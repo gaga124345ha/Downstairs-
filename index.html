@@ -402,7 +402,26 @@ input[type=range]{accent-color:var(--amber)}
 #monList button.lx::before{content:var(--li);position:absolute;left:7px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--lc);font-family:serif;line-height:1}
 #monList button.lx>span .pxw{background:var(--ln)}#monList button.lx small{color:var(--lc)}
 #monList button.lx:hover{filter:brightness(1.25)}#monList button.lx.on{box-shadow:inset 0 0 0 1px var(--lc),0 0 10px -2px var(--lc);filter:brightness(1.3)}
-#monList .lx-cam{--lc:#a070ff;--ln:linear-gradient(#efe2ff,#a878ff);--li:"◉";--lb:repeating-linear-gradient(0deg,rgba(160,110,255,.1) 0 1px,transparent 1px 3px),linear-gradient(90deg,rgba(60,30,100,.55),rgba(20,10,36,.2))}
+#monList .lx-glit{--lc:#5cf0ff;--ln:linear-gradient(90deg,#ff3aa0,#5cf0ff 50%,#ffffff);--li:"▚";--lb:repeating-linear-gradient(0deg,rgba(92,240,255,.12) 0 1px,transparent 1px 2px),linear-gradient(90deg,rgba(255,40,140,.35),rgba(0,40,60,.3))}
+.lx-glit span{animation:glJit 2.6s steps(1) infinite}
+/* The Glitch: 신호가 깨진 화면 */
+#monDetail.cx-glit canvas{border:1px solid #5cf0ff;background:repeating-linear-gradient(0deg,rgba(92,240,255,.12) 0 1px,transparent 1px 2px),#020608;box-shadow:3px 0 0 rgba(255,40,140,.6),-3px 0 0 rgba(92,240,255,.6);animation:glImg 3.1s steps(1) infinite}
+.cx-glit .cdxw{position:relative;overflow:hidden;border:1px solid rgba(92,240,255,.4);background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px),linear-gradient(#05080a,#020304)}
+.cx-glit .cxhud{color:#5cf0ff;font-family:monospace}
+.cx-glit .nosig{color:#fff;background:#0030ff;padding:0 6px;animation:cxblink .7s steps(2) infinite}
+.cx-glit .err{color:#ff3aa0}
+.cx-glit h3{animation:glJit 2.2s steps(1) infinite;filter:drop-shadow(2px 0 0 rgba(255,40,140,.85)) drop-shadow(-2px 0 0 rgba(92,240,255,.85))}
+.cx-glit h3 .pxw{background:linear-gradient(90deg,#ffffff,#c8f8ff)}
+.cx-glit p{color:#bfe8ee;text-shadow:1px 0 rgba(255,40,140,.45),-1px 0 rgba(92,240,255,.45)}
+.cx-glit p:nth-of-type(1){animation:glTxt 5s steps(1) infinite}
+.cx-glit .lbl{color:#ff3aa0}.cx-glit .tag{color:#5cf0ff}
+.cx-glit .glbars{position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 0 30%,rgba(92,240,255,.18) 30% 31.5%,transparent 31.5% 62%,rgba(255,40,140,.16) 62% 63%,transparent 63%);animation:glBars 1.7s steps(4) infinite;mix-blend-mode:screen}
+@keyframes glJit{0%,86%,100%{transform:none;clip-path:none}87%{transform:translateX(4px);clip-path:inset(0 0 55% 0)}89%{transform:translateX(-5px) skewX(10deg);clip-path:inset(40% 0 0 0)}91%{transform:translateX(2px)}93%{transform:translateX(-1px);clip-path:inset(20% 0 30% 0)}}
+@keyframes glImg{0%,80%,100%{filter:none;transform:none}82%{filter:hue-rotate(90deg) saturate(3);transform:translateX(3px)}85%{filter:invert(1);transform:translateX(-2px)}88%{filter:none;transform:scaleY(.96)}}
+@keyframes glTxt{0%,90%,100%{opacity:1}91%{opacity:.3;transform:translateX(3px)}93%{opacity:1}95%{opacity:.5;transform:translateX(-2px)}}
+@keyframes glBars{0%{transform:translateY(-40%)}100%{transform:translateY(60%)}}
+@media (prefers-reduced-motion:reduce){.lx-glit span,.cx-glit h3,.cx-glit p,.cx-glit .glbars,#monDetail.cx-glit canvas{animation:none!important}}
+.lx-cam{--lc:#a070ff;--ln:linear-gradient(#efe2ff,#a878ff);--li:"◉";--lb:repeating-linear-gradient(0deg,rgba(160,110,255,.1) 0 1px,transparent 1px 3px),linear-gradient(90deg,rgba(60,30,100,.55),rgba(20,10,36,.2))}
 #monList .lx-sew{--lc:#d8a888;--ln:#f0dcc8;--li:"✕";--lb:repeating-linear-gradient(45deg,rgba(255,230,200,.06) 0 2px,transparent 2px 4px),linear-gradient(90deg,rgba(90,56,44,.6),rgba(44,30,24,.2));outline:1px dashed rgba(216,168,136,.45);outline-offset:-3px}
 #monList .lx-holy{--lc:#ffcc66;--ln:linear-gradient(#fff8e0,#f0b048);--li:"✝";--lb:radial-gradient(ellipse at 0% 50%,rgba(255,200,110,.32),transparent 70%),rgba(30,20,8,.4)}
 #monList .lx-surg{--lc:#7ad0b8;--ln:linear-gradient(#f0faf6,#8ad0b8);--li:"✂";--lb:linear-gradient(90deg,rgba(140,220,200,.08) 1px,transparent 1px) 0 0/8px 100%,linear-gradient(90deg,rgba(20,60,52,.6),rgba(10,20,18,.2))}
@@ -2434,12 +2453,12 @@ function render(){
     const tex=(G.wdt&&hit!==9&&G.wdt[my*N+mx])||wallTex(hit,mx,my);
     const lm=(pmx>=0&&pmy>=0&&pmx<N&&pmy<N)?light[pmy*N+pmx]:0;
     const fog=(side?.72:1)/(1+pd*FOGK),ff=fp/(1+pd*pd*.07),step=32/lineH;
-    const y0=Math.max(ds,0),y1=Math.min(de,H-1);WTOP[x]=y0;WBOT[x]=y1;let tp=(y0-hz+lineH*(1-EYE))*step;
+    const y0=Math.max(ds,0),y1=Math.min(de,H-1);WTOP[x]=y0;WBOT[x]=y0>y1?-1:y1;let tp=(y0-hz+lineH*(1-EYE))*step;
     for(let y=y0;y<=y1;y++){const ty=(tp|0)&31;tp+=step;const ti=(ty*32+tx)*3;
       buf[y*W+x]=sh(tex[ti],tex[ti+1],tex[ti+2],(amb+lm+ff*cone[y*W+x])*fog,BAY[((y&3)<<2)+(x&3)])}
   }
   for(let y=0;y<H;y++){
-    const p=y-hz,row=y*W;if(p===0){for(let x=0;x<W;x++)buf[row+x]=0xFF000000;continue}
+    const p=y-hz,row=y*W;if(p===0){for(let x=0;x<W;x++)if(!(y>=WTOP[x]&&y<=WBOT[x]))buf[row+x]=0xFF000000;continue}
     const isF=p>0,rowD=posZ*VS*(isF?EYE*2:(1-EYE)*2)/Math.abs(p),stx=rowD*(rdx1-rdx0)/W,sty=rowD*(rdy1-rdy0)/W;
     let fx=P.x+rowD*rdx0,fy=P.y+rowD*rdy0;
     const fog=(isF?1:.78)/(1+rowD*FOGK),ff=fp/(1+rowD*rowD*.07),bay=(y&3)<<2;
@@ -3796,6 +3815,7 @@ function glitchFX(){
   if(g>.75&&rnd()<.08){ctx.fillStyle='rgba(0,0,0,.85)';ctx.fillRect(0,0,W,H)}
 }
 function glitchTick(dt){
+  if(!G.gEv&&G.glitchBoost>0)G.glitchBoost=Math.max(0,G.glitchBoost-dt*.5);
   const g=G.glitch=glitchLevel();const hud=$('hud');
   if(g>.45&&rnd()<.3)hud.style.transform=`translate(${ri(-4,4)*g|0}px,${ri(-3,3)*g|0}px)`;else if(hud.style.transform)hud.style.transform='';
   if(AC&&rnd()<g*dt*9){const f=pick([200,400,800,1600,3200])*(.9+rnd()*.2);blip(f,.04+rnd()*.06,'square',.05*g,f*(rnd()<.5?.5:2),0,(rnd()-.5)*1.6,.1);if(rnd()<.3)burst(.05,'highpass',3000,.15*g)}
@@ -5254,7 +5274,7 @@ function codexStep(d){if(!SAVE.hasCodex)return;const i=Math.max(0,ORDER.indexOf(
   ul.addEventListener('pointermove',e=>{if(!on||e.pointerId!==id)return;const dy=e.clientY-y0;if(Math.abs(dy)>5&&!ul._dragged){ul._dragged=true;ul.classList.add('drag');try{ul.setPointerCapture(id)}catch(_){}}if(ul._dragged)ul.scrollTop=s0-dy});
   const end=()=>{if(!on)return;on=false;ul.classList.remove('drag');setTimeout(()=>{ul._dragged=false},0)};ul.addEventListener('pointerup',end);ul.addEventListener('pointercancel',end)})();
 // 강한 괴물의 도감 장식
-const CXT={reaper:'reap',butcher:'butch',mother:'mother',warden:'warden',juggernaut:'jugg',watch:'cam',seam:'sew',puppet:'sew',preach:'holy',cultist:'holy',surgeon:'surg',specimen:'surg',bomber:'surg',brat:'flesh',dreg:'flesh',origin:'origin'};
+const CXT={glitch:'glit',reaper:'reap',butcher:'butch',mother:'mother',warden:'warden',juggernaut:'jugg',watch:'cam',seam:'sew',puppet:'sew',preach:'holy',cultist:'holy',surgeon:'surg',specimen:'surg',bomber:'surg',brat:'flesh',dreg:'flesh',origin:'origin'};
 // ================= 공략집 =================
 // 줄 머리: '# ' 소제목 · '# @몹 제목' 도감 미등록이면 가림 · '- ' 항목 · '! ' 빨간 펜 · '~ ' 떨리는 글씨
 // 인라인: **굵게** · ~~지운 글씨~~ · @{몹} 미등록이면 ■■■
@@ -5909,6 +5929,7 @@ function renderCodex(){
       sew:`<div class="cxhud"><span>✕ 치수표 · 재봉 공방 ✕</span></div>`,holy:`<div class="cxhud"><span>✝ 지하 예배당 기록 ✝</span></div>`,
       surg:`<div class="cxhud"><span>환자 기록 No.${String(fl*37).padStart(4,'0')}</span><span class="cut">✂ ┄┄┄┄┄┄┄┄┄┄</span></div>`,
       flesh:`<div class="cxhud"><span>살점 표본 · 같은 몸에서 떨어져 나온 것</span></div>`,reap:`<div class="cxhud"><span>☠ 회수 명단</span><span class="due">미납 1건 · 대상: 당신</span></div>`,butch:`<div class="cxhud"><span>▼ 도축실 · 관리자</span></div>`,mother:`<div class="cxhud"><span>◍ 생물 연구실 · 관리자</span></div>`,warden:`<div class="cxhud"><span>♫ 열쇠를 가진 자 · 관리자</span></div>`,jugg:`<div class="cxhud"><span>■ 융합 개체 · 관리자</span></div>`,
+      glit:`<div class="cxhud"><b class="nosig">NO SIGNAL</b><span>CH-${String(fl).padStart(2,'0')} ▒▓░ ${tm}</span><span class="err">ERR 0x${(fl*4099).toString(16).toUpperCase()}</span></div><div class="glbars" aria-hidden="true"></div>`,
       origin:`<div class="omarq" aria-hidden="true"><div>THE ORIGIN · 모든 것의 시작 · 모든 것의 끝 · THE ORIGIN · 모든 것의 시작 · 모든 것의 끝 · </div></div><div class="ekg" aria-hidden="true"></div>`}[TH];
     tx.insertAdjacentHTML('afterbegin',pre);if(TH==='origin')tx.insertAdjacentHTML('beforeend','<div class="ekg" aria-hidden="true"></div>')}}
   }
