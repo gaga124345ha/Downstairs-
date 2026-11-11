@@ -595,7 +595,7 @@ body.pxwait .ov,body.pxwait #hud{visibility:hidden}
     <button id="openAch2">도전과제</button>
     <button id="optBtn2">설정</button>
     <button id="touchTg2" class="touchTg">모바일 조작 · 끔</button>
-    <label for="sens"><span>마우스 감도</span><input id="sens" type="range" min="1" max="10" value="4"></label>
+    <label for="sens"><span>마우스 감도</span><input id="sens" type="range" min="1" max="20" step="0.5" value="4"></label>
     <label for="vol"><span>음량</span><input id="vol" type="range" min="0" max="10" value="7"></label>
     <button id="quit">포기하고 처음으로</button>
   </div>
@@ -650,6 +650,9 @@ body.pxwait .ov,body.pxwait #hud{visibility:hidden}
 <div id="opts" class="ov" hidden><div class="menu"><h2>설정</h2>
   <label for="o_mus"><span>음악</span><input id="o_mus" type="range" min="0" max="10" value="10"></label>
   <label for="o_sfx"><span>효과음</span><input id="o_sfx" type="range" min="0" max="10" value="10"></label>
+  <label for="o_sens"><span>마우스 감도 <em id="o_sensV" class="nopx">4.0</em></span><input id="o_sens" type="range" min="2" max="40" step="1" value="8"></label>
+  <label for="o_adsS"><span>조준 시 감도 <em id="o_adsSV" class="nopx">100%</em></span><input id="o_adsS" type="range" min="3" max="15" value="10"></label>
+  <button id="o_invY" class="optT">마우스 상하 반전 · 끔</button>
   <label for="o_bright"><span>밝기</span><input id="o_bright" type="range" min="6" max="16" value="10"></label>
   <label for="o_shake"><span>화면 흔들림</span><input id="o_shake" type="range" min="0" max="10" value="10"></label>
   <label for="o_flash"><span>번쩍임</span><input id="o_flash" type="range" min="0" max="10" value="10"></label>
@@ -6370,7 +6373,10 @@ addEventListener('keydown',e=>{if(END&&e.code==='Space')END.fast=true});addEvent
 $('resume').onclick=resume;
 $('openCodex').onclick=()=>openCodex('pause');
 $('quit').onclick=()=>{stopMusic();runClear();$('pause').hidden=true;$('hud').hidden=true;stopAllVoices();G.state='title';$('title').hidden=false;showBest();lobbyRun()};
-$('sens').oninput=e=>{mouseSens=.0007*e.target.value};mouseSens=.0007*4;
+function sensApply(){mouseSens=.0007*OPT.sens;const a=$('sens'),b=$('o_sens');if(a)a.value=OPT.sens;if(b)b.value=Math.round(OPT.sens*2);const v=$('o_sensV');if(v)v.textContent=OPT.sens.toFixed(1);const w=$('o_adsSV');if(w)w.textContent=Math.round(OPT.adsS*100)+'%';const c=$('o_adsS');if(c)c.value=Math.round(OPT.adsS*10);const iy=$('o_invY');if(iy){iy.textContent=`마우스 상하 반전 · ${OPT.invY?'켬':'끔'}`;iy.classList.toggle('on',!!OPT.invY)}}
+$('sens').oninput=e=>{OPT.sens=+e.target.value;sensApply();optSave()};
+$('o_sens').oninput=e=>{OPT.sens=e.target.value/2;sensApply();optSave()};$('o_adsS').oninput=e=>{OPT.adsS=e.target.value/10;sensApply();optSave()};$('o_invY').onclick=()=>{OPT.invY=OPT.invY?0:1;sensApply();pxify($('o_invY'));optSave()};
+
 $('vol').oninput=e=>{vol=e.target.value/10;if(MASTER)MASTER.gain.value=vol;if(PBUS)PBUS.gain.value=vol};
 function showBest(){try{const d=runLoad(),cb=$('contBtn');{const st=$('start');if(st){st.textContent=d?'▶  새로 시작한다':'▶  엘리베이터에 탄다';pxify(st)}}if(cb){cb.hidden=!d;if(d){cb.textContent=`⟲  이어하기 · B${d.floor}${d.G&&d.G.nm?' · 악몽':''}`;pxify(cb)}}const st=$('start');if(st&&d){st.textContent='▶  새로 시작한다';pxify(st)}nmLabel()}catch(e){}try{const b=$('openAch');if(b){AS();b.textContent=`★  도전과제  ${ACH.filter(a=>SAVE.ach[a[0]]).length} / ${ACH.length}`;pxify(b)}}catch(e){}const n=SAVE.endings?Object.keys(SAVE.endings).length:0;$('best').textContent=(SAVE.best?`최고 기록 · B${SAVE.best}`:'')+(n?` · 엔딩 ${n} / 6`:'')}
 showBest();
@@ -6406,7 +6412,7 @@ addEventListener('mousemove',e=>{if(!G||G.state!=='play')return;if(!(lockOK||e.b
   if(skipMove>0){skipMove--;return}let mx=e.movementX||0,my=e.movementY||0;
   // 브라우저가 가끔 보내는 비정상적으로 큰 움직임(튐)은 버린다
   if(Math.abs(mx)>220||Math.abs(my)>220)return;
-  const zk=adsZoom();P.a+=mx*mouseSens*zk;P.pitch=clamp((P.pitch||0)-my*mouseSens*95*zk,-H*.48,H*.48)});
+  const az=adsZoom(),zk=az*(az<.99?OPT.adsS:1),iy=OPT.invY?-1:1;P.a+=mx*mouseSens*zk;P.pitch=clamp((P.pitch||0)-my*iy*mouseSens*95*zk,-H*.48,H*.48)});
 let mouseHeld=false;
 function priDown(){mouseHeld=true;if(P.selfT!=null)selfResist();if(P.latch)latchClick();if(pistonPress())return;attack()}
 function priUp(){mouseHeld=false;pistonRelease()}
@@ -6553,15 +6559,16 @@ function makeIR(sec,decay){const r=AC.sampleRate,len=Math.floor(r*sec),b=AC.crea
   for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);let lp=0;for(let i=0;i<len;i++){const t=i/len,n=(rnd()*2-1)*Math.pow(1-t,decay);lp+=(n-lp)*(.42-.34*t);d[i]=i<r*.004?0:lp*(1+(i<r*.08&&rnd()<.002?6:0))}}return b}
 function initReverb(){revIn=AC.createGain();const c=AC.createConvolver();c.buffer=makeIR(2.8,3);const o=AC.createGain();o.gain.value=.6;const hp=filt('highpass',160);revIn.connect(hp);hp.connect(c);c.connect(o);o.connect(MASTER)}
 let PBUS=null,PDEST=false,MUSB=null;
-const OPT=Object.assign({mus:1,sfx:1,bright:1,shake:1,flash:1,tbs:1,hitstop:1,shadow:1,warp:1,tut:0,tlook:1,vib:1,ui:null},SAVE.opt||{});
+const OPT=Object.assign({mus:1,sfx:1,bright:1,shake:1,flash:1,tbs:1,hitstop:1,shadow:1,warp:1,tut:0,tlook:1,vib:1,ui:null,sens:4,adsS:1,invY:0},SAVE.opt||{});
 function optSave(){SAVE.opt=OPT;persist()}
+sensApply();
 function optApply(){if(MUSB)MUSB.gain.value=OPT.mus;cv.style.filter=OPT.bright!==1?`brightness(${OPT.bright})`:'';if(typeof tzApply==='function')tzApply();
   $('o_shadow').textContent=`그림자 · ${OPT.shadow?'켬':'끔'}`;$('o_shadow').classList.toggle('on',!!OPT.shadow);pxify($('o_shadow'));$('o_warp').textContent=`정신력 화면 왜곡 · ${OPT.warp?'켬':'끔'}`;$('o_warp').classList.toggle('on',!!OPT.warp);pxify($('o_warp'));
   $('o_hitstop').textContent=`히트스톱 · ${OPT.hitstop?'켬':'끔'}`;$('o_hitstop').classList.toggle('on',!!OPT.hitstop);$('o_vib').textContent=`진동 · ${OPT.vib?'켬':'끔'}`;$('o_vib').classList.toggle('on',!!OPT.vib);pxify($('o_vib'));$('o_tut').textContent=`튜토리얼 다시 보기 · ${OPT.tut?'켬':'끔'}`;$('o_tut').classList.toggle('on',!!OPT.tut);pxify($('o_hitstop'));pxify($('o_tut'))}
 let optFrom='title';
 function openOpts(from){optFrom=from;if(from==='pause')$('pause').hidden=true;else $('title').hidden=true;$('opts').hidden=false;
   sbOptLabel();pxify($('o_sb'));
-  for(const[k,id,sc]of[['mus','o_mus',10],['sfx','o_sfx',10],['bright','o_bright',10],['shake','o_shake',10],['flash','o_flash',10],['tbs','o_tbs',10],['tlook','o_tlook',10]])$(id).value=Math.round(OPT[k]*sc);$('o_ui').value=Math.round(UIZ()*10);optApply()}
+  for(const[k,id,sc]of[['mus','o_mus',10],['sfx','o_sfx',10],['bright','o_bright',10],['shake','o_shake',10],['flash','o_flash',10],['tbs','o_tbs',10],['tlook','o_tlook',10]])$(id).value=Math.round(OPT[k]*sc);$('o_ui').value=Math.round(UIZ()*10);sensApply();pxify($('o_invY'));optApply()}
 function closeOpts(){$('opts').hidden=true;if(optFrom==='pause')$('pause').hidden=false;else{$('title').hidden=false;lobbyRun()}}
 for(const[k,id]of[['mus','o_mus'],['sfx','o_sfx'],['bright','o_bright'],['shake','o_shake'],['flash','o_flash'],['tbs','o_tbs'],['tlook','o_tlook'],['ui','o_ui']])$(id).oninput=e=>{OPT[k]=e.target.value/10;optApply();optSave()};
 $('o_vib').onclick=()=>{OPT.vib=OPT.vib?0:1;optApply();optSave()};
