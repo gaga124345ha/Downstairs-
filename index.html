@@ -362,7 +362,7 @@ input[type=range]{accent-color:var(--amber)}
 .shopnote b{color:var(--ink);font-weight:700}
 #cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 @media (max-width:760px){#cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.card{display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;min-width:0;padding:14px 14px 12px;background:linear-gradient(180deg,#1d1a14,#100e0b);border:1px solid #33302a;border-top:3px solid var(--rc);text-align:left;cursor:pointer;color:var(--ink);font-family:var(--ui)}
+.card{display:grid;grid-template-rows:auto auto auto 1fr auto;gap:8px;min-width:0;padding:14px 14px 12px;background:linear-gradient(180deg,#1d1a14,#100e0b);border:1px solid #33302a;border-top:3px solid var(--rc);text-align:left;cursor:pointer;color:var(--ink);font-family:var(--ui)}
 .card:hover:not(:disabled){transform:translateY(-3px);border-color:var(--rc)}
 .card[data-r="5"],.card.org{--rc:#ff4a36!important;background:radial-gradient(120% 70% at 85% 0%,rgba(255,90,40,.22),transparent 55%),radial-gradient(90% 60% at 10% 100%,rgba(120,10,10,.55),transparent 70%),repeating-linear-gradient(115deg,transparent 0 13px,rgba(150,20,16,.25) 13px 14px,transparent 14px 31px),linear-gradient(180deg,#2a0d0b,#120505);border-color:#5a1612;border-top-color:#ff4a36;animation:orgBeat 1.15s ease-in-out infinite}
 @keyframes orgBeat{0%,100%{box-shadow:0 0 22px rgba(200,30,20,.35),inset 0 0 18px rgba(120,0,0,.5)}12%{box-shadow:0 0 38px rgba(255,70,40,.7),inset 0 0 26px rgba(170,10,0,.6)}24%{box-shadow:0 0 24px rgba(200,30,20,.4),inset 0 0 18px rgba(120,0,0,.5)}36%{box-shadow:0 0 34px rgba(255,70,40,.6),inset 0 0 24px rgba(160,10,0,.55)}}
@@ -373,6 +373,7 @@ input[type=range]{accent-color:var(--amber)}
 .card[data-r="3"]{box-shadow:0 0 18px rgba(228,80,80,.14)}
 .card .rr{font-size:10.5px;letter-spacing:.3em;color:var(--rc)}
 .card .nm{font-size:15.5px;font-weight:700;line-height:1.35}
+.card .icw{display:flex;justify-content:center;align-items:center;height:72px;margin:-2px -6px 0;background:radial-gradient(ellipse at 50% 60%,color-mix(in srgb,var(--rc) 22%,transparent),transparent 70%);border-bottom:1px dashed #2a2620}.card .icw img{width:64px;height:64px;image-rendering:pixelated;filter:drop-shadow(0 3px 0 rgba(0,0,0,.6));transition:transform .15s}.card:hover:not(:disabled) .icw img{transform:translateY(-3px) rotate(-4deg)}.card.sold .icw img{filter:grayscale(1) brightness(.4)}
 .card .ds{font-size:12px;color:#a69c8c;line-height:1.6}
 .card .pr{font-family:var(--num);font-size:26px;color:var(--amber)}
 .card.sold{opacity:.3;cursor:default}
@@ -5770,12 +5771,13 @@ function renderShop(){
   G.shop.forEach((s,i)=>{const b=document.createElement('button');b.className='card';b.dataset.r=s.it.r;b.style.setProperty('--rc',s.it.perm?'var(--amber)':s.it.rw?ANT_R[s.it.g].c:RAR[s.it.r].c);if(s.it.rw)b.dataset.perm=1;if(s.it.perm)b.dataset.perm=1;
     const poor=P.money<s.price,cap=s.sold?null:itemCap(s.it);if(s.sold)b.classList.add('sold');else if(cap)b.classList.add('poor','capd');else if(poor)b.classList.add('poor');
     const ok=oKey(s.it);if(ok)b.classList.add('org');
-    b.innerHTML=(ok?`<img class="oic" alt="" src="${originIcon(ok)}">`:'')+`<span class="rr">${s.it.perm?'영구 소장':s.it.rw?'유물 무기 · '+ANT_R[s.it.g].n:s.it.gun?'총 · '+RAR[s.it.r].n:s.it.wp?'무기 · '+RAR[s.it.r].n:RAR[s.it.r].n}</span><span class="nm">${s.it.n}</span><span class="ds">${s.it.d}</span>${cap?`<span class="capn">${cap}</span>`:''}${s.sold?'<span class="pr st">판매됨</span>':`<span class="pr" data-n="◈ ${s.price}" data-s="3"></span>`}`;
+    let ic='';try{ic=ok?'':itemIcon(s.it)}catch(e){}
+    b.innerHTML=(ok?`<img class="oic" alt="" src="${originIcon(ok)}">`:'')+`<span class="rr">${s.it.perm?'영구 소장':s.it.rw?'유물 무기 · '+ANT_R[s.it.g].n:s.it.gun?'총 · '+RAR[s.it.r].n:s.it.wp?'무기 · '+RAR[s.it.r].n:RAR[s.it.r].n}</span>${ic?`<span class="icw"><img alt="" src="${ic}"></span>`:''}<span class="nm">${s.it.n}</span><span class="ds">${s.it.d}</span>${cap?`<span class="capn">${cap}</span>`:''}${s.sold?'<span class="pr st">판매됨</span>':`<span class="pr" data-n="◈ ${s.price}" data-s="3"></span>`}`;
     b.disabled=s.sold;b.onclick=()=>buy(i);if(s.it.key&&!s.sold&&!G.keyBan&&!G.leaving){const st=document.createElement('span');st.className='steal';st.textContent='몰래 집기';st.onclick=e=>{e.stopPropagation();trySteal(i)};b.appendChild(st)}box.appendChild(b)});
   renderAntiques();
   applyNums($('shop'));pxify($('shop'));
 }
-function buy(i){const s=G.shop[i];if(s.sold)return;{const cap=itemCap(s.it);if(cap){say('그건 더 못 들어. 손님 몸이 하나뿐이잖아. 히히.');msg(cap,'warn',2200);sfxBuzz();return}}if(P.money<s.price){say(pick(LINES.poor));sfxBuzz();return}P.money-=s.price;s.sold=true;if(s.it.r>=4)ach('buy_legend');s.it.f();useFxStart(s.it.id);if(!s.it.cons)G.owned.push(s.it.id);sfxBuy(s.it.r);keeperMood=1.4;say(s.it.perm?LINES.book:s.it.r>=3?pick(LINES.rare):pick(LINES.buy));renderShop()}
+function buy(i){const s=G.shop[i];if(s.sold)return;{const cap=itemCap(s.it);if(cap){say('그건 더 못 들어. 손님 몸이 하나뿐이잖아. 히히.');msg(cap,'warn',2200);sfxBuzz();return}}if(P.money<s.price){say(pick(LINES.poor));sfxBuzz();return}P.money-=s.price;s.sold=true;if(s.it.r>=4)ach('buy_legend');s.it.f();useFxStart(s.it.id);if(!s.it.cons)G.owned.push(s.it.id);sfxBuy(s.it.r);keeperMood=1.4;say(s.it.perm?LINES.book:buyLine(s.it));renderShop()}
 $('talk').onclick=talk;
 $('reroll').onclick=()=>{const c=rerollCost();if(P.money<c)return;P.money-=c;G.rerolls++;if(G.rerolls>=5)ach('reroll5');rollShop();sfxClick();say(G.shop.some(x=>x.it.r>=4)?pick(LINES.legend):pick(LINES.reroll));renderShop()};
 $('goDown').onclick=()=>{
@@ -5789,6 +5791,108 @@ $('goDown').onclick=()=>{
 };
 
 
+// ================= 상점 물건 그림 (32×32 픽셀) =================
+const ICC={};
+function icDraw(fn){const c=document.createElement('canvas');c.width=32;c.height=32;const g=c.getContext('2d');
+  const R=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x|0,y|0,w|0||1,h|0||1)},E=(x,y,rx,ry,col)=>{g.fillStyle=col;g.beginPath();g.ellipse(x,y,rx,ry,0,0,6.283);g.fill()},
+    L=(x0,y0,x1,y1,w,col)=>{const n=Math.ceil(Math.hypot(x1-x0,y1-y0));g.fillStyle=col;for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,y=y0+(y1-y0)*i/n;g.fillRect(Math.round(x-w/2),Math.round(y-w/2),w,w)}};
+  fn(R,E,L,g);
+  // 1픽셀 외곽선
+  const d=g.getImageData(0,0,32,32),a=d.data,o=new Uint8ClampedArray(a);for(let y=0;y<32;y++)for(let x=0;x<32;x++){const i=(y*32+x)*4;if(a[i+3])continue;let n=0;for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const X=x+dx,Y=y+dy;if(X>=0&&Y>=0&&X<32&&Y<32&&a[(Y*32+X)*4+3]>40)n=1}if(n){o[i]=12;o[i+1]=9;o[i+2]=7;o[i+3]=255}}
+  d.data.set(o);g.putImageData(d,0,0);return c.toDataURL()}
+const ICN={
+  ammo:(R)=>{R(6,14,20,13,'#6a4a2a');R(6,14,20,2,'#8a6a3a');R(8,19,16,4,'#4a3018');for(let i=0;i<5;i++){R(8+i*3.5,7,2,8,'#e8c050');R(8+i*3.5,7,2,2,'#c8a040')}R(13,20,6,2,'#e8c050')},
+  bandage:(R,E)=>{E(16,17,9,9,'#e8e4da');E(16,17,4,4,'#bdb6a8');E(16,17,2,2,'#7a7468');R(16,8,10,4,'#e8e4da');R(18,9,6,1,'#c82a2a')},
+  cell:(R)=>{R(11,8,10,18,'#3a8a4a');R(11,8,10,3,'#c8ccd0');R(14,5,4,3,'#c8ccd0');R(12,12,2,12,'#5aaa6a');R(13,16,6,4,'#e8e8e0');R(15,14,2,8,'#e8e8e0')},
+  shoes:(R)=>{R(4,16,20,7,'#c8c0b0');R(4,22,25,4,'#e8e4dc');R(20,19,9,4,'#c8c0b0');R(7,15,9,3,'#a8a090');for(let i=0;i<3;i++)R(9+i*3,17,2,1,'#5a5248');R(4,25,25,1,'#8a8478')},
+  tape:(L,R)=>{},
+  purse:(R,E)=>{E(15,19,10,8,'#7a4a28');E(15,18,8,6,'#9a6438');R(9,10,12,3,'#c8a040');E(9,11,2,2,'#e8c050');E(21,11,2,2,'#e8c050');E(23,23,4,4,'#e8c050');E(23,23,2,2,'#c89a30')},
+  gum:(R)=>{R(6,10,20,13,'#3aaa7a');R(6,10,20,3,'#5ad09a');R(9,15,14,5,'#e8f8f0');R(11,16,10,1,'#3aaa7a');for(let i=0;i<3;i++)R(9+i*5,24,3,4,'#d8f0e4')},
+  keyring:(R,E)=>{E(12,11,6,6,'#a8a8b0');E(12,11,4,4,'rgba(0,0,0,0)');R(15,14,3,13,'#e8c050');R(17,23,4,2,'#e8c050');R(17,19,3,2,'#e8c050');R(9,15,2,12,'#c0c0c8');R(6,24,4,2,'#c0c0c8')},
+  antidep:(R,E)=>{R(5,9,22,15,'#c8d0e0');R(5,9,22,2,'#e0e8f4');for(let y=0;y<2;y++)for(let x=0;x<4;x++){E(9+x*5,14+y*6,2,2,'#5a7ad8');E(8.5+x*5,13.5+y*6,.8,.8,'#a8c0ff')}},
+  vest:(R)=>{R(8,7,16,20,'#5a5e48');R(8,7,4,4,'rgba(0,0,0,0)');R(12,7,8,4,'#3a3e30');R(13,12,6,14,'#4a4e3a');for(let y=10;y<26;y+=3)for(let x=9;x<24;x+=4)R(x,y,1,1,'#7a7e66');R(10,26,12,2,'#3a3e30')},
+  bigcell:(R)=>{R(5,9,22,16,'#3a3c40');R(5,9,22,3,'#5a5c62');R(8,14,16,8,'#2a7a3a');R(8,14,11,8,'#4aba5a');R(22,6,3,4,'#8a8a90');R(9,6,3,4,'#8a8a90');R(24,22,2,2,'#7aff7a')},
+  pills:(R)=>{R(10,10,12,16,'#d87a2a');R(9,6,14,5,'#e8e4dc');R(9,10,14,1,'#a8a49c');R(12,14,8,8,'#f0e8d8');R(14,16,4,1,'#c82a2a');R(15,15,2,3,'#c82a2a');R(11,11,2,14,'#f0a050')},
+  soles:(R,E)=>{E(11,16,5,10,'#2a2a2e');E(21,16,5,10,'#2a2a2e');for(let y=9;y<25;y+=3){R(8,y,7,1,'#4a4a50');R(18,y,7,1,'#4a4a50')}},
+  bar:(R)=>{R(5,11,22,14,'#3a5a9a');R(5,11,22,3,'#5a7aba');R(8,16,16,5,'#e8c050');R(9,17,14,1,'#a87820');R(3,20,8,6,'#c8a060');R(3,20,8,2,'#e8c080')},
+  crowbar:(R)=>{R(8,10,16,13,'#6a4228');R(8,10,16,2,'#8a5a38');R(8,21,16,2,'#4a2a18');R(14,13,5,7,'#a8a8b0');R(15,14,3,5,'#6a4228');for(let x=10;x<24;x+=3)R(x,11,1,1,'#c8a070')},
+  stim:(L,R)=>{},drug:(L,R)=>{},adren:(L,R)=>{},
+  taser:(R)=>{R(7,12,16,10,'#2a2a2e');R(7,12,16,2,'#4a4a50');R(10,21,6,7,'#2a2a2e');R(23,13,4,2,'#c0c0c8');R(23,19,4,2,'#c0c0c8');R(26,14,2,6,'#8ae0ff');R(28,12,1,2,'#ffffff');R(28,19,1,3,'#8ae0ff');R(12,15,4,2,'#ffd040')},
+  nv:(R,E)=>{R(5,12,22,10,'#2a2c30');E(11,17,5,5,'#1a1c1e');E(21,17,5,5,'#1a1c1e');E(11,17,3,3,'#3aff6a');E(21,17,3,3,'#3aff6a');E(10,16,1,1,'#c8ffd0');E(20,16,1,1,'#c8ffd0');R(14,9,4,4,'#3a3c40')},
+  fang:(R)=>{for(let i=0;i<9;i++)R(12+i*.5,6+i*2,8-i,2,'#f0e8d8');R(15,24,2,4,'#a01010');R(15,28,2,2,'#c82020')},
+  glove:(R)=>{R(9,11,14,14,'#1e1c1a');for(let i=0;i<4;i++)R(9+i*3.5,5+(i===0?3:0),3,7,'#1e1c1a');R(23,14,4,6,'#1e1c1a');R(9,23,14,4,'#c8a040');R(9,24,14,1,'#e8c860')},
+  radar:(R,E)=>{R(7,6,18,22,'#3a3c40');E(16,15,7,7,'#0a2a14');E(16,15,4,4,'#0f3a1c');R(16,9,1,7,'#5aff8a');R(19,12,1,1,'#ff4a3a');R(10,24,12,2,'#5a5c62')},
+  c4:(R)=>{R(4,10,24,14,'#c8b890');R(4,10,24,2,'#e0d4b0');R(4,16,24,2,'#4a4038');R(14,8,5,18,'#2a2a2e');R(16,12,2,2,'#ff2a1a');R(20,4,1,7,'#c82a2a');R(22,4,1,7,'#2a5aba')},
+  defib:(R)=>{R(4,12,14,12,'#e0c030');R(4,12,14,2,'#f0d860');R(8,16,6,4,'#2a2a2e');R(10,17,2,2,'#5aff6a');R(20,8,8,7,'#2a2a2e');R(20,18,8,7,'#2a2a2e');R(21,9,6,1,'#c8ccd0');R(21,19,6,1,'#c8ccd0');R(17,14,4,1,'#c82a2a');R(17,20,4,1,'#c82a2a')},
+  exec:(L,R)=>{},
+  watch:(R,E)=>{R(15,3,2,4,'#c8a040');E(16,4,2,2,'#e8c050');E(16,17,11,11,'#c8a040');E(16,17,9,9,'#f0e8d8');R(16,10,1,7,'#2a2a2e');R(16,17,5,1,'#2a2a2e');for(const[a,b]of[[12,11],[13,14],[11,17],[14,20]])R(a,b,1,2,'#5a5248');R(20,12,1,3,'#5a5248')},
+  coat:(R)=>{R(9,6,14,22,'#2a2830');R(15,6,2,22,'#1a1820');R(6,8,4,16,'#2a2830');R(22,8,4,16,'#2a2830');R(12,5,8,3,'#3a3840');for(let y=11;y<25;y+=4)R(13,y,1,1,'#6a6870')},
+  exo:(R,L)=>{},
+  heart:(R,E)=>{E(12,13,6,6,'#a01818');E(20,13,6,6,'#a01818');for(let i=0;i<10;i++)R(6+i*.9,16+i,20-i*1.8,1,'#a01818');R(14,5,3,6,'#d8c8b0');R(19,6,2,5,'#6a3a8a');E(11,11,2,2,'#e05050')},
+  midas:(R)=>{R(9,12,14,13,'#e8c050');for(let i=0;i<4;i++)R(9+i*3.5,5+(i===0?3:0),3,8,'#e8c050');R(23,15,4,6,'#e8c050');R(10,13,3,10,'#fff0a0');R(9,25,14,3,'#a87820')},
+  sun:(R,E)=>{E(16,16,11,11,'rgba(255,220,120,.35)');for(let i=0;i<8;i++)R(15-i*.4,5+i*2.5,2+i*.8,3,'#ffe890');R(15,8,3,16,'#fffbe0');R(16,10,1,12,'#ffffff')},
+  cloak:(R,E)=>{E(16,10,6,6,'#141218');for(let i=0;i<16;i++)R(10-i*.4,12+i,12+i*.8,1,'#1c1a22');E(16,10,3,3.5,'#000');R(14,10,1,1,'#ff3a3a');R(18,10,1,1,'#ff3a3a')},
+  helmet:(R,E)=>{E(16,17,11,8,'#e8c030');R(3,19,26,4,'#c8a020');R(15,9,2,10,'#f0d860');R(5,22,22,1,'#8a6a10')},
+  medkit:(R)=>{R(5,10,22,16,'#c82a2a');R(5,10,22,2,'#e04a4a');R(12,7,8,4,'#8a1a1a');R(14,13,4,10,'#f0f0e8');R(11,16,10,4,'#f0f0e8')},
+  plate:(R)=>{R(8,5,16,22,'#b8b4ac');R(8,5,16,2,'#d8d4cc');R(9,8,14,1,'#8a867e');R(9,24,14,2,'#8a867e');R(18,11,2,7,'#6a6660');R(17,15,2,4,'#6a6660')},
+  goggle:(R,E)=>{R(4,14,24,4,'#2a2c30');E(10,16,6,5,'#3a3c40');E(22,16,6,5,'#3a3c40');E(10,16,4,3,'#d88a2a');E(22,16,4,3,'#d88a2a');E(9,15,1,1,'#fff0c0');E(21,15,1,1,'#fff0c0')},
+  riot:(R)=>{R(8,8,16,19,'#22283a');R(4,8,6,8,'#2a3248');R(22,8,6,8,'#2a3248');R(12,8,8,4,'#141822');R(10,14,12,2,'#3a4a6a');R(10,19,12,2,'#3a4a6a');R(10,24,12,1,'#d8d8e0')},
+  heavy:(R)=>{R(6,7,20,21,'#4a4a3e');R(3,7,7,10,'#5a5a4c');R(22,7,7,10,'#5a5a4c');R(12,7,8,4,'#2a2a22');for(let y=13;y<27;y+=4)R(7,y,18,2,'#3a3a30');R(14,12,4,14,'#6a6a5a')},
+  calm:(R)=>{R(6,8,20,16,'#e0d8c8');R(6,8,20,2,'#f0e8d8');R(11,11,10,10,'#5a8a5a');R(15,12,2,8,'#e0d8c8');R(12,15,8,2,'#e0d8c8');R(4,12,2,8,'#c8c0b0');R(26,12,2,8,'#c8c0b0')},
+  eod:(R,E)=>{E(16,15,11,11,'#4a5a3a');R(8,10,16,9,'#1a2a2a');R(9,11,14,2,'#5a8a9a');R(6,24,20,5,'#4a5a3a');R(10,20,12,3,'#3a4a2a')},
+  oskin:(R,E)=>{E(16,16,11,12,'#8a2a28');E(14,14,7,6,'#b04a44');for(let i=0;i<5;i++)R(8+i*4,10+(i%3)*5,3,1,'#5a0a0a')},
+  ocore:(R,E)=>{E(16,16,10,10,'#6a0a0a');E(16,16,7,7,'#c82a20');E(16,16,4,4,'#ff8a50');E(15,15,1.5,1.5,'#fff0c0')}};
+// 선을 쓰는 아이템
+const ICL={tape:(R,E,L)=>{L(7,26,24,8,4,'#5a3a20');for(let i=0;i<6;i++)L(9+i*2.2,20-i*1.9,13+i*2.2,24-i*1.9,2,'#a8a8b0')},
+  stim:(R,E,L)=>{L(6,26,22,10,4,'#e8e4dc');L(10,22,20,12,2,'#e8c030');L(22,10,27,5,1,'#c0c0c8');L(4,24,8,28,2,'#c0c0c8')},
+  drug:(R,E,L)=>{L(6,26,22,10,4,'#e8e4dc');L(10,22,20,12,2,'#d040c0');L(22,10,27,5,1,'#c0c0c8');L(4,24,8,28,2,'#c0c0c8');E(26,6,2,2,'rgba(255,80,220,.6)')},
+  adren:(R,E,L)=>{L(7,25,23,9,6,'#c82a2a');L(9,23,21,11,2,'#ff8a5a');L(23,9,26,6,3,'#2a2a2e');L(5,27,8,24,4,'#e8e4dc')},
+  exec:(R,E,L)=>{L(6,26,12,20,3,'#3a2418');L(10,22,26,6,4,'#8a1010');L(12,20,26,6,2,'#d0d0d8');L(9,18,15,24,2,'#c8a040')},
+  exo:(R,E,L)=>{L(10,4,10,28,2,'#8a8e94');L(22,4,22,28,2,'#8a8e94');for(const y of[8,16,24])L(10,y,22,y,2,'#6a6e74');for(const y of[8,16,24]){R(8,y-2,4,4,'#c8a040');R(20,y-2,4,4,'#c8a040')}}};
+// 근접 무기·총
+function wIcon(k){const w=WEP[k]||{},kd=w.kind;return(R,E,L)=>{const met='#c0c4ca',wood='#7a4a28',dk='#2a2a2e';
+  const H=(c)=>L(6,26,15,17,3,c||wood);
+  ({knife:()=>{L(7,25,12,20,3,dk);L(12,20,25,7,3,met);L(13,19,25,7,1,'#f0f4f8')},machete:()=>{L(6,26,11,21,3,dk);L(11,21,27,5,4,met);L(12,22,28,6,1,'#f0f4f8')},
+    cleaver:()=>{L(6,26,12,20,3,wood);R(12,7,13,13,met);R(12,7,13,2,'#f0f4f8');E(21,10,1.5,1.5,dk)},fireaxe:()=>{L(6,27,22,7,3,'#c82a2a');R(18,4,9,7,met);R(25,3,3,9,'#e8ecf0')},
+    spade:()=>{L(6,27,19,11,3,wood);R(18,4,9,10,'#7a7e84');R(18,4,9,2,'#a8acb2')},spear:()=>{L(4,28,23,9,2,wood);L(23,9,28,4,3,met)},
+    pickaxe:()=>{L(8,28,18,9,3,wood);L(8,9,28,9,3,'#7a7e84');R(7,8,3,3,met);R(26,8,3,3,met)},bat:()=>{L(6,27,25,8,4,'#a87a48');L(18,15,26,7,6,'#a87a48');for(const[x,y]of[[20,10],[24,12],[22,8],[26,8]])R(x,y,2,2,met)},
+    crowbar:()=>{L(7,26,24,9,3,'#c82a2a');L(24,9,27,6,3,'#c82a2a');L(7,26,5,22,3,'#c82a2a')},hammer:()=>{L(7,27,18,12,3,wood);R(15,5,12,6,'#6a6e74');R(24,4,4,3,'#6a6e74')},
+    wrench:()=>{L(7,26,22,11,3,met);E(24,8,5,5,met);R(23,4,3,5,'rgba(0,0,0,0)')},warham:()=>{L(7,28,17,14,3,'#5a3a20');R(12,3,16,11,'#5a5e64');R(12,3,16,2,'#8a8e94')},
+    sledge:()=>{L(7,28,18,13,3,wood);R(13,5,14,9,'#6a6e74');R(13,5,14,2,'#9a9ea4')},plasma:()=>{L(6,26,12,20,4,dk);L(12,20,27,5,4,'#5af0ff');L(12,20,27,5,2,'#e8ffff')},
+    rib:()=>{L(6,27,24,7,4,'#e8dcc0');for(let i=0;i<4;i++)L(10+i*4,23-i*4,14+i*4,26-i*4,2,'#c8b898')},
+    chainsaw:()=>{R(4,16,13,10,'#e07a20');R(4,16,13,2,'#f09a40');R(6,13,8,4,dk);R(17,18,12,5,met);for(let x=17;x<29;x+=2)R(x,17,1,7,'#5a5e64')},
+    grinder:()=>{R(5,17,15,7,'#2a6aba');R(5,17,15,2,'#4a8ada');E(23,15,6,6,'#a8acb2');E(23,15,2,2,dk);R(3,19,3,3,dk)},
+    pipe:()=>{L(6,26,25,7,4,'#7a7e84');L(6,26,25,7,1,'#a8acb2')}})[k]?.()||(()=>{H();L(15,17,26,6,4,met)})()}}
+function gIcon(k){return(R,E,L)=>{const m='#4a4c52',dk='#2a2a2e',wd='#7a4a28',long=['rifle','amr','ar','carbine','shotgun','dbarrel','rail'].includes(k);
+  if(k==='crossbow'){R(6,15,18,4,wd);L(20,8,20,26,2,'#c8c0b0');L(20,8,14,17,1,'#e8e0d0');L(20,26,14,17,1,'#e8e0d0');R(6,18,4,6,wd);return}
+  if(k==='gatling'){for(let i=0;i<3;i++)R(12,11+i*3,17,2,'#6a6e74');R(4,10,10,12,m);R(6,22,5,6,dk);return}
+  if(k==='teslacell'||k==='rail'){R(4,13,22,7,'#3a3c44');R(8,11,14,3,'#5af0ff');R(24,15,5,3,'#8a8e94');R(8,20,4,7,dk);if(k==='rail'){R(3,13,4,6,dk);R(26,14,4,1,'#e8ffff')}return}
+  if(k==='flare'){R(8,13,14,6,'#e07a20');R(18,12,6,8,'#e07a20');R(10,19,4,7,dk);return}
+  if(k==='nailgun'){R(5,12,20,8,'#e0c030');R(23,14,5,4,m);R(9,20,5,8,dk);R(7,9,12,3,'#8a8e94');return}
+  if(k==='revolver'){R(12,13,15,3,m);E(13,16,4,3.5,'#6a6e74');R(6,15,6,4,m);R(5,18,5,8,wd);return}
+  if(long){R(2,15,10,5,wd);R(10,13,12,6,m);R(20,14,10,2,m);if(k==='dbarrel'){R(20,16,10,2,m)}if(k==='shotgun')R(18,17,9,3,wd);if(k==='ar'||k==='carbine')R(14,19,4,7,dk);if(k==='amr'||k==='rifle'){R(12,9,9,3,'#2a2c30');E(12,10.5,1.5,1.5,'#5ad0ff')}R(12,19,4,5,dk);return}
+  R(8,12,18,6,m);R(8,12,18,2,'#6a6e74');R(9,17,6,10,dk);R(15,18,3,2,dk);if(k==='smg')R(16,18,4,9,dk)}}
+function itemIcon(it){const key=it.wp?'w_'+it.wp:it.gun?'g_'+it.gun:it.id;if(ICC[key])return ICC[key];let fn=null;
+  if(it.wp)fn=wIcon(it.wp);else if(it.gun)fn=gIcon(it.gun);else if(ICL[it.id])fn=ICL[it.id];else if(ICN[it.id])fn=ICN[it.id];
+  if(!fn){fn=(R,E)=>{R(9,9,14,14,'#5a5248');R(9,9,14,2,'#7a7268');R(14,13,4,6,'#c8a040')}}
+  return ICC[key]=icDraw((R,E,L,g)=>fn(R,E,L,g))}
+// 물건마다 다른 상인의 한마디
+const BUYL={ammo:'총알 한 상자. 세어 보진 마, 모자라면 마음만 아프니까.',bandage:'붕대는 넉넉히 감아. 구멍은 생각보다 크거든.',cell:'불이 꺼지면 그때부터는 걔네 시간이야. 히히.',shoes:'그 운동화, 전 주인은 그걸 신고 꽤 멀리까지 도망갔지. 결국은... 뭐.',
+  tape:'손에서 미끄러지면 끝이야. 단단히 감아.',purse:'동전 소리 좋지? 걔네도 좋아해.',gum:'씹으면 숨소리가 안 떨려. 숨소리 들키면 끝이니까.',keyring:'이 엘리베이터 열쇠가 아니야. 어디 열쇠인지는 나도 몰라. 히히.',
+  antidep:'머릿속 목소리가 좀 조용해질 거야. 좀만.',vest:'칼은 막아. 이빨은... 글쎄.',bigcell:'이 정도면 끝까지 버티겠네. 끝이 있다면 말이지.',pills:'두 알 이상은 먹지 마. 먹어도 내 알 바 아니지만.',
+  soles:'발소리가 줄면 오래 살아. 이건 확실해.',bar:'맛없지? 그래도 먹어 둬. 마지막 식사일지도 모르니까.',crowbar:'손목이 부러지면 아무것도 못 쥐어. 아끼라고.',stim:'심장이 좀 빨리 뛸 거야. 원래 빨리 뛰고 있었잖아?',
+  taser:'찌릿하지? 걔네도 찌릿해할 거야. 잠깐은.',nv:'어둠이 초록색으로 보일 거야. 안에 뭐가 서 있는지도 다 보이고. 히히.',fang:'피 맛이 나면 힘이 나. 누구 피든.',glove:'욕심 많은 손이 돈을 부르지. 다른 것도 부르고.',
+  adren:'죽기 직전에 한 번 더 일어나게 해 줘. 딱 한 번.',radar:'빨간 점이 가까워지면 뛰어. 설명은 그게 다야.',drug:'히히, 좋은 선택이야. 아주 나쁜 선택이기도 하고.',c4:'터뜨릴 땐 멀리 떨어져. 손님 조각 줍는 건 내 일 아니야.',
+  defib:'한 번은 살려 줘. 두 번째는 없어. 아마.',exec:'그 칼날로 몇 명이나 보냈을까. 이제 네 차례야, 휘두르는 쪽으로.',watch:'멈춘 시계는 하루에 두 번 맞아. 이건... 한 번도 안 맞았지만.',coat:'소리를 먹는 코트야. 배가 고프면 다른 것도 먹을지 몰라.',
+  exo:'철골로 된 뼈. 네 뼈보단 튼튼하지.',heart:'그 심장, 아직도 뛰어. 원래 주인은 안 뛰는데. 히히히.',midas:'금빛 손이라. 만지는 게 다 돈이 되면 좋겠지?',sun:'아래층에선 빛이 제일 비싸. 잘 샀어.',cloak:'그림자가 널 감싸 줄 거야. 그림자 속에 뭐가 있는지는 묻지 마.',
+  helmet:'머리는 하나뿐이야. 아끼라고.',medkit:'구급 상자라니, 아직 살 생각이 있구나. 좋아.',plate:'판 한 장이 목숨 하나지. 금 가면 바로 갈아 끼워.',goggle:'눈은 지켜야지. 봐야 도망가니까.',riot:'진압용이었어. 진압당한 건 입던 쪽이었지만.',
+  heavy:'무겁지? 그 무게가 너를 살릴 거야. 아니면 못 도망가게 하든가.',calm:'붙이면 손 떨림이 멎어. 머리 떨림도.',eod:'폭탄을 해체하던 옷이야. 이 건물은 해체 못 했지만. 히히.',oskin:'...그걸 입겠다고? 그건 이제 너를 입을 거야.',ocore:'그게 뛰는 소리 들려? 너랑 박자가 같아지고 있어.'};
+const BUYW={blade:'날이 잘 섰어. 뭐든 썰려.',blunt:'묵직하지? 머리 하나쯤은 거뜬해.',saw:'시동 소리가 걔네를 불러. 대신 다 갈아 버리지. 히히.',energy:'빛나는 칼이라니. 어둠 속에선 너무 눈에 띄지 않을까?',bone:'뼈로 뼈를 부수는 거야. 시적이지?'};
+const BUYG={pistol:'가볍고 믿음직해. 마지막 한 발은 아껴 둬.',revolver:'여섯 발. 여섯 번의 기회.',shotgun:'가까이서 쏘면 실수할 일이 없지.',dbarrel:'두 발이면 대부분 끝나. 대부분.',rifle:'멀리서 쏘는 거 좋아하는구나. 걔네는 가까이 오는 걸 좋아하는데.',
+  amr:'벽째로 뚫어. 귀는 막아 두고.',smg:'탄을 아끼지 않는 손님이네. 탄은 나한테서 사.',ar:'제대로 된 총이야. 이 아래에선 귀하지.',carbine:'짧고 빨라. 도망가면서 쏘기 좋아.',crossbow:'조용하지. 조용한 게 제일 무서운 법이야.',
+  nailgun:'원래는 관 짜는 데 쓰던 거야. 지금도 비슷한 용도지. 히히.',flare:'밝게 타올라. 너도 그렇게 타지 않길.',teslacell:'번개를 병에 담았어. 놓치지 마.',rail:'이걸 살 돈이 있었다니. 가끔은 놀라워.',gatling:'돌기 시작하면 멈추기 싫을 거야.'};
+function buyLine(it){if(it.id&&BUYL[it.id])return BUYL[it.id];if(it.wp){const w=WEP[it.wp]||{},kd=w.kind;const b=it.wp==='rib'?'bone':kd==='saw'?'saw':it.wp==='plasma'?'energy':['knife','machete','cleaver','fireaxe','spade','spear','pickaxe'].includes(it.wp)?'blade':'blunt';return BUYW[b]}
+  if(it.gun&&BUYG[it.gun])return BUYG[it.gun];return it.r>=3?pick(LINES.rare):pick(LINES.buy)}
 // ================= 엘리베이터 상인 =================
 const LINES={
   first:'어서 와, 새 손님. 이 엘리베이터는 아래로만 가. 내려가는 동안만 가게를 열지. 히히.',
