@@ -1115,7 +1115,7 @@ const MT={
   glitch:{hp:Infinity,dmg:0,spd:5.2,h:1.05,reach:0,immune:1,vol:1.4,elev:1},
   joe:{hp:58,dmg:22,spd:2.3,h:1.0,reach:.95,vol:1.3},
   dread:{hp:140,dmg:30,spd:1.45,h:1.25,reach:1,vol:1.3},
-  stalker:{hp:Infinity,dmg:20,spd:1.3,h:1.08,reach:.85,undying:1,vol:1.1},
+  stalker:{hp:Infinity,dmg:10,spd:.95,h:1.08,reach:.85,undying:1,vol:1.1},
   statue:{hp:210,dmg:32,spd:3.7,h:.92,reach:.8,vol:1.2},
   listener:{hp:46,dmg:20,spd:1.0,h:.8,reach:.85,vol:1},
   leech:{hp:18,dmg:3,spd:1.0,h:.42,reach:.75,vol:.7},
@@ -1145,7 +1145,7 @@ const MT={
   censor:{hp:95,dmg:24,spd:.7,h:1.08,reach:.9,vol:1},
 };
 const UNLOCK={shooter:9,censor:14,puppet:21,queen:8,parasite:3,joe:4,dread:8,stalker:5,wanderer:1,listener:1,sprinter:2,leech:3,mimic:3,statue:4,flicker:6,swarm:7};
-const ORDER=['wanderer','listener','sprinter','leech','mimic','statue','flicker','swarm','shooter','censor','stalker','dread','joe','parasite','queen','glitch','reaper','butcher','mother','warden','juggernaut','watch','seam','puppet','preach','cultist','surgeon','specimen','bomber','brat','dreg','origin','hound','guard','merchant'];
+const ORDER=['wanderer','listener','sprinter','leech','mimic','statue','flicker','swarm','shooter','censor','stalker','dread','joe','parasite','queen','glitch','reaper','butcher','mother','warden','juggernaut','watch','seam','puppet','preach','cultist','surgeon','specimen','bomber','brat','dreg','origin','husk','hound','guard','merchant'];
 const FT={hound:{hp:55,dmg:8,spd:3.1,h:.5,reach:.9,cost:55},guard:{hp:130,dmg:15,spd:1.9,h:.95,reach:1,cost:110}};
 const CODEX={
   wanderer:{n:'Wanderer',tag:'일반',t:'느리지만 한 번 냄새를 맡으면 끝까지 따라온다. 길게 늘어진 팔로 할퀸다. 낮게 앓는 듯한 신음이 들리면 근처에 있다.',tip:'정면으로 상대할 수 있다. 한 대 치고 물러나기를 반복하라.'},
@@ -1158,7 +1158,7 @@ const CODEX={
   glitch:{n:'The Glitch',tag:'재앙 · 이벤트',t:'화면이 깨지는 순간 나타난다. 플레이어를 층의 아무 곳으로나 날려 보낸 뒤, 10초 동안 엄청난 속도로 사냥한다. 어떤 공격도 통하지 않고 닿으면 즉사한다. 눈이 멀어 오직 소리로만 찾는다. 10초가 지나면 신호가 끊기듯 사라진다.',tip:'멈추거나 C로 웅크려 천천히 걸어라. 달리기, 총소리, 돈 줍는 소리가 위치를 알려 준다. 가까운 사물함에 숨으면 소리가 나지 않는다.'},
   joe:{n:'Screamer Joe',tag:'일반',t:'Wanderer였던 것. 아래턱이 떨어져 나가고 얼굴 가죽이 가슴까지 괴상하게 늘어져 있다. 두 손은 뾰족한 뼈 송곳으로 변했다. 플레이어를 보면 걸음을 멈추고 비명을 질러 귀를 먹먹하게 하고 시야를 뒤흔든 뒤, 계속 소리를 지르며 쫓아와 찌른다.',tip:'비명은 13초에 한 번뿐이다. 비명을 지르는 1초 동안은 멈춰 있으니 그 틈에 때리거나 도망쳐라. 귀가 먹먹한 동안에는 다른 괴물의 소리가 잘 들리지 않는다.'},
   dread:{n:'Dread',tag:'일반 · 광폭',t:'그림자가 뭉쳐 만든 거대한 덩어리. 금이 간 하얀 가면 아래로 세로로 찢어진 입이 있다. 평소에는 느리게 어슬렁거리지만 체력이 절반 아래로 떨어지면 광폭화한다. 광폭화하면 길을 막는 다른 괴물을 찢어발기며 플레이어에게 곧장 돌진한다. 가까이 올수록 화면이 깨지고 지직거린다.',tip:'반쯤 때렸다면 끝까지 몰아붙이거나, 아예 건드리지 마라. 화면이 깨지기 시작하면 이미 가까이 있다.'},
-  stalker:{n:'Stalker',tag:'일반 · 죽지 않음',t:'자루를 뒤집어쓴 키 큰 사람. 어떤 무기로도 죽일 수 없다. 대신 충분히 때리면 쓰러져 몇 초 동안 꼼짝 못 하고, 일어날 때마다 더 단단해진다. 쇠사슬 끌리는 소리를 낸다. 가끔 미쳐 날뛰며 끝까지 쫓아오는 추격전을 벌인다.',tip:'때려 눕히고 그 틈에 도망쳐라. 추격전에서는 엘리베이터에 타거나, 들키지 않고 사물함에 숨으면 포기한다.'},
+  stalker:{n:'Stalker',tag:'일반 · 죽지 않음',t:'자루를 뒤집어쓴 키 큰 사람. 어떤 무기로도 죽일 수 없다. 느리고 눈이 나빠서 가까이 가거나 눈에 띄지 않으면 쫓아오지 않는다. 몇 대 때리면 쓰러져 한동안 꼼짝 못 하고, 일어날 때마다 아주 조금 더 단단해진다. 쇠사슬 끌리는 소리를 낸다. 가끔 미쳐 날뛰며 끝까지 쫓아오는 추격전을 벌인다.',tip:'때려 눕히고 그 틈에 도망쳐라. 추격전에서는 엘리베이터에 타거나, 들키지 않고 사물함에 숨으면 포기한다.'},
   statue:{n:'Mannequin',tag:'일반 · 단단함',t:'누군가 보고 있으면 움직이지 못한다. 시선을 떼는 순간 돌 긁는 소리를 내며 다가온다. 석고처럼 단단해서 쉽게 부서지지 않는다.',tip:'손전등으로 비춘 채 때려라. 비추는 동안은 꼼짝하지 못한다. 불을 끄거나 등을 보이면 안 된다.'},
   flicker:{n:'Flicker',tag:'일반',t:'어둠 속에서 순간이동한다. 닿으면 손전등 배터리를 빨아들인다. 지직거리는 잡음이 갑자기 가까워진다. 엘리베이터 안으로도 들어온다.',tip:'밝은 곳에 서 있으면 순간이동이 뜸해진다.'},
   swarm:{n:'Swarm',tag:'일반',t:'수백 마리 벌레가 사람 모양으로 뭉쳐 있다. 죽이면 작은 벌레들로 흩어져 다시 덤빈다.',tip:'흩어진 벌레는 약하지만 빠르다. 좁은 통로에서 하나씩 정리하라.'},
@@ -1182,7 +1182,7 @@ const CODEX={
   shooter:{n:'Shooter',tag:'일반 · B9~',t:'오른팔이 뼈와 힘줄로 된 석궁으로 자라난 Wanderer. 팔꿈치 뼈를 활대 삼아 힘줄을 끌어당겨 장전하고, 뼛조각 화살을 쏜다. 장전에는 5초가 걸린다. 장전이 끝나면 팔이 끼익 하고 팽팽해진다.',tip:'끼익 하는 소리가 나면 곧 쏜다. 기둥 뒤로 숨거나 옆으로 비켜라. 쏜 직후가 다가갈 기회다. 가까이 붙으면 뒷걸음질친다.'},
   bomber:{n:'Bomber',tag:'소환 · B45',t:'집도의가 환자의 배를 열고 가스 주머니와 기폭 장치를 꿰매 넣은 것. 비틀거리며 달려와 몸에 닿으면 삑삑 소리를 내다 터진다. 터질 때 곁에 있는 것은 무엇이든 찢는다. 자기를 만든 집도의조차.',tip:'멀리서 쓰러뜨려라. 죽어도 터진다. 집도의 곁으로 유인해 터뜨리면 집도의에게 큰 상처를 입힌다. 삑삑 소리가 나면 바로 물러나라.'},
   censor:{n:'Censorer',tag:'일반 · B14~',t:'눈과 입은 검은 띠로 덮였고 귀는 꿰매 막혔다. 아무것도 보지 못하고 아무것도 듣지 못한다. 평소에는 벽을 더듬으며 떠돌지만, 몸에 상처가 나는 순간 아무 방향으로나 벽에 부딪힐 때까지 돌진한다. 벽에 부딪히면 다시 아무 방향으로 돌진한다.',tip:'건드리지 않으면 해가 없다. 싸울 거라면 넓은 곳은 피하라. 돌진하는 길에 있는 것은 사람이든 괴물이든 짓뭉개진다. 다른 괴물 무리 사이에서 건드리면 대신 싸워 준다.'},
-  husk:{n:'나였던 것',tag:'특수 · 이전의 나',t:'지난번 이 층에서 쓰러진 너의 시신. 정신이 무너진 채 죽은 몸은 편히 눕지 못한다. 네 장비를 그대로 든 채 일어나 너를 쫓는다.',tip:'쓰러뜨리면 지니고 있던 돈과 유물을 되찾는다. 정신력 30 이상으로 죽었다면 일어나지 않는다.'},
+  husk:{n:'Revenant',tag:'특수 · 이전의 나',t:'「나였던 것」. 지난번 이 층에서 쓰러진 너의 시신. 정신이 무너진 채 죽은 몸은 편히 눕지 못한다. 네 장비를 그대로 든 채 일어나 너를 쫓는다.',tip:'쓰러뜨리면 지니고 있던 돈과 유물을 되찾는다. 정신력 30 이상으로 죽었다면 일어나지 않는다.'},
   puppet:{n:'Puppet',tag:'일반 · B21~',t:'여러 사람의 가죽을 조각조각 이어 붙인 인형. 단추 눈과 꿰매 붙인 입. 실에 매달린 것처럼 덜컥거리며 움직이다가 갑자기 빨라진다. 쓰러지면 가죽 더미만 남는다.',tip:'움직임이 멈칫하는 순간을 노려라. 남은 가죽 더미는 E로 찢어 두면 다시 일어나지 않는다.'},
   warden:{n:'Warden',tag:'보스',t:'이 건물의 열쇠를 가진 자. 머리 대신 등불을 달고 있다. 등 뒤로 순간이동하며 손전등을 꺼뜨린다.',tip:'멈추지 마라. 종소리가 울리면 바로 뒤를 돌아보라.'},
 };
@@ -1891,7 +1891,7 @@ function genFloor(f){
   stopAllVoices();
   if(AC)stopAllVoices();
   G.floor=f;G.threat=0;G.tint=null;G.wdrops=null;G.br=null;G.fk=null;G.wdt=null;G.fdt=null;G.altar=null;G.tanks=null;G.mgas=[];G.alarm=0;G.mi=null;G.midDone=0;G.door=null;G.lampK=1;G.mon=[];G.pick=[];G.proj=[];G.t1=G.t2=G.reaper=false;G.floorEarn=0;G.got=0;G.piles=0;G.parts=[];G.splat=[];G.npcs=[];G.gibs=[];G.fx=[];G.tmpL=[];G.tracers=[];G.bolts=[];G.slowT=0;G.lockers=0;G.lockOpen=0;if(!G.allies)G.allies=[];G.boss=null;G.bossFloor=f%5===0&&f!==50;G.fin=null;G.ph=[];G.eyes=[];G._stk=0;G._drd=0;G._qn=0;if(P){P.latch=null;P.selfT=null;P.ribPlant=null;P.ribG=0}G.flz=[];G.gEv=null;G.glitchBoost=0;G.glitchAt=(f>=4&&f%5!==0&&rnd()<.07)?25+rnd()*40:0;$('evT').hidden=true;G.ft=0;G.chase=null;G.halT=6;
-  G.chaseAt=(f>=3&&f%5!==0&&rnd()<.12)?20+rnd()*30:0;if(P)P.san=Math.min(100,(P.san==null?100:P.san)+10);
+  G.chaseAt=(f>=4&&f%5!==0&&rnd()<.06)?35+rnd()*40:0;if(P)P.san=Math.min(100,(P.san==null?100:P.san)+10);
   chooseTrait(f);if(G.traitK&&G.state!=='title'){const st=AS();if(!st.traits.includes(G.traitK)){st.traits.push(G.traitK);persist()}if(st.traits.length>=5)ach('traits5')}
   buildTextures(f);traitTex();wallVariants(f);
   const boss=G.bossFloor,fin=f===50;G.stealF=!!G.forceSteal;G.forceSteal=0;G.thief=null;G.hatch=null;
@@ -2001,7 +2001,7 @@ function spawn(type,x,y){if(NET.cl&&!G._netSpawn){const t0=MT[type]||MT.wanderer
   const bossScale=1+Math.floor((f-1)/15)*1.2+f*.04;
   const hp=t.boss?t.hp*bossScale:t.hp*sc;
   const m={type,x,y,hp,maxHp:hp,dmg:t.dmg*(1+f*.06),spd:t.spd*(1+Math.min(f,30)*.012),aggro:0,atkCd:0,stun:0,st:'idle',timer:2+rnd()*3,hit:0,wt:null,wd:0,voice:null,disguised:type==='mimic',noElev:!t.elev,isMon:1,moving:false,bobT:rnd()*9,sumAtk:0,dead:false};
-  if(t.undying)m.stagMax=55*(1+f*.08);
+  if(t.undying)m.stagMax=28*(1+f*.04);
   if(G.nm&&isFinite(m.hp)){m.hp*=1.6;m.maxHp=m.hp;m.dmg*=1.45;m.spd*=1.12}else if(G.nm){m.dmg*=1.45;m.spd*=1.08;if(m.stagMax)m.stagMax*=1.4}
   G.mon.push(m);return m;
 }
@@ -2049,7 +2049,7 @@ function ghostPlace(f,rooms,r0,boss,fin){const g=SAVE.ghost;if(!g||G.state==='ti
   if(g.h)G.fx.push({type:'deco',gib:1,spr:'husk_c',h:.3,z:0,x,y,life:1e9,ghostT:1});else G.pick.push({x,y,kind:'ghost',h:.3,ck:g.k||null});
   bleed(x,y,.05,16,[70,10,8],0,1,true)}
 function ghostTick(dt){for(const f of G.fx){if(!f.ghostT||f.life<=0)continue;const d=Math.hypot(f.x-P.x,f.y-P.y);if(d<2.6&&los(P.x,P.y,f.x,f.y)){f.life=0;const g=SAVE.ghost||{};const m=spawn('husk',f.x,f.y);m.aggro=12;m.ghostDrop={m:g.m||0,a:g.a||null};see('husk');delete SAVE.ghost;persist();
-  sfxScream();shake(.6);P.san=Math.max(0,P.san-10);msg('바닥의 시신이 몸을 일으킨다. …그건 너였다.','warn',3600)}}}
+  sfxScream();shake(.6);P.san=Math.max(0,P.san-10);msg('Revenant — 바닥의 시신이 몸을 일으킨다. …그건 너였다.','warn',3600);showBanner&&showBanner('REVENANT','나였던 것','정신이 무너진 채 죽은 몸은 편히 눕지 못한다.','#9a8a70')}}}
 function takeGhost(t){const g=SAVE.ghost||{};if(g.m){P.money+=g.m;G.earned+=g.m;bumpMoney();sfxCoin()}if(g.a)setTimeout(()=>addAntique(g.a),500);delete SAVE.ghost;persist();ach('ghost_back');
   msg(`네 시신이다. 차갑게 식어 있다. ◈${g.m||0}${g.a?' 과 유물 하나':''}를 되찾았다.`,'gold',4200);blip(90,1.4,'sine',.12,60,0,0,.7)}
 // ================= 엘리베이터 문 =================
@@ -2693,7 +2693,7 @@ function updateMonsters(dt){
       case 'glitch':{glitchMonTick(m,dt,d);break}
       case 'joe':{joeTick(m,spd,dt,d,hasLos);break}
       case 'dread':{dreadTick(m,spd,dt,d);break}
-      case 'stalker':{if(m.rage||d<13){m.aggro=8;m.moving=stepToward(m,m.rage?m.spd*S.slow:spd,dt)}else{wander(m,spd,dt);m.moving=true}break}
+      case 'stalker':{if(m.rage||d<6||(hasLos&&d<10&&!P.hidden)){m.aggro=8;m.moving=stepToward(m,m.rage?m.spd*S.slow:spd,dt)}else{wander(m,spd*.7,dt);m.moving=true}break}
       case 'butcher':{
         if(m.st==='idle')m.st='walk';
         if(m.st==='walk'){m.moving=stepToward(m,spd,dt);m.timer-=dt;if(m.timer<=0&&hasLos&&d<11){m.st='wind';m.timer=.95;m.scrFx=.9;sfxRoar()}}
@@ -3211,7 +3211,7 @@ function sfxLaugh(pan){for(let i=0;i<5;i++){blip(310-i*12,.13,'sawtooth',.06,240
 // ================= Stalker · 추격전 =================
 function stagger(m,dmg,quiet){
   m.stag=(m.stag||0)+dmg;if(!quiet)m.hit=.12;
-  if(m.stun<=0&&m.stag>=m.stagMax){m.stun=3.5;m.stag=0;ach('stalker_stun');m.stagMax*=1.25;sfxStalkerDown(m);bleed(m.x,m.y,.5,18,bloodOf(m.type),0,2.2,true);msg('Stalker가 쓰러졌다. 곧 다시 일어난다','warn')}
+  if(m.stun<=0&&m.stag>=m.stagMax){m.stun=6.5;m.stag=0;ach('stalker_stun');m.stagMax*=1.08;sfxStalkerDown(m);bleed(m.x,m.y,.5,18,bloodOf(m.type),0,2.2,true);msg('Stalker가 쓰러졌다. 곧 다시 일어난다','warn')}
 }
 function floorTick(dt){
   G.ft=(G.ft||0)+dt;
@@ -3222,7 +3222,7 @@ function floorTick(dt){
 function startChase(){
   if(G.chase)return;const c=[];for(let i=0;i<N*N;i++)if(distF[i]>=9&&distF[i]<=15&&kind[i]===0)c.push(i);
   if(!c.length)for(let i=0;i<N*N;i++)if(distF[i]>=6&&kind[i]===0)c.push(i);if(!c.length)return;
-  const i=pick(c),m=spawn('stalker',i%N+.5,((i/N)|0)+.5);m.rage=1;m.aggro=999;m.spd=2.75;m.dmg*=1.2;m.stagMax*=1.5;
+  const i=pick(c),m=spawn('stalker',i%N+.5,((i/N)|0)+.5);m.rage=1;m.aggro=999;m.spd=2.05;m.stagMax*=1.1;
   G.chase={m,t:0,lost:0};P.stam=100;sfxSiren();chaseMusic(true);see('stalker');
   showBanner('RUN','추격전','Stalker가 미쳐 날뛴다. 엘리베이터까지 도망쳐라.','#e06050');shake(.6);
 }
@@ -5280,6 +5280,7 @@ const GUIDE=[
 - **B14** @{censor}
 - **B21** @{puppet}
 - 전 구역 기척 포화 시 @{reaper} 투입
+- 정신이 무너진 채 사망한 피험자의 층 · @{husk}
 # 관리 개체 (승강기 잠금)
 - **B5** @{butcher} · **B15** @{warden} · **B20** @{juggernaut}
 - **B30** @{mother} · **B40** @{juggernaut}
@@ -5862,7 +5863,7 @@ function die(src){
 }
 // ---- 처형 장면: 괴물마다 너를 죽이는 방식이 다르다 ----
 const EXM={wanderer:'bite',listener:'lift',sprinter:'bite',leech:'absorb',mimic:'bite',statue:'snap',flicker:'drag',swarm:'bite',swarmling:'bite',stalker:'lift',dread:'crush',joe:'slash',parasite:'absorb',queen:'absorb',glitch:'drag',reaper:'scythe',butcher:'slash',mother:'absorb',juggernaut:'crush',warden:'crush',watch:'shock',seam:'slash',puppet:'snap',preach:'lift',cultist:'slash',surgeon:'slash',specimen:'bite',brat:'absorb',dreg:'absorb',origin:'absorb',husk:'bite',shooter:'bolt',bomber:'blast',censor:'crush',merchantM:'slash',hound:'bite',guard:'crush'};
-const EXT={wanderer:'Wanderer가 너를 바닥에 쓰러뜨리고 목을 물어뜯었다.',listener:'Listener가 너를 들어 올려, 숨소리가 멎을 때까지 귀를 기울였다.',sprinter:'Sprinter가 네 위로 뛰어올라 목덜미를 물었다.',leech:'Leech가 몸에 달라붙어 마지막 한 방울까지 빨아들였다.',mimic:'돈 더미가 입을 벌려 너를 반쯤 삼켰다.',statue:'눈을 돌린 순간, Mannequin이 네 목을 비틀어 꺾었다.',flicker:'Flicker가 너를 어둠 속으로 끌고 들어갔다.',swarm:'Swarm이 사방에서 덮쳐 물어뜯었다.',swarmling:'작은 것들이 사방에서 덮쳐 물어뜯었다.',stalker:'Stalker가 너를 들어 올린 채 놓아 주지 않았다.',dread:'Dread가 너를 내리찍어 바닥에 짓뭉갰다.',joe:'Screamer Joe가 비명을 지르며 칼을 몇 번이고 내리꽂았다.',parasite:'Parasite가 살갗을 뚫고 몸속으로 파고들었다.',queen:'Queen Parasite의 유충들이 너를 뒤덮었다.',glitch:'The Glitch가 너를 세상 바깥으로 끌어냈다.',reaper:'Collector의 낫이 한 번에 목을 거두었다.',butcher:'Butcher의 식칼이 너를 두 동강 냈다.',mother:'Mother가 너를 자신의 살 속으로 품었다.',juggernaut:'Juggernaut가 너를 바닥째로 짓눌렀다.',warden:'Warden이 너를 들어 바닥에 내리꽂았다.',watch:'Night Watch의 전류가 심장을 멈췄다.',seam:'재봉사의 가위가 너를 조각조각 잘라 냈다. 새 인형의 가죽이 될 것이다.',puppet:'Puppet이 실에 당겨지듯 네 목을 비틀었다.',preach:'설교자가 너를 빛 속으로 들어 올렸다. 다시 내려오지 않았다.',cultist:'신도의 의식용 칼이 가슴을 길게 그었다.',surgeon:'집도의가 네 개의 팔로 너를 해부대에 눕혔다.',specimen:'Specimen이 다리를 타고 올라와 목을 물었다.',brat:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',dreg:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',origin:'기원이 너를 받아들였다. 너는 이제 그 일부다.',husk:'예전의 네가 너를 끌어안고 함께 쓰러졌다.',shooter:'Shooter의 뼈 화살이 가슴을 꿰뚫었다.',bomber:'Bomber가 네 품에서 터졌다.',censor:'눈먼 Censorer가 돌진해 너를 짓뭉갰다.',merchantM:'상인은 빚을 받아 갔다.'};
+const EXT={wanderer:'Wanderer가 너를 바닥에 쓰러뜨리고 목을 물어뜯었다.',listener:'Listener가 너를 들어 올려, 숨소리가 멎을 때까지 귀를 기울였다.',sprinter:'Sprinter가 네 위로 뛰어올라 목덜미를 물었다.',leech:'Leech가 몸에 달라붙어 마지막 한 방울까지 빨아들였다.',mimic:'돈 더미가 입을 벌려 너를 반쯤 삼켰다.',statue:'눈을 돌린 순간, Mannequin이 네 목을 비틀어 꺾었다.',flicker:'Flicker가 너를 어둠 속으로 끌고 들어갔다.',swarm:'Swarm이 사방에서 덮쳐 물어뜯었다.',swarmling:'작은 것들이 사방에서 덮쳐 물어뜯었다.',stalker:'Stalker가 너를 들어 올린 채 놓아 주지 않았다.',dread:'Dread가 너를 내리찍어 바닥에 짓뭉갰다.',joe:'Screamer Joe가 비명을 지르며 칼을 몇 번이고 내리꽂았다.',parasite:'Parasite가 살갗을 뚫고 몸속으로 파고들었다.',queen:'Queen Parasite의 유충들이 너를 뒤덮었다.',glitch:'The Glitch가 너를 세상 바깥으로 끌어냈다.',reaper:'Collector의 낫이 한 번에 목을 거두었다.',butcher:'Butcher의 식칼이 너를 두 동강 냈다.',mother:'Mother가 너를 자신의 살 속으로 품었다.',juggernaut:'Juggernaut가 너를 바닥째로 짓눌렀다.',warden:'Warden이 너를 들어 바닥에 내리꽂았다.',watch:'Night Watch의 전류가 심장을 멈췄다.',seam:'재봉사의 가위가 너를 조각조각 잘라 냈다. 새 인형의 가죽이 될 것이다.',puppet:'Puppet이 실에 당겨지듯 네 목을 비틀었다.',preach:'설교자가 너를 빛 속으로 들어 올렸다. 다시 내려오지 않았다.',cultist:'신도의 의식용 칼이 가슴을 길게 그었다.',surgeon:'집도의가 네 개의 팔로 너를 해부대에 눕혔다.',specimen:'Specimen이 다리를 타고 올라와 목을 물었다.',brat:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',dreg:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',origin:'기원이 너를 받아들였다. 너는 이제 그 일부다.',husk:'Revenant — 예전의 네가 너를 끌어안고 함께 쓰러졌다.',shooter:'Shooter의 뼈 화살이 가슴을 꿰뚫었다.',bomber:'Bomber가 네 품에서 터졌다.',censor:'눈먼 Censorer가 돌진해 너를 짓뭉갰다.',merchantM:'상인은 빚을 받아 갔다.'};
 const PCT={bite:'목이 뜯겨 나갔다',slash:'허리가 두 동강 나 있다',crush:'납작하게 짓눌려 있다',snap:'목이 뒤로 돌아가 있다',lift:'목에 손자국이 남아 있다',drag:'핏자국이 길게 끌려가 있다',shock:'까맣게 그을려 있다',bolt:'뼈 화살이 몇 개 박혀 있다',blast:'몸이 흩어져 있다',absorb:'살덩이에 반쯤 덮여 있다',scythe:'머리가 떨어져 나가 있다',self:'웅크린 채 굳어 있다',gas:'웅크린 채 굳어 있다',ash:'재만 남아 있다'};
 // 같은 방식이어도 괴물마다 디테일이 다르다
 const EXV={wanderer:{fx:['arms'],fall:1},sprinter:{from:'top',fx:['pounce'],fall:-1},swarm:{fx:['swarmers']},swarmling:{fx:['swarmers']},specimen:{from:'bottom',fx:['limbs'],fall:-1},mimic:{fx:['coins'],tint:'150,110,20'},husk:{fx:['mirror']},hound:{fx:[]},
