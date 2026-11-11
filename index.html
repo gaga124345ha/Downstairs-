@@ -1132,7 +1132,7 @@ const MT={
   dreg:{hp:60,dmg:7,spd:1.8,h:.62,reach:.75,vol:.8},
   juggernaut:{hp:1500,dmg:22,spd:1.15,h:1.55,reach:1.25,boss:1,vol:1.6,elev:1},
   warden:{hp:950,dmg:26,spd:2.3,h:1.3,reach:1.05,boss:1,vol:1.4,elev:1},
-  watch:{hp:900,dmg:24,spd:1.5,h:1.5,reach:1.05,boss:1,vol:1.4,elev:1},
+  watch:{hp:900,dmg:9,spd:1.5,h:1.5,reach:1.05,boss:1,vol:1.4,elev:1},
   preach:{hp:1000,dmg:22,spd:1.0,h:1.55,reach:1,boss:1,vol:1.4,elev:1},
   surgeon:{hp:1100,dmg:26,spd:2.0,h:1.5,reach:1.1,boss:1,vol:1.4,elev:1},
   cultist:{hp:52,dmg:13,spd:1.35,h:.9,reach:.82,vol:.8},
@@ -1173,7 +1173,7 @@ const CODEX={
   brat:{n:'Brat',tag:'최종',t:'The ORIGIN이 바닥에서 떼어 던진 작은 살점 덩어리. 한 대만 쳐도 터진다.',tip:'무시해도 되지만 많이 모이면 귀찮다. 지나가며 쳐라.'},
   dreg:{n:'Dreg',tag:'최종',t:'뼈가 모조리 으스러진 채 살점 속에 무너져 내린 사람의 형상. 척추는 휘어 버렸고 갈비뼈는 조각만 남았다. 짓눌린 두개골을 끌고 한 팔로 느리게 기어 오다가, 갑자기 곁으로 순간이동한다.',tip:'순간이동한 직후가 빈틈이다. 하얀 가루가 흩날리면 뒤를 확인하라.'},
   juggernaut:{n:'Juggernaut',tag:'보스',t:'여러 괴물이 녹아 하나로 붙어 버린 거대한 덩어리. 엄청난 힘을 얻은 대신 눈·귀·코가 거의 다 먹통이 되어 멍청해졌다. 몇 초에 한 번씩만 네 위치를 떠올리고, 그 자리를 향해 몸을 낮춘 뒤 정해 둔 방향으로만 돌진한다. 얇은 벽은 그대로 부수고, 길을 막은 괴물은 짓밟는다.',tip:'몸을 낮추는 순간 방향은 이미 정해졌다. 옆으로 비켜라. 두꺼운 벽 앞으로 유인하면 처박혀 한참 비틀거린다. 그때 공격하라.'},
-  watch:{n:'Night Watch',tag:'중간 보스 · B10',t:'건물의 첫 번째 경비원이었던 것. 머리가 있던 자리에 감시 카메라와 손전등이 엉겨 붙었다. 서치라이트로 보안 통제실을 천천히 훑다가, 빛에 걸린 것에게 곧장 돌진한다. 놓치지 않으면 전기 충격 다트를 쏜다.',tip:'빛줄기가 지나가는 길을 읽고 책상 뒤에 붙어라. 돌진하다 벽에 부딪히면 한동안 멍해지고, 그때는 훨씬 아프게 맞는다.'},
+  watch:{n:'Night Watch',tag:'중간 보스 · B10',t:'건물의 첫 번째 경비원이었던 것. 머리가 있던 자리에 감시 카메라와 손전등이 엉겨 붙었다. 서치라이트로 보안 통제실을 천천히 훑다가, 빛에 걸린 것에게 곧장 돌진한다. 놓치지 않으면 전기 충격 다트를 쏜다. 멀리서 공격당하면 1초 뒤 서치라이트를 공격이 날아온 곳에 고정한다.',tip:'멀리서 쏘고 나면 바로 자리를 옮겨라. 1초 뒤 빛이 그 자리를 비춘다. 돌진하다 벽에 부딪히면 한동안 멍해지고, 그때는 훨씬 아프게 맞는다.'},
   preach:{n:'The Preacher',tag:'중간 보스 · B35',t:'지하 예배당에서 기원을 섬기던 사제. 살점이 스며든 제의를 입고 끝없이 설교한다. 제단 앞에 무릎 꿇은 신도가 하나라도 기도하고 있으면 기도의 힘이 몸을 감싸 거의 다치지 않는다. 합창이 끝나는 순간 정신을 찢는 파동이 퍼진다.',tip:'기도하는 신도부터 쓰러뜨려라. 합창 소리가 커지면 멀리 떨어져라. 천천히 따라오는 불씨는 기둥으로 막을 수 있다.'},
   cultist:{n:'Cultist',tag:'일반 · B35',t:'기원을 숭배하는 신도. 제단 앞에 무릎 꿇고 기도하며 설교자에게 힘을 보낸다. 건드리거나 가까이 가면 일어나 덤벼든다.',tip:'기도하는 동안은 무방비다. 한 명씩 끊어라.'},
   surgeon:{n:'The Surgeon',tag:'중간 보스 · B45',t:'연구실에서 샘플 A-0을 다루던 집도의. 네 개의 팔로 메스를 부채꼴로 던지고, 팔을 치켜든 뒤 돌진해 벤다. 마취 가스 통을 던지고, 수조 속 표본을 깨워 풀어놓는다.',tip:'가스 구역에 들어가면 몸이 둔해진다. 메스가 날아오면 옆으로 비켜라. 수조가 깨지는 소리가 나면 표본부터 처리하라.'},
@@ -2753,7 +2753,7 @@ function teleportNear(m,a,b){const c=[];const cx=P.x|0,cy=P.y|0;
   if(!c.length)return;const i=pick(c);m.x=i%N+.5;m.y=((i/N)|0)+.5;sfxStatic(m)}
 function updateProj(dt){
   for(const p of G.proj){if(p.home){const a=Math.atan2(P.y-p.y,P.x-p.x),cu=Math.atan2(p.vy,p.vx),sp=Math.hypot(p.vx,p.vy),na=cu+clamp(angDiff(a,cu),-p.home*dt,p.home*dt);p.vx=Math.cos(na)*sp;p.vy=Math.sin(na)*sp;if(rnd()<dt*20)G.parts.push({x:p.x,y:p.y,z:.5,vx:0,vy:0,vz:.2,life:.4,col:[255,140,60],sz:.4,rest:0})}p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;if(solid(p.x,p.y))p.life=0;
-    if(Math.hypot(p.x-P.x,p.y-P.y)<.38){p.life=0;hurtPlayer(p.dmg,{type:p.src||'mother'});if(p.src==='seam'||p.src==='surgeon'){burst(.05,'highpass',4000,.3);splatScreen(2)}else if(p.src==='shooter'){burst(.06,'lowpass',600,.6,1);modal(240,[[1,.1,.12]],1,0,0,.1);splatScreen(3);msg('뼈 화살이 박혔다','warn',1000)}else if(p.src==='watch'){P.boundT=Math.max(P.boundT||0,1.2);sfxZap();msg('전기 충격 — 몸이 굳는다','warn',1200)}else if(p.src==='preach'){P.san=Math.max(0,P.san-5);burst(.3,'lowpass',600,.4)}else sfxSizzle()}}
+    if(Math.hypot(p.x-P.x,p.y-P.y)<.38){p.life=0;hurtPlayer(p.dmg,{type:p.src||'mother'});if(p.src==='seam'||p.src==='surgeon'){burst(.05,'highpass',4000,.3);splatScreen(2)}else if(p.src==='shooter'){burst(.06,'lowpass',600,.6,1);modal(240,[[1,.1,.12]],1,0,0,.1);splatScreen(3);msg('뼈 화살이 박혔다','warn',1000)}else if(p.src==='watch'){P.boundT=Math.max(P.boundT||0,.5);sfxZap();msg('전기 충격 — 몸이 잠깐 굳는다','warn',1000)}else if(p.src==='preach'){P.san=Math.max(0,P.san-5);burst(.3,'lowpass',600,.4)}else sfxSizzle()}}
   if(NET.host)for(const p of G.proj){if(p.life<=0)continue;for(const id in NET.peers){const r=NET.peers[id];if(r.dead)continue;if(Math.hypot(p.x-r.x,p.y-r.y)<.38){p.life=0;netTo(id,{t:'hurt',a:p.dmg,s:p.src||'mother',x:p.x,y:p.y})}}}
   G.proj=G.proj.filter(p=>p.life>0);
 }
@@ -3291,17 +3291,20 @@ $('tut').addEventListener('pointerdown',e=>{e.stopPropagation();if(G&&G.tut)tutD
 // ================= 중간 보스 =================
 function watchTick(m,spd,dt,d,hasLos){if(m.la==null){m.la=Math.PI;m.st='patrol';m.dcd=0}m.dcd-=dt;const aP=Math.atan2(P.y-m.y,P.x-m.x);
   const beam=[];{const cx=Math.cos(m.la),cy=Math.sin(m.la);for(let t=1.5;t<12;t+=2){const x=m.x+cx*t,y=m.y+cy*t;if(solid(x,y))break;beam.push([x,y,t])}}for(const[x,y,t]of beam)G.tmpL.push({x,y,r:1.6+t*.12,i:.75,ttl:.05,type:'muz'});
+  if(m.lhp!=null&&m.hp<m.lhp-.01&&d>3&&m.st==='patrol'&&!(m.lockT>0)){m.lockT=1;m.lockP={x:P.x,y:P.y};m.lockH=0;blip(300,.6,'square',.04,900,0,panOf(m),.2);msg('맞은 서치라이트가 덜컥 멈췄다…','warn',1200)}m.lhp=m.hp;
+  if(m.lockT>0){m.lockT-=dt;if(m.lockT<=0){m.lockH=4.5;for(let i=0;i<2;i++)blip(1400,.08,'square',.06,1400,i*.1,panOf(m));msg('서치라이트가 공격이 날아온 곳에 고정되었다','warn',1500)}}
+  if(m.lockH>0&&m.lockP){m.lockH-=dt;const ta=Math.atan2(m.lockP.y-m.y,m.lockP.x-m.x);m.la+=clamp(angDiff(ta,m.la),-9*dt,9*dt)}
   const inCone=!P.hidden&&hasLos&&d<12&&Math.abs(angDiff(aP,m.la))<.3;
-  if(m.st==='patrol'){m.la+=dt*.85;G.alarm=Math.max(0,G.alarm-dt);m.pt=(m.pt||0)-dt;if(m.pt<=0){m.pt=3+rnd()*3;m.tx=m.x+(rnd()-.5)*8;m.ty=m.y+(rnd()-.5)*8}wander(m,spd*.5,dt);m.moving=true;
-    if(inCone||(d<2&&!P.hidden)){m.st='spot';m.timer=.6;G.alarm=1;msg('서치라이트에 걸렸다!','warn',1400);for(let i=0;i<3;i++){blip(1200,.12,'square',.08,1200,i*.18);blip(900,.12,'square',.08,900,i*.18+.09)}}return}
+  if(m.st==='patrol'){if(!(m.lockH>0)&&!(m.lockT>0))m.la+=dt*.85;G.alarm=Math.max(0,G.alarm-dt);m.pt=(m.pt||0)-dt;if(m.pt<=0){m.pt=3+rnd()*3;m.tx=m.x+(rnd()-.5)*8;m.ty=m.y+(rnd()-.5)*8}if(m.lockH>0||m.lockT>0)m.moving=false;else{wander(m,spd*.5,dt);m.moving=true}
+    if(inCone||(d<2&&!P.hidden)){m.lockH=0;m.lockT=0;m.st='spot';m.timer=.6;G.alarm=1;msg('서치라이트에 걸렸다!','warn',1400);for(let i=0;i<3;i++){blip(1200,.12,'square',.08,1200,i*.18);blip(900,.12,'square',.08,900,i*.18+.09)}}return}
   m.la=m.la+clamp(angDiff(aP,m.la),-4*dt,4*dt);G.alarm=1;
   if(m.st==='spot'){m.timer-=dt;if(m.timer<=0){m.st='charge';m.timer=1.3;m.cdir=aP;m.chit=0;burst(.4,'lowpass',300,.5);blip(60,.5,'sawtooth',.25,30)}return}
-  if(m.st==='charge'){m.timer-=dt;const mv=moveEnt(m,Math.cos(m.cdir)*7.2*dt,Math.sin(m.cdir)*7.2*dt,.45);m.moving=true;if(!m.chit&&d<1.25){m.chit=1;hurtPlayer(m.dmg*1.4,m)}
+  if(m.st==='charge'){m.timer-=dt;const mv=moveEnt(m,Math.cos(m.cdir)*7.2*dt,Math.sin(m.cdir)*7.2*dt,.45);m.moving=true;if(!m.chit&&d<1.25){m.chit=1;hurtPlayer(m.dmg*1.1,m)}
     if(!mv){m.st='daze';m.timer=2.4;shake(1);sfxThud();msg('Night Watch가 벽에 처박혔다 — 지금이다','gold',1600)}else if(m.timer<=0){m.st='hunt';m.timer=5}return}
   if(m.st==='daze'){m.timer-=dt;G.alarm=Math.max(0,G.alarm-dt*2);if(m.timer<=0){m.st='hunt';m.timer=4}return}
   if(m.st==='hunt'){m.timer-=dt;if(hasLos)m.timer=Math.max(m.timer,2);m.moving=stepToward(m,spd,dt);
-    if(m.dcd<=0&&hasLos&&d<12){m.dcd=1.7;G.proj.push({x:m.x+Math.cos(aP)*.7,y:m.y+Math.sin(aP)*.7,vx:Math.cos(aP)*9,vy:Math.sin(aP)*9,life:2.5,dmg:m.dmg*.4,kind:'dart',h:.08,z:.55,src:'watch'});sfxZap()}
-    m.cc=(m.cc||4)-dt;if(m.cc<=0&&hasLos&&d>3&&d<10){m.cc=5;m.st='spot';m.timer=.5}
+    if(m.dcd<=0&&hasLos&&d<12){m.dcd=4.2;G.proj.push({x:m.x+Math.cos(aP)*.7,y:m.y+Math.sin(aP)*.7,vx:Math.cos(aP)*8,vy:Math.sin(aP)*8,life:2.5,dmg:m.dmg*.3,kind:'dart',h:.08,z:.55,src:'watch'});sfxZap()}
+    m.cc=(m.cc||8)-dt;if(m.cc<=0&&hasLos&&d>3&&d<10){m.cc=11;m.st='spot';m.timer=.7}
     if(m.timer<=0){m.st='patrol';msg('서치라이트가 다시 천천히 돈다','gold',1400)}}}
 function preachTick(m,spd,dt,d,hasLos){m.ob=(m.ob==null?2.5:m.ob)-dt;m.ser=(m.ser==null?7:m.ser)-dt;m.cs=(m.cs==null?12:m.cs)-dt;
   const pr=G.mon.filter(o=>!o.dead&&o.type==='cultist'&&o.st==='pray');m.shield=pr.length>0;m.pray=pr;
@@ -5306,6 +5309,7 @@ const GUIDE=[
  {t:'방의 주인들',s:'수색대 교신 기록',p:'radio',b:`[교신 기록] 수색대 2팀. 잡음 구간은 생략함.
 # @watch B10 · 통제실
 - "…빛줄기가 복도를 훑는다. 책상 뒤에 붙어. 붙으라고."
+- "…쐈으면 움직여! 1초면 빛이 네 자리로 꽂힌다!"
 - "…놈이 벽에 박았다! 멍하다, 지금이다, 지금!"
 # @seam B25 · 재봉실
 ! "…쓰러진 인형 **가죽을 E로 찢어!** 안 찢으면 다시 꿰매서 일으킨다!"
