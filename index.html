@@ -1589,7 +1589,7 @@ const GUN={
   amr:{n:'대물 저격총',r:4,dmg:340,rate:1.7,mag:4,spread:0,range:34,pierce:6,noise:22,reload:3.2,kick:2,len:60,d:'장갑을 뚫는 탄. 한 줄로 선 괴물 여섯까지 꿰뚫는다. 쏘면 온 층이 듣는다.'},
   rail:{n:'가우스 레일건',r:5,dmg:44,cdmg:520,rate:.085,mag:60,spread:.025,range:24,pierce:2,noise:9,reload:2.6,kick:.18,len:56,auto:1,energy:1,d:'The ORIGIN의 척추를 레일로 깎아 만든 살아 있는 총. 등 위의 핵이 맥동하며 붉은 에너지를 밀어낸다. 좌클릭: 에너지탄 연사 (둘까지 관통). 우클릭을 누르고 있으면 주변의 전기를 끌어모아 손전등 전지를 태우며 충전하고, 놓으면 일직선상의 모든 것을 꿰뚫는 차징샷을 쏜다. X: 「특이점」 — 탄 10발과 전지 25를 태워 검붉은 구체를 쏜다. 구체는 2초 동안 주변의 괴물(과 너)을 빨아들이며 갈아 낸 뒤 안쪽으로 무너지며 폭발한다 (재사용 16초). 종결급.'},
   gatling:{n:'게틀링 건',r:4,dmg:20,rate:.05,mag:150,spread:.07,range:15,noise:17,reload:3.8,kick:.1,len:58,auto:1,spin:1,d:'여섯 개의 총열이 회전하며 탄을 쏟아낸다. 누르고 있으면 총열이 돌기 시작하고, 다 돌면 무엇이든 갈아 버린다. 무거워서 들고 있으면 느려진다.'},
-  hcannon:{n:'핸드캐논',r:4,dmg:135,rate:.85,mag:5,spread:.012,range:20,noise:18,reload:2.6,kick:.8,len:36,d:'곰 사냥용 탄을 쓰는 대구경 리볼버. 한 발이 웬만한 괴물을 끝장낸다. 반동이 크다.'},
+  hcannon:{n:'핸드캐논',r:4,dmg:150,rate:.85,mag:5,spread:.012,range:22,pierce:3,noise:18,reload:2.6,kick:.8,len:36,hc:1,d:'곰 사냥용 탄을 쓰는 대구경 리볼버. 탄이 괴물 셋을 꿰뚫는다 · 보스 피해 +40% · 치명타 확률 +25%, 치명타는 3배 · 맞은 괴물은 크게 밀려나며 기절 · 처치하면 탄 1발이 즉시 장전 · 실린더의 마지막 한 발은 2.5배 피해와 함께 터진다.'},
   flamer:{n:'화염방사기',r:3,dmg:7,rate:.07,mag:120,fuel:1,spread:.1,range:5,noise:8,reload:2.2,kick:.05,len:46,auto:1,flame:1,d:'기름을 태워 불길을 뿜는다. 맞은 괴물은 불이 붙어 계속 타며 느려진다. 바닥의 기름에 닿으면 화재가 난다. 탄약 대신 기름통으로 연료를 채운다 (R 또는 [5]).'},
   rifle:{n:'사냥용 소총',r:3,dmg:88,rate:1.15,mag:5,spread:0,range:24,pierce:3,noise:14,reload:2.7,kick:1.4,len:50,d:'멀리 있는 것도 꿰뚫는다. 한 줄로 선 괴물 셋까지 관통.'},
 };
@@ -1616,8 +1616,9 @@ function fireGun(){
   if(g.flare){G.fx.push({type:'flare',gib:1,spr:'flareS',h:.07,z:.45,x:P.x+cx*.4,y:P.y+cy*.4,vx:cx*11,vy:cy*11,life:12,dmg:g.dmg*bonus});return}
   const ad=P.adsT||0,sp=g.spread*(attOf().laser?.55:1)*(P.crouch?.6:1)*(1+(P.recoil||0)*.5*(1-ad*.7))*(P.moving?1+.35*(1-ad):1)*lerp(1,g.pellets?.5:.12,ad);
   if(S.gun==='smg'||S.gun==='ar'||S.gun==='carbine'||S.gun==='pistol')ejectUI(PORT[0],PORT[1],'brass');if(S.gun==='shotgun')setTimeout(()=>ejectUI(PORT[0],PORT[1],'shell'),300);if(S.gun==='rifle')setTimeout(()=>ejectUI(PORT[0],PORT[1],'brass'),560);
+  G.hc=g.hc?{last:P.mag===0}:null;if(G.hc&&G.hc.last){G.tmpL.push({x:P.x+cx*.8,y:P.y+cy*.8,r:6,i:2.2,ttl:.12,type:'muz'});shake(.6);blip(60,.5,'sawtooth',.3,30);msg('마지막 한 발','gold',900)}
   G.dmgK=g.energy?'energy':null;for(let i=0;i<(g.pellets||1);i++)shoot(P.a+(rnd()-.5)*2*sp,g.dmg*bonus,g.range,g.pierce||1,g.falloff||0);G.dmgK=null;
-  if(g.energy){const tr=G.tracers[G.tracers.length-1];if(tr){tr.en=1;tr.life=.07}}
+  G.hc=null;if(g.energy){const tr=G.tracers[G.tracers.length-1];if(tr){tr.en=1;tr.life=.07}}
   if(P.mag===0&&P.ammo>0)setTimeout(()=>{if(G.state==='play'&&P.useGun)startReload()},280);
 }
 // 즉발 사격: 시선 방향으로 선을 그어 처음 맞는 것부터
@@ -1629,8 +1630,10 @@ function shoot(ang,dmg,range,pierce,falloff){
   for(const[t,m]of hits){if(n>=pierce)break;n++;end=t;const mt=MT[m.type];
     if(m.disguised){reveal(m);stop=true;break}
     if(mt.immune){sfxClang();bleed(m.x,m.y,mt.h*.6,6,bloodOf(m.type),ang+Math.PI,1.6);stop=true;break}
-    const f=falloff?Math.max(.3,1-t/range*falloff):1,crit=rnd()<S.crit;
-    bleed(m.x,m.y,mt.h*.6,crit?12:7,bloodOf(m.type),ang,2.4);sfxSplat(.8,m);if(rnd()<.35)wallMark(m.x,m.y,ang+(rnd()-.5)*.4,1.6,'blood',ri(8,20),bloodOf(m.type));damageMon(m,dmg*f*(crit?2:1),false);m.aggro=Math.max(m.aggro,8);m.hit=.12;see(m.type);P.hm=.14}
+    const HC=G.hc,f=falloff?Math.max(.3,1-t/range*falloff):1,crit=rnd()<S.crit+(HC?.25:0);
+    bleed(m.x,m.y,mt.h*.6,crit?12:7,bloodOf(m.type),ang,2.4);sfxSplat(.8,m);if(rnd()<.35)wallMark(m.x,m.y,ang+(rnd()-.5)*.4,1.6,'blood',ri(8,20),bloodOf(m.type));damageMon(m,dmg*f*(crit?(HC?3:2):1)*(HC&&mt.boss?1.4:1)*(HC&&HC.last?2.5:1),false);m.aggro=Math.max(m.aggro,8);m.hit=.12;see(m.type);P.hm=.14;
+    if(HC){if(!mt.boss){m.stun=Math.max(m.stun||0,.9);for(let q=0;q<8;q++)moveEnt(m,cx*.15,cy*.15,.35)}if(HC.last&&!HC.boom){HC.boom=1;const bx=m.x,by=m.y;setTimeout(()=>{try{hzReset();boomAt(bx,by,1.8,45+G.floor*3,false)}catch(e){}},30)}
+      if((m.dead||m.hp<=0)&&P.mag<magOf()){P.mag++;blip(1500,.06,'square',.05,1500);if(!G.hcMsg){G.hcMsg=1;msg('처치 — 탄 1발이 실린더에 돌아왔다','gold',1400)}}if(crit){shake(.3);blip(90,.25,'sine',.25,50)}}}
   if(!stop&&n<Math.max(1,pierce)&&!(n&&end<wd-.1)){const ix=P.x+cx*(wd-.06),iy=P.y+cy*(wd-.06);end=wd;bleed(ix,iy,.4+rnd()*.25,5,[150,140,118],ang+Math.PI,1.4);if(rnd()<.5)sfxRicochet();wallMark(P.x,P.y,ang,wd+.3,'bullet')}
   G.tracers.push({x0:P.x+cx*.45,y0:P.y+cy*.45,x1:P.x+cx*end,y1:P.y+cy*end,life:.05});
 }
