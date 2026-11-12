@@ -1343,7 +1343,7 @@ const MT={
   juggernaut:{hp:1500,dmg:22,spd:1.15,h:1.55,reach:1.25,boss:1,vol:1.6,elev:1},
   warden:{hp:950,dmg:26,spd:2.3,h:1.3,reach:1.05,boss:1,vol:1.4,elev:1},
   watch:{hp:900,dmg:9,spd:1.5,h:1.5,reach:1.05,boss:1,vol:1.4,elev:1},
-  preach:{hp:1000,dmg:22,spd:1.0,h:1.55,reach:1,boss:1,vol:1.4,elev:1},
+  preach:{hp:700,dmg:15,spd:1.0,h:1.55,reach:1,boss:1,vol:1.4,elev:1},
   surgeon:{hp:1100,dmg:26,spd:2.0,h:1.5,reach:1.1,boss:1,vol:1.4,elev:1},
   cultist:{hp:52,dmg:13,spd:1.35,h:.9,reach:.82,vol:.8},
   burnt:{hp:150,dmg:16,spd:0,h:1.3,reach:.85,vol:1,fireIm:1},
@@ -1403,7 +1403,7 @@ const CODEX={
   warden:{n:'Warden',tag:'보스',t:'이 건물의 열쇠를 가진 자. 머리 대신 등불을 달고 있다. 등 뒤로 순간이동하며 손전등을 꺼뜨린다.',tip:'멈추지 마라. 종소리가 울리면 바로 뒤를 돌아보라.'},
 };
 const RAR=[{n:'일반',c:'var(--r0)'},{n:'희귀',c:'var(--r1)'},{n:'영웅',c:'var(--r2)'},{n:'신화',c:'var(--r3)'},{n:'전설',c:'var(--r4)'},{n:'기원',c:'var(--r5)'}];
-const PRICE=[28,75,180,400,820,2100];
+const PRICE=[28,75,180,400,1050,2100];
 const BOOK={id:'bestiary',r:1,n:'괴물 도감',d:'모든 괴물의 이름과 특성이 적힌 낡은 수첩. 마주친 괴물의 공략법이 채워진다. 죽어도 다음 판까지 남는다.',perm:1,cons:1,f:()=>{SAVE.hasCodex=1;persist();msg('도감을 손에 넣었다. Tab으로 펼칠 수 있다.','gold',5000)}};
 const ANT_R=[{n:'일반',c:'var(--r0)'},{n:'희귀',c:'var(--r1)'},{n:'레어',c:'var(--r2)'},{n:'전설',c:'var(--r4)'},{n:'기원',c:'var(--r5)'}];
 const ANT_BASE=[45,120,300,760,2400];
@@ -1474,11 +1474,11 @@ const ITEMS=[
   {id:'drug',r:2,n:'마약',d:'30초 동안 체력이 계속 줄어든다. 대신 이동 속도와 공격 속도가 크게 오르고 치명타 +30%. 모든 상태이상과 어둠을 무시하지만 기척이 빠르게 오른다. [0]',f:()=>beltAdd('drug'),cons:1},
   {id:'aid',r:0,n:'응급 처치 키트',d:'[7] 체력을 40 회복한다. 함께 하기에서는 쓰러진 동료 곁에서 E를 길게 눌러 일으킬 때 쓴다. 벨트에 5개까지.',f:()=>beltAdd('aid'),cons:1},
   {id:'c4',r:2,n:'C4 폭약',d:'[6]으로 바닥에 설치하고 우클릭으로 터뜨린다. 반경 안의 괴물을 날려 버리지만 온 층이 듣는다. 너무 가까우면 너도 다친다.',f:()=>beltAdd('c4'),cons:1},
-  {id:'halo',r:4,n:'금 간 후광',d:'설교자의 제단 뒤에서 나온 금속 고리. 정신력 소모 -35% · 초당 체력 1.5 회복.',f:()=>{S.sanK=(S.sanK||0)-.35;S.regen=(S.regen||0)+1.5},uniq:1},
-  {id:'wardcoat',r:4,n:'경비반장의 외투',d:'무전기가 꿰매진 두꺼운 외투. 방어 +14% · 기척 -12% · 최대 전지 +25.',f:()=>{S.armor=(S.armor||0)+.14;S.noise=(S.noise||0)-.12;S.maxBat=(S.maxBat||100)+25},uniq:1},
-  {id:'surgkit',r:4,n:'집도의의 메스 세트',d:'한 번도 소독한 적 없는 메스들. 치명타 +15% · 흡혈 +5%.',f:()=>{S.crit=(S.crit||0)+.15;S.lifesteal=(S.lifesteal||0)+.05},uniq:1},
-  {id:'thread',r:4,n:'재봉사의 금실',d:'끊어지지 않는 금빛 실. 손목에 감으면 팔이 저절로 움직인다. 공격 속도 +18% · 사거리 +0.3.',f:()=>{S.atkSpd=(S.atkSpd||1)+.18;S.range=(S.range||0)+.3},uniq:1},
-  {id:'reaperhood',r:4,n:'회수자의 두건',d:'안쪽에 누군가의 이름이 빽빽이 적혀 있다. 치명타 +12% · 근접 피해 +8.',f:()=>{S.crit=(S.crit||0)+.12;S.dmg+=8},uniq:1},
+  {id:'halo',r:4,n:'금 간 후광',d:'설교자의 제단 뒤에서 나온 금속 고리. 정신력 소모 -50% · 초당 체력 2.5 회복 · 최대 체력 +40.',f:()=>{S.sanK=(S.sanK||0)-.5;S.regen=(S.regen||0)+2.5;S.maxHp+=40;P.hp+=40},uniq:1},
+  {id:'wardcoat',r:4,n:'경비반장의 외투',d:'무전기가 꿰매진 두꺼운 외투. 방어 +20% · 기척 -15% · 최대 전지 +40 · 최대 체력 +50.',f:()=>{S.armor=(S.armor||0)+.2;S.noise=(S.noise||0)-.15;S.maxBat=(S.maxBat||100)+40;S.maxHp+=50;P.hp+=50},uniq:1},
+  {id:'surgkit',r:4,n:'집도의의 메스 세트',d:'한 번도 소독한 적 없는 메스들. 치명타 +22% · 흡혈 +8% · 근접 피해 +6.',f:()=>{S.crit=(S.crit||0)+.22;S.lifesteal=(S.lifesteal||0)+.08;S.dmg+=6},uniq:1},
+  {id:'thread',r:4,n:'재봉사의 금실',d:'끊어지지 않는 금빛 실. 손목에 감으면 팔이 저절로 움직인다. 공격 속도 +28% · 사거리 +0.45 · 치명타 +6%.',f:()=>{S.atkSpd=(S.atkSpd||1)+.28;S.range=(S.range||0)+.45;S.crit=(S.crit||0)+.06},uniq:1},
+  {id:'reaperhood',r:4,n:'회수자의 두건',d:'안쪽에 누군가의 이름이 빽빽이 적혀 있다. 치명타 +18% · 근접 피해 +14 · 이동 속도 +4%.',f:()=>{S.crit=(S.crit||0)+.18;S.dmg+=14;S.speed+=.04},uniq:1},
   {id:'censer',r:3,n:'은 향로',d:'연기가 몸의 냄새를 덮는다. 기척 -18% · 정신력 소모 -15%.',f:()=>{S.noise=(S.noise||0)-.18;S.sanK=(S.sanK||0)-.15},uniq:1},
   {id:'bonecharm',r:3,n:'뼈 부적',d:'손가락뼈를 엮은 부적. 최대 체력 +30 · 방어 +5%.',f:()=>{S.maxHp+=30;P.hp+=30;S.armor=(S.armor||0)+.05},uniq:1},
   {id:'scope',r:3,n:'저격 조준경',d:'총 피해 +18%.',f:()=>{S.gunK=(S.gunK||0)+.18},uniq:1},
@@ -1496,10 +1496,10 @@ const ITEMS=[
   {id:'watch',r:3,n:'멈춘 회중시계',d:'모든 괴물의 이동 속도 -18%',f:()=>{S.slow*=.82}},
   {id:'coat',r:3,n:'소음 흡수 코트',d:'기척 상승 -40%, 발소리 -30%',f:()=>{S.threat*=.6;S.noise*=.7}},
   {id:'exo',r:3,n:'강화 외골격',d:'최대 체력 +50, 받는 피해 -15%',f:()=>{S.maxHp+=50;P.hp+=50;S.armor+=.15}},
-  {id:'heart',r:4,n:'불멸자의 심장',d:'최대 체력 +80, 체력 재생 초당 +2',f:()=>{S.maxHp+=80;P.hp+=80;S.regen+=2}},
-  {id:'midas',r:4,n:'황금 손',d:'줍는 돈 두 배',f:()=>{S.moneyMult+=1}},
-  {id:'sun',r:4,n:'태양의 조각',d:'배터리가 닳지 않고, 손전등 빛이 괴물을 태운다.',f:()=>{S.sun=1;P.bat=S.maxBat},uniq:1},
-  {id:'cloak',r:4,n:'그림자 망토',d:'괴물에게 들키는 거리 -45%, 발소리 -50%',f:()=>{S.sight*=.55;S.noise*=.5}},
+  {id:'heart',r:4,n:'불멸자의 심장',d:'최대 체력 +140, 체력 재생 초당 +3.5, 방어 +6%',f:()=>{S.maxHp+=140;P.hp+=140;S.regen+=3.5;S.armor=(S.armor||0)+.06}},
+  {id:'midas',r:4,n:'황금 손',d:'줍는 돈 두 배 반 · 상점 가격 -10%',f:()=>{S.moneyMult+=1.5;S.priceMult=(S.priceMult||1)-.1}},
+  {id:'sun',r:4,n:'태양의 조각',d:'배터리가 닳지 않고, 손전등 빛이 괴물을 태운다. 정신력 소모 -20%.',f:()=>{S.sun=1;P.bat=S.maxBat;S.sanK=(S.sanK||0)-.2},uniq:1},
+  {id:'cloak',r:4,n:'그림자 망토',d:'괴물에게 들키는 거리 -55%, 발소리 -60%, 치명타 +10%',f:()=>{S.sight*=.45;S.noise*=.4;S.crit=(S.crit||0)+.1}},
   {id:'helmet',r:0,n:'공사장 안전모',d:'받는 피해 -8%. 괴물이 다가올 때 화면이 어두워지고 조여드는 효과 -20%',f:()=>{S.armor+=.08;vigMul(.8)}},
   {id:'medkit',r:1,n:'야전 구급 상자',d:'최대 체력 +40, 체력을 모두 회복한다',f:()=>{S.maxHp+=40;P.hp=S.maxHp}},
   {id:'plate',r:1,n:'세라믹 방탄판',d:'받는 피해 -15%',f:()=>{S.armor+=.15}},
@@ -1531,11 +1531,11 @@ const WEP={
   pickaxe:{two:1,n:'곡괭이',r:2,dmg:36,spd:.7,range:1.7,arc:.55,wt:1.3,kind:'blade',crit:.2,d:'한 점에 모든 힘이 실린다. 치명타 +20%.'},
   grinder:{n:'앵글 그라인더',r:3,dmg:16,spd:3.4,range:1.3,arc:.45,wt:.6,kind:'saw',bleed:4,loud:1,d:'고속으로 도는 절단 날. 갈아 버리지만 매우 시끄럽다.'},
   warham:{two:1,n:'공성 해머',r:3,dmg:64,spd:.55,range:1.9,arc:1,wt:1.8,kind:'blunt',stun:1.2,knock:1,d:'철거 현장의 거대한 해머. 맞은 것은 모두 날아가고 기절한다.'},
-  lasersw:{n:'레이저 커터 검',r:4,dmg:50,spd:1.9,range:1.95,arc:.8,wt:.4,kind:'blade',bleed:8,crit:.18,burn:3,d:'공업용 레이저 커터를 칼자루에 박아 넣었다. 빛의 날이 스치기만 해도 살이 갈라지고 불이 붙는다. 아주 빠르다.'},
-  scythe:{two:1,n:'회수자의 낫',r:4,dmg:56,spd:.95,range:2.4,arc:1.15,wt:1.2,kind:'blade',bleed:8,crit:.15,d:'Reaper가 떨어뜨린 거대한 낫. 앞을 넓게 쓸어 베고, 벤 것은 오래 피를 흘린다.'},
-  exeblade:{two:1,n:'처형인의 대검',r:4,dmg:72,spd:.72,range:2.15,arc:.95,wt:1.6,kind:'blade',bleed:10,crit:.25,knock:1,d:'끝이 둥글게 갈린 처형용 대검. 느리지만 한 번에 끝낸다. 치명타 +25%.'},
-  censerw:{n:'향로 철퇴',r:4,dmg:46,spd:1.05,range:1.95,arc:.9,wt:1,kind:'blunt',stun:.7,knock:1,burn:1.5,d:'설교자의 쇠사슬 향로. 맞은 것은 휘청이고, 뜨거운 재에 불이 붙는다.'},
-  plasma:{n:'플라즈마 절단기',r:4,dmg:54,spd:1.6,range:2,arc:.75,wt:.6,kind:'blade',bleed:11,crit:.2,burn:2.5,d:'청백색 아크로 강철도 녹여 자른다. 벤 곳에 불이 붙고 계속 탄다. 치명타 +20%.'},
+  lasersw:{n:'레이저 커터 검',r:4,dmg:64,spd:1.9,range:1.95,arc:.8,wt:.4,kind:'blade',bleed:8,crit:.18,burn:3,d:'공업용 레이저 커터를 칼자루에 박아 넣었다. 빛의 날이 스치기만 해도 살이 갈라지고 불이 붙는다. 아주 빠르다.'},
+  scythe:{two:1,n:'회수자의 낫',r:4,dmg:70,spd:.95,range:2.4,arc:1.15,wt:1.2,kind:'blade',bleed:8,crit:.15,d:'Reaper가 떨어뜨린 거대한 낫. 앞을 넓게 쓸어 베고, 벤 것은 오래 피를 흘린다.'},
+  exeblade:{two:1,n:'처형인의 대검',r:4,dmg:90,spd:.72,range:2.15,arc:.95,wt:1.6,kind:'blade',bleed:10,crit:.25,knock:1,d:'끝이 둥글게 갈린 처형용 대검. 느리지만 한 번에 끝낸다. 치명타 +25%.'},
+  censerw:{n:'향로 철퇴',r:4,dmg:60,spd:1.05,range:1.95,arc:.9,wt:1,kind:'blunt',stun:.7,knock:1,burn:1.5,d:'설교자의 쇠사슬 향로. 맞은 것은 휘청이고, 뜨거운 재에 불이 붙는다.'},
+  plasma:{n:'플라즈마 절단기',r:4,dmg:66,spd:1.6,range:2,arc:.75,wt:.6,kind:'blade',bleed:11,crit:.2,burn:2.5,d:'청백색 아크로 강철도 녹여 자른다. 벤 곳에 불이 붙고 계속 탄다. 치명타 +20%.'},
   rib:{two:1,n:'기원의 갈비뼈',r:5,dmg:78,spd:1.25,range:2.25,arc:.95,wt:1.1,kind:'blade',bleed:8,crit:.25,knock:1,d:'The ORIGIN에게서 뜯어낸 거대한 갈비뼈. 휘두를 때마다 기원 스택이 쌓이고(최대 10), 좌클릭을 꾹 누르면 고쳐 쥐며 기원의 핵 잔재를 불러낸다. X: 바닥에 꽂아 살점 오염(다시 X로 뽑을 때까지 맨손). 종결급.'},
   sledge:{two:1,n:'대형 해머',r:2,dmg:46,spd:.55,range:1.75,arc:.95,wt:1.6,kind:'blunt',stun:.9,d:'아주 느리지만 맞은 것은 모두 기절한다.'},
   chainsaw:{two:1,n:'전기톱',r:2,dmg:8,spd:3.2,range:1.35,arc:.45,wt:.6,kind:'saw',bleed:3,loud:1,d:'멈추지 않고 갈아 버린다. 대신 온 층이 들을 만큼 시끄럽다.'},
@@ -1586,10 +1586,10 @@ const GUN={
   crossbow:{n:'복합 석궁',r:2,dmg:78,rate:.5,mag:1,spread:0,range:22,pierce:2,noise:2,reload:1.4,kick:.4,len:34,d:'거의 소리가 나지 않는다. 화살이 둘까지 꿰뚫는다.'},
   carbine:{n:'반자동 카빈',r:2,dmg:30,rate:.2,mag:15,spread:.02,range:18,noise:12,reload:2.1,kick:.6,len:42,d:'가볍고 정확한 반자동 소총.'},
   ar:{n:'돌격소총',r:3,dmg:22,rate:.095,mag:30,spread:.045,range:18,noise:14,reload:2.2,kick:.3,len:44,auto:1,d:'군용 자동소총. 누르고 있으면 연사한다.'},
-  amr:{n:'대물 저격총',r:4,dmg:280,rate:1.7,mag:4,spread:0,range:34,pierce:6,noise:22,reload:3.2,kick:2,len:60,d:'장갑을 뚫는 탄. 한 줄로 선 괴물 여섯까지 꿰뚫는다. 쏘면 온 층이 듣는다.'},
+  amr:{n:'대물 저격총',r:4,dmg:340,rate:1.7,mag:4,spread:0,range:34,pierce:6,noise:22,reload:3.2,kick:2,len:60,d:'장갑을 뚫는 탄. 한 줄로 선 괴물 여섯까지 꿰뚫는다. 쏘면 온 층이 듣는다.'},
   rail:{n:'가우스 레일건',r:5,dmg:44,cdmg:520,rate:.085,mag:60,spread:.025,range:24,pierce:2,noise:9,reload:2.6,kick:.18,len:56,auto:1,energy:1,d:'The ORIGIN의 척추를 레일로 깎아 만든 살아 있는 총. 등 위의 핵이 맥동하며 붉은 에너지를 밀어낸다. 좌클릭: 에너지탄 연사 (둘까지 관통). 우클릭을 누르고 있으면 주변의 전기를 끌어모아 손전등 전지를 태우며 충전하고, 놓으면 일직선상의 모든 것을 꿰뚫는 차징샷을 쏜다. X: 「특이점」 — 탄 10발과 전지 25를 태워 검붉은 구체를 쏜다. 구체는 2초 동안 주변의 괴물(과 너)을 빨아들이며 갈아 낸 뒤 안쪽으로 무너지며 폭발한다 (재사용 16초). 종결급.'},
-  gatling:{n:'게틀링 건',r:4,dmg:16,rate:.05,mag:150,spread:.07,range:15,noise:17,reload:3.8,kick:.1,len:58,auto:1,spin:1,d:'여섯 개의 총열이 회전하며 탄을 쏟아낸다. 누르고 있으면 총열이 돌기 시작하고, 다 돌면 무엇이든 갈아 버린다. 무거워서 들고 있으면 느려진다.'},
-  hcannon:{n:'핸드캐논',r:4,dmg:110,rate:.85,mag:5,spread:.012,range:20,noise:18,reload:2.6,kick:.8,len:36,d:'곰 사냥용 탄을 쓰는 대구경 리볼버. 한 발이 웬만한 괴물을 끝장낸다. 반동이 크다.'},
+  gatling:{n:'게틀링 건',r:4,dmg:20,rate:.05,mag:150,spread:.07,range:15,noise:17,reload:3.8,kick:.1,len:58,auto:1,spin:1,d:'여섯 개의 총열이 회전하며 탄을 쏟아낸다. 누르고 있으면 총열이 돌기 시작하고, 다 돌면 무엇이든 갈아 버린다. 무거워서 들고 있으면 느려진다.'},
+  hcannon:{n:'핸드캐논',r:4,dmg:135,rate:.85,mag:5,spread:.012,range:20,noise:18,reload:2.6,kick:.8,len:36,d:'곰 사냥용 탄을 쓰는 대구경 리볼버. 한 발이 웬만한 괴물을 끝장낸다. 반동이 크다.'},
   flamer:{n:'화염방사기',r:3,dmg:7,rate:.07,mag:120,fuel:1,spread:.1,range:5,noise:8,reload:2.2,kick:.05,len:46,auto:1,flame:1,d:'기름을 태워 불길을 뿜는다. 맞은 괴물은 불이 붙어 계속 타며 느려진다. 바닥의 기름에 닿으면 화재가 난다. 탄약 대신 기름통으로 연료를 채운다 (R 또는 [5]).'},
   rifle:{n:'사냥용 소총',r:3,dmg:88,rate:1.15,mag:5,spread:0,range:24,pierce:3,noise:14,reload:2.7,kick:1.4,len:50,d:'멀리 있는 것도 꿰뚫는다. 한 줄로 선 괴물 셋까지 관통.'},
 };
@@ -3633,13 +3633,13 @@ function watchTick(m,spd,dt,d,hasLos){if(m.la==null){m.la=Math.PI;m.st='patrol';
     if(m.dcd<=0&&hasLos&&d<12){m.dcd=4.2;G.proj.push({x:m.x+Math.cos(aP)*.7,y:m.y+Math.sin(aP)*.7,vx:Math.cos(aP)*8,vy:Math.sin(aP)*8,life:2.5,dmg:m.dmg*.3,kind:'dart',h:.08,z:.55,src:'watch'});sfxZap()}
     m.cc=(m.cc||8)-dt;if(m.cc<=0&&hasLos&&d>3&&d<10){m.cc=11;m.st='spot';m.timer=.7}
     if(m.timer<=0){m.st='patrol';msg('서치라이트가 다시 천천히 돈다','gold',1400)}}}
-function preachTick(m,spd,dt,d,hasLos){if(m.ph2){preachP2Tick(m,spd,dt,d,hasLos);return}if(G.midDone&&!G.mi&&(G.cultK||0)>=2&&!G.mon.some(o=>!o.dead&&o.type==='cultist')){preachP2(m);return}if(G.midDone&&!G.mi&&preachNew(m,dt,d,hasLos))return;m.ob=(m.ob==null?2.5:m.ob)-dt;m.ser=(m.ser==null?7:m.ser)-dt;m.cs=(m.cs==null?12:m.cs)-dt;
+function preachTick(m,spd,dt,d,hasLos){if(m.ph2){preachP2Tick(m,spd,dt,d,hasLos);return}if(G.midDone&&!G.mi&&(((G.cultK||0)>=1&&!G.mon.some(o=>!o.dead&&o.type==='cultist'))||m.hp<m.maxHp*.5)){preachP2(m);return}if(G.midDone&&!G.mi&&preachNew(m,dt,d,hasLos))return;m.ob=(m.ob==null?2.5:m.ob)-dt;m.ser=(m.ser==null?7:m.ser)-dt;m.cs=(m.cs==null?12:m.cs)-dt;
   const pr=G.mon.filter(o=>!o.dead&&o.type==='cultist'&&o.st==='pray');m.shield=pr.length>0;m.pray=pr;
   if(m.st==='chant'){m.timer-=dt;m.ch=(m.ch||0)-dt;if(m.ch<=0){m.ch=.3;const f=[110,130.8,164.8][(rnd()*3)|0]*(rnd()<.5?2:1);blip(f,.6,'sawtooth',.05,f,0,panOf(m),.6)}
     if(m.timer<=0){m.st='walk';if(d<10){P.san=Math.max(0,P.san-14);hurtPlayer(m.dmg*.4,m);P.wobble=Math.max(P.wobble||0,1.6);msg('설교가 머릿속을 찢는다','warn',1600)}G.preachP=.6;blip(55,1.2,'sawtooth',.4,30,0,0,.6);burst(.8,'lowpass',500,.5,0,0,0,.5,100)}return}
   if(m.ser<=0){m.ser=10+rnd()*2;m.st='chant';m.timer=1.9;msg('합창이 커진다 — 멀어져라','warn',1600);return}
   if(m.ob<=0&&hasLos&&d<14){m.ob=6;const a0=Math.atan2(P.y-m.y,P.x-m.x);for(const da of[-.35,0,.35]){const a=a0+da;G.proj.push({x:m.x+Math.cos(a)*.7,y:m.y+Math.sin(a)*.7,vx:Math.cos(a)*3.4,vy:Math.sin(a)*3.4,life:6,dmg:m.dmg*.6,kind:'eball',h:.22,z:.5,src:'preach',home:1.1})}blip(300,.5,'sine',.1,150,0,panOf(m),.4)}
-  if(m.cs<=0&&G.altar){m.cs=15;const n=G.mon.filter(o=>!o.dead&&o.type==='cultist').length;if(n<6)for(let i=0;i<2;i++){const a=rnd()*6.28,c=spawn('cultist',G.altar.x-2+Math.cos(a)*1.8,G.altar.y+Math.sin(a)*1.8);if(solid(c.x,c.y)){c.x=m.x;c.y=m.y}c.st='pray';c.spr='cultistK';c.hk=.66}msg('신도들이 제단 앞에 무릎 꿇는다','warn',1600)}
+  if(m.cs<=0&&G.altar&&!m.ph2){m.cs=18;const n=G.mon.filter(o=>!o.dead&&o.type==='cultist').length;if(n<6)for(let i=0;i<2;i++){const a=rnd()*6.28,c=spawn('cultist',G.altar.x-2+Math.cos(a)*1.8,G.altar.y+Math.sin(a)*1.8);if(solid(c.x,c.y)){c.x=m.x;c.y=m.y}c.st='pray';c.spr='cultistK';c.hk=.66}msg('신도들이 제단 앞에 무릎 꿇는다','warn',1600)}
   const ax=G.altar?G.altar.x-2.5:m.x,ay=G.altar?G.altar.y:m.y;if(d<4){const a=Math.atan2(m.y-P.y,m.x-P.x);moveEnt(m,Math.cos(a)*spd*dt,Math.sin(a)*spd*dt,.4);m.moving=true}else if(Math.hypot(m.x-ax,m.y-ay)>4){m.moving=stepToward(m,spd,dt)}}
 function surgTick(m,spd,dt,d,hasLos){if(!m.rage&&G.midDone&&!G.mi&&m.hp<m.maxHp*.42)surgRage(m);if(surgP2Tick(m,spd,dt,d,hasLos))return;m.sc=(m.sc==null?2.2:m.sc)-dt;m.lc=(m.lc==null?3:m.lc)-dt;m.gc=(m.gc==null?7:m.gc)-dt;m.tc=(m.tc==null?9:m.tc)-dt;const aP=Math.atan2(P.y-m.y,P.x-m.x);
   if(m.st==='wind'){m.timer-=dt;m.cdir=aP;if(m.timer<=0){m.st='lunge';m.timer=.4;m.chit=0;burst(.2,'highpass',3000,.4,0,0,panOf(m),.2)}return}
@@ -4467,7 +4467,8 @@ function exitTry(dt){const md=beingOK()?'being':'escape';if(!NET.on){startEnding
 
 // ================= 2페이즈: 설교자(갈라진 머리 · 화재 · 붕괴) / 집도의(광폭 · 창고 · 잡기) =================
 function p2Banner(en,ko,ds,col){try{showBanner(en,ko,ds,col)}catch(e){}}
-function preachP2(m,remote){if(!remote){m.ph2=1;m.spr='preachS';m.stun=2.6;m.hp=Math.min(m.maxHp,m.hp+m.maxHp*.2);m.spd=MT.preach.spd*1.35;m.shield=false;
+function preachP2(m,remote){if(!remote){m.ph2=1;m.spr='preachS';m.stun=2.6;m.shield=false;m.spd=MT.preach.spd*1.35;m.shield=false;
+    for(const o of G.mon)if(!o.dead&&o.type==='cultist'){(G.cultP=G.cultP||[]).push({x:o.x,y:o.y});o._nb=1;o.dead=true;for(let i=0;i<8;i++)G.parts.push({x:o.x,y:o.y,z:rnd()*.8,vx:0,vy:0,vz:1,g:-1,life:.6,col:[255,140,40],sz:.4,rest:0})}
     const pts=(G.cultP||[]).slice(-6),out=[];for(const p of pts)if(!out.some(o=>Math.hypot(o.x-p.x,o.y-p.y)<1.2))out.push(p);
     while(out.length<4&&G.altar){const a=rnd()*6.28;out.push({x:G.altar.x-2.5+Math.cos(a)*2.2,y:G.altar.y+Math.sin(a)*2.2})}
     for(const p of out){let x=p.x,y=p.y;if(solid(x,y)){x=m.x;y=m.y}const b=spawn('burnt',x,y);if(b){b.aggro=10;b.stun=1.2}fireAt(x,y,.8,2.2,true)}}
@@ -4719,15 +4720,15 @@ function renderVault(){const box=$('vaultBox');if(!box)return;const V=G.vault||[
 // ================= 설교자: 새 패턴 · 불타는 성당 천장 =================
 function preachNew(m,dt,d,hasLos){m.plc=(m.plc==null?4:m.plc)-dt;m.bel=(m.bel==null?9:m.bel)-dt;m.cen=(m.cen||0)-dt;
   if(m.st==='bell'){m.timer-=dt;if(rnd()<dt*6)G.tmpL.push({x:m.x,y:m.y,r:3,i:.8,ttl:.06,type:'muz'});if(m.timer<=0){m.st='walk';bellRing(m,!!m.ph2)}return true}
-  if(m.st==='cens'){m.timer-=dt;if(m.timer<=0){m.st='walk';const dd=Math.hypot(P.x-m.x,P.y-m.y);whoosh(.3,200,1200,.35,1,0,0);if(dd<2.7&&!P.hidden){hurtPlayer(m.dmg*.85,m);splatScreen(1);shake(.35)}
+  if(m.st==='cens'){m.timer-=dt;if(m.timer<=0){m.st='walk';const dd=Math.hypot(P.x-m.x,P.y-m.y);whoosh(.3,200,1200,.35,1,0,0);if(dd<2.7&&!P.hidden){hurtPlayer(m.dmg*.6,m);splatScreen(1);shake(.35)}
       G.smoke.push({x:m.x+Math.cos(Math.atan2(P.y-m.y,P.x-m.x))*1.5,y:m.y+Math.sin(Math.atan2(P.y-m.y,P.x-m.x))*1.5,t:4,r:.3});burst(.6,'highpass',1600,.12,1)}return true}
   if(m.bel<=0&&d<13){m.bel=(m.ph2?9:13)+rnd()*2;m.st='bell';m.timer=1.2;msg(m.ph2?'지옥의 종이 울린다 — C로 엎드려라!':'"무릎 꿇어라." — C를 눌러 웅크려라','warn',1800);tBellNow(m.ph2?150:220,.3);return true}
   if(m.cen<=0&&d<2.4){m.cen=5;m.st='cens';m.timer=.55;msg('설교자가 향로를 크게 휘두른다','warn',900);burst(.4,'bandpass',500,.15,2);return true}
   if(m.plc<=0&&hasLos&&d<15){m.plc=m.ph2?5:7.5;const L=[{x:P.x,y:P.y}];for(let i=0;i<(m.ph2?5:3);i++){const a=rnd()*6.28,r=1.2+rnd()*2.2,x=P.x+Math.cos(a)*r,y=P.y+Math.sin(a)*r;if(!solid(x,y))L.push({x,y})}
-    for(const q of L)(G.pills=G.pills||[]).push({x:q.x,y:q.y,t:1.25,fire:!!m.ph2,dmg:m.dmg*.8});blip(1320,.6,'sine',.05,1760);msg(m.ph2?'바닥이 붉게 달아오른다':'발밑에 빛이 모인다 — 비켜라','warn',1100)}
+    for(const q of L)(G.pills=G.pills||[]).push({x:q.x,y:q.y,t:1.25,fire:!!m.ph2,dmg:m.dmg*.55});blip(1320,.6,'sine',.05,1760);msg(m.ph2?'바닥이 붉게 달아오른다':'발밑에 빛이 모인다 — 비켜라','warn',1100)}
   return false}
 function tBellNow(f,v){for(const[r,a,dd]of[[1,1,2.4],[2.76,.5,1.4],[5.4,.25,.8]])blip(f*r,dd,'sine',v*a,f*r)}
-function bellRing(m,fire){G.bellR={x:m.x,y:m.y,r:.5,hit:0,fire,dmg:m.dmg*.7,fl:0};tBellNow(fire?110:165,.45);burst(1.2,'lowpass',200,.5,1);shake(.5)}
+function bellRing(m,fire){G.bellR={x:m.x,y:m.y,r:.5,hit:0,fire,dmg:m.dmg*.45,fl:0};tBellNow(fire?110:165,.45);burst(1.2,'lowpass',200,.5,1);shake(.5)}
 function preachFXTick(dt){
   if(G.pills){for(const q of G.pills){q.t-=dt;if(q.t>0){if(rnd()<dt*30)G.parts.push({x:q.x+(rnd()-.5)*1.4,y:q.y+(rnd()-.5)*1.4,z:.02,vx:0,vy:0,vz:.3,g:0,life:.4,col:q.fire?[255,120,40]:[255,240,170],sz:.25,rest:0});if(rnd()<.5)G.tmpL.push({x:q.x,y:q.y,r:1.6,i:.5*(1.3-q.t),ttl:.05,type:'muz'})}
     else if(!q.done){q.done=1;G.tmpL.push({x:q.x,y:q.y,r:4,i:2.4,ttl:.25,type:'muz'});for(let i=0;i<30;i++)G.parts.push({x:q.x+(rnd()-.5)*.6,y:q.y+(rnd()-.5)*.6,z:rnd()*1.6,vx:0,vy:0,vz:1.5+rnd()*2,g:0,life:.5,col:q.fire?[255,140,40]:[255,250,220],sz:.35,rest:0});
@@ -4740,7 +4741,7 @@ function preachFXTick(dt){
     for(let i=0;i<2;i++){const a=rnd()*6.28,r=1.5+rnd()*4;G.tmpL.push({x:P.x+Math.cos(a)*r,y:P.y+Math.sin(a)*r,r:4,i:.35+rnd()*.15,ttl:.05,type:'muz'})}
     Q.dbT=(Q.dbT==null?2:Q.dbT)-dt;if(Q.dbT<=0){Q.dbT=Math.max(.5,1.6-Q.t/Q.T);const a=rnd()*6.28,r=rnd()*3.5,x=P.x+Math.cos(a)*r,y=P.y+Math.sin(a)*r;if(!solid(x,y))(G.debs=G.debs||[]).push({x,y,t:1.1})}}
   if(G.debs){for(const q of G.debs){q.t-=dt;if(q.t<=0&&!q.done){q.done=1;shake(.4);burst(.5,'lowpass',180,.5,1);fireAt(q.x,q.y,.6,5,true);for(let i=0;i<18;i++)G.parts.push({x:q.x,y:q.y,z:.1,vx:(rnd()-.5)*3,vy:(rnd()-.5)*3,vz:rnd()*2,life:.7,col:pick([[90,70,50],[255,140,40],[60,50,40]]),sz:.3,rest:0});
-      if(Math.hypot(P.x-q.x,P.y-q.y)<.95&&!P.hidden){P.invT=0;hurtPlayer(16+G.floor*.6,{type:'ceil'});P.burn=Math.max(P.burn||0,2)}}}G.debs=G.debs.filter(q=>q.t>-.2)}}
+      if(Math.hypot(P.x-q.x,P.y-q.y)<.95&&!P.hidden){P.invT=0;hurtPlayer(10+G.floor*.35,{type:'ceil'});P.burn=Math.max(P.burn||0,2)}}}G.debs=G.debs.filter(q=>q.t>-.2)}}
 function preachFX(){
   if(G.pills)for(const q of G.pills){if(q.t<=0)continue;const k=1-q.t/1.25;ring2(q.x,q.y,.85*(.4+.6*k),q.fire?`rgba(255,110,40,${(.4+.5*k).toFixed(2)})`:`rgba(255,240,170,${(.4+.5*k).toFixed(2)})`)}
   if(G.bellR)ring2(G.bellR.x,G.bellR.y,G.bellR.r,G.bellR.fire?'rgba(255,120,40,.8)':'rgba(255,235,170,.75)',1);
