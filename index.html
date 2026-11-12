@@ -2105,7 +2105,7 @@ function bossFor(f){return MIDB[f]?MIDB[f]:['butcher','mother','warden','juggern
 function genFloor(f){if(G)G.portals=[];if(P){P.carry=null;P.rvT=0}if(G&&G.cut){G.cut=null;document.body.classList.remove('cutting')}
   stopAllVoices();
   if(AC)stopAllVoices();
-  G.floor=f;G.threat=0;G.tint=null;G.wdrops=null;G.br=null;G.fk=null;G.wdt=null;G.fdt=null;G.altar=null;G.tanks=null;G.p2=null;G.closets=null;G.cultK=0;G.cultP=[];if(P){P.grab=null;P.op=null}{const e=document.getElementById('p2T');if(e)e.hidden=true;const g=document.getElementById('grabV');if(g)g.hidden=true}G.mgas=[];G.alarm=0;G.mi=null;G.midDone=0;G.door=null;G.lampK=1;G.mon=[];G.pick=[];G.proj=[];G.t1=G.t2=G.reaper=false;G.floorEarn=0;G.got=0;G.piles=0;G.parts=[];G.splat=[];G.npcs=[];G.gibs=[];G.fx=[];G.tmpL=[];G.tracers=[];G.bolts=[];G.slowT=0;G.lockers=0;G.lockOpen=0;if(!G.allies)G.allies=[];G.boss=null;G.bossFloor=f%5===0&&f!==50;G.fin=null;G.ph=[];G.eyes=[];G._stk=0;G._drd=0;G._qn=0;if(P){P.latch=null;P.selfT=null;P.ribPlant=null;P.ribG=0}G.flz=[];G.gEv=null;G.glitchBoost=0;G.glitchAt=(f>=4&&f%5!==0&&rnd()<.07)?25+rnd()*40:0;$('evT').hidden=true;G.ft=0;G.chase=null;G.halT=6;
+  G.floor=f;G.threat=0;G.tint=null;G.wdrops=null;G.br=null;G.fk=null;G.wdt=null;G.fdt=null;G.altar=null;G.tanks=null;G.p2=null;G.surgRage=0;G.closets=null;G.cultK=0;G.cultP=[];if(P){P.grab=null;P.op=null}{const e=document.getElementById('p2T');if(e)e.hidden=true;const g=document.getElementById('grabV');if(g)g.hidden=true}G.mgas=[];G.alarm=0;G.mi=null;G.midDone=0;G.door=null;G.lampK=1;G.mon=[];G.pick=[];G.proj=[];G.t1=G.t2=G.reaper=false;G.floorEarn=0;G.got=0;G.piles=0;G.parts=[];G.splat=[];G.npcs=[];G.gibs=[];G.fx=[];G.tmpL=[];G.tracers=[];G.bolts=[];G.slowT=0;G.lockers=0;G.lockOpen=0;if(!G.allies)G.allies=[];G.boss=null;G.bossFloor=f%5===0&&f!==50;G.fin=null;G.ph=[];G.eyes=[];G._stk=0;G._drd=0;G._qn=0;if(P){P.latch=null;P.selfT=null;P.ribPlant=null;P.ribG=0}G.flz=[];G.gEv=null;G.glitchBoost=0;G.glitchAt=(f>=4&&f%5!==0&&rnd()<.07)?25+rnd()*40:0;$('evT').hidden=true;G.ft=0;G.chase=null;G.halT=6;
   G.chaseAt=(f>=4&&f%5!==0&&rnd()<.06)?35+rnd()*40:0;if(P)P.san=Math.min(100,(P.san==null?100:P.san)+10);
   chooseTrait(f);if(G.traitK&&G.state!=='title'){const st=AS();if(!st.traits.includes(G.traitK)){st.traits.push(G.traitK);persist()}if(st.traits.length>=5)ach('traits5')}
   buildTextures(f);traitTex();wallVariants(f);
@@ -3785,6 +3785,7 @@ function eliteDrop(m){const v=Math.round(160*(1+G.floor*.15));G.pick.push({x:m.x
 let TRK=null;
 const TRACKS={
   lobby:{bpm:58,div:2,vol:3.2},hope:{bpm:76,div:2,vol:6},hope2:{bpm:64,div:2,vol:2.4},boss:{bpm:100,div:4,vol:2.2},origin:{bpm:56,div:2,vol:.9},
+  m_watch:{bpm:92,div:4,vol:3.6},m_seam:{bpm:84,div:4,vol:3.8},m_preach:{bpm:60,div:2,vol:2.2},m_preach2:{bpm:112,div:4,vol:2.4},m_surg:{bpm:72,div:4,vol:4.4},m_surg2:{bpm:140,div:4,vol:2.4},
   end_escape:{bpm:70,div:2,vol:2.6,ch:[[48,52,55,60],[43,50,55,59],[45,52,57,60],[41,48,53,57]]},
   end_freedom:{bpm:66,div:2,vol:3.6,ch:[[41,48,53,57],[40,48,52,55],[38,50,53,57],[46,50,53,58]]},
   end_betray:{bpm:58,div:2,vol:2.4,ch:[[38,50,53,57],[37,49,52,56],[34,46,50,53],[33,45,49,52]]},
@@ -3804,6 +3805,7 @@ function tBell(f,t,v,d){for(const[r,a,dd]of[[1,1,1],[2.76,.5,.6],[5.4,.25,.35],[
 function tChoir(notes,t,dur,v){const bp=filt('bandpass',750,1.2),bp2=filt('bandpass',1150,2);const g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+dur*.35);g.gain.linearRampToValueAtTime(0,t+dur);bp.connect(g);bp2.connect(g);g.connect(TRK.out);
   for(const n of notes){const o=tOsc('sawtooth',mtof(n),t,dur);o.detune.value=(rnd()-.5)*14;const lf=tOsc('sine',4.5+rnd(),t,dur),lg=AC.createGain();lg.gain.value=5;lf.connect(lg);lg.connect(o.detune);o.connect(bp);o.connect(bp2)}}
 function trkStep(name,t,st,sd){const T=TRACKS[name];
+  if(name.startsWith('m_')){midStep(name,t,st,sd);return}
   if(name==='lobby'){const bar=Math.floor(st/8),k=st%8,CH=[[45,57,60,64],[41,57,60,65],[38,57,62,65],[40,56,59,64]],c=CH[Math.floor(bar/2)%4];
     const MEL=[[76,0,74,72,71,0,72,0],[69,0,0,0,0,0,0,0],[77,0,76,74,72,0,74,0],[72,0,0,0,0,0,0,0],[74,0,72,69,71,0,69,0],[65,0,0,0,0,0,0,0],[71,0,72,74,76,0,74,0],[68,0,0,0,71,0,0,0]],m=MEL[bar%8][k];
     if(k===0&&bar%2===0){tPad(c,t,sd*16,.05,800);tKick(t,mtof(c[0]-12),mtof(c[0]-12),.18,sd*14);tPluck(mtof(c[0]-12),t,.12,sd*12,'triangle')}
@@ -3844,18 +3846,82 @@ function trkStep(name,t,st,sd){const T=TRACKS[name];
     if(md==='being'){if(two){const l=filt('lowpass',200,4);for(const n of[c[0]-12,c[0]-11,c[0]-5]){const o=tOsc('sawtooth',mtof(n),t,sd*16);o.connect(l)}const g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.09,t+sd*6);g.gain.linearRampToValueAtTime(0,t+sd*16);l.connect(g);g.connect(TRK.out)}
       if(rnd()<.35){const sN=AC.createBufferSource();sN.buffer=NOISE;const fl=filt('lowpass',400+rnd()*600,5);sN.connect(fl);trkEnv(fl,.08,t,.01,.12+rnd()*.15);sN.start(t,rnd());sN.stop(t+.4)}
       if(k===3||k===7)tPluck(mtof(c[3]+24)*(1+(rnd()-.5)*.03),t,.025,3,'sine');if(k===0&&bar%2===1)tPluck(mtof(c[0]+25),t,.03,4,'sine');return}}}
+// ================= 중간 보스 음악 (1페이즈 · 2페이즈) =================
+function tSq(f,t,v,d,cut,type){const o=tOsc(type||'square',f,t,d),l=filt('lowpass',cut||1200,1);o.connect(l);trkEnv(l,v,t,.004,d)}
+function tVib(f,t,v,d,rate,dep,type){const o=tOsc(type||'sine',f,t,d),lf=tOsc('sine',rate||5,t,d),lg=AC.createGain();lg.gain.value=f*(dep||.01);lf.connect(lg);lg.connect(o.frequency);const g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+Math.min(.25,d*.3));g.gain.setValueAtTime(v,t+d*.75);g.gain.linearRampToValueAtTime(0,t+d);o.connect(g);g.connect(TRK.out)}
+function tOrgan(notes,t,d,v,cut){const l=filt('lowpass',cut||2200,.7),g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.08);g.gain.setValueAtTime(v,t+d*.85);g.gain.linearRampToValueAtTime(0,t+d);l.connect(g);g.connect(TRK.out);
+  for(const n of notes)for(const[r,a]of[[1,1],[2,.55],[3,.3],[4,.18],[.5,.4]]){const o=tOsc('sine',mtof(n)*r,t,d),og=AC.createGain();og.gain.value=a;o.connect(og);og.connect(l)}}
+function tSwell(notes,t,d,v,type,cut,det){const l=filt('lowpass',cut||1400,2),g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.exponentialRampToValueAtTime(Math.max(.0004,v),t+d*.92);g.gain.linearRampToValueAtTime(0,t+d);l.connect(g);g.connect(TRK.out);
+  for(const n of notes){const o=tOsc(type||'sawtooth',mtof(n),t,d);o.detune.value=(rnd()-.5)*(det||30);o.connect(l)}}
+function tSweep(f0,f1,t,d,v,type){const o=tOsc(type||'sine',f0,t,d);o.frequency.linearRampToValueAtTime(f1,t+d*.5);o.frequency.linearRampToValueAtTime(f0,t+d);trkEnv(o,v,t,.05,d)}
+function midStep(name,t,st,sd){
+  // Night Watch: 경비실 — 시계 초침, 스캐너 신호음, 무전 잡음, 낮게 맥박 치는 베이스
+  if(name==='m_watch'){const bar=Math.floor(st/16),k=st%16,CH=[[38,50,53,57],[34,46,50,53],[36,48,52,55],[33,45,49,52]],c=CH[Math.floor(bar/2)%4],r=c[0]-12;
+    if(k%4===0)tNz(t,'highpass',5200,k%8?.018:.03,.025,2);if(k%8===0)tKick(t,70,40,.32,.3);if(k===12)tNz(t,'bandpass',300,.08,.12,2);
+    const BS=[0,0,0,7,0,0,10,0,0,0,0,7,0,0,12,10];if(k%2===0)tSq(mtof(r+BS[k]),t,.07,.16,420);
+    if(k===0){tSq(1318,t,.03,.08,4000,'sine');tSq(988,t+sd*1.5,.025,.08,4000,'sine')}
+    if(k===0&&bar%2===0)tPad(c.slice(1),t,sd*32,.035,520);
+    if(bar%4===3&&k===8){for(let i=0;i<4;i++)tSq(i%2?660:880,t+i*sd*1.5,.025,sd*1.3,1600)}
+    if(rnd()<.05)tNz(t,'bandpass',1800+rnd()*1200,.03,.05+rnd()*.15,5);
+    if(k===6&&bar%8===5){for(let i=0;i<3;i++)tSq(1760,t+i*sd*.7,.012,.04,6000,'sine')}return}
+  // Seamstress: 오르골 — 3박자, 높은 음 상자 소리, 태엽이 풀리며 음이 늘어진다
+  if(name==='m_seam'){const bar=Math.floor(st/12),k=st%12,CH=[[45,57,60,64],[40,56,59,64],[41,57,60,65],[40,56,59,62]],c=CH[bar%4];
+    const MEL=[[81,0,0,0,76,0,0,0,77,0,76,0],[74,0,0,0,72,0,0,0,71,0,72,0],[76,0,0,0,72,0,0,0,69,0,0,0],[68,0,0,0,71,0,0,0,76,0,0,0],
+      [81,0,83,0,84,0,0,0,83,0,81,0],[79,0,0,0,77,0,0,0,76,0,74,0],[72,0,74,0,76,0,0,0,71,0,0,0],[69,0,0,0,0,0,0,0,68,0,0,0]],m=MEL[bar%8][k];
+    const cyc=(bar%16)/16,wind=bar%16>=13?1-(bar%16-12+k/12)*.018:1,w=wind*(1+(rnd()-.5)*.004);
+    if(m&&!(bar%16===15&&k>6)){const f=mtof(m+12)*w;tPluck(f,t,.06,1.6,'sine');const o=tOsc('sine',f*4.02,t,.25);trkEnv(o,.012,t,.002,.25);const o2=tOsc('sine',f*2.99,t,.4);trkEnv(o2,.008,t,.002,.4)}
+    if(k===0)tPluck(mtof(c[0])*w,t,.05,1.8,'sine');if(k===4||k===8)for(const n of[c[2],c[3]])tPluck(mtof(n+12)*w,t,.018,.9,'sine');
+    if(k===6&&rnd()<.35)tPluck(mtof(c[3]+24)*w,t,.012,.6,'sine');
+    if(k===0&&bar%4===0)tPad([c[0]-12,c[0]],t,sd*48,.03,300);
+    if(rnd()<.04){tNz(t,'highpass',6000,.04,.02,3);tNz(t+.06,'highpass',5500,.035,.02,3)}if(k===0&&bar%16===15)tNz(t,'bandpass',900,.04,.6,6);return}
+  // Preacher 1: 신성함 — 오르간, 성가대, 종, 낮게 깔리는 성가
+  if(name==='m_preach'){const bar=Math.floor(st/8),k=st%8,CH=[[38,50,57,62,66],[35,50,54,59,62],[31,50,55,59,62],[33,49,52,57,64]],c=CH[bar%4];
+    if(k===0){tOrgan(c.slice(1),t,sd*8,.035,2000);tOrgan([c[0],c[0]-12],t,sd*8,.03,600)}
+    if(k===0&&bar%2===0)tChoir(c.slice(2).map(n=>n+12),t,sd*16,.06);
+    if(k===0&&bar%4===0){tBell(mtof(74),t,.05,6);tBell(mtof(62),t+sd*2,.03,5)}
+    const MEL=[[74,0,76,0,78,0,76,0],[74,0,0,0,71,0,0,0],[71,0,74,0,76,0,74,0],[73,0,0,0,76,0,0,0]],m=MEL[bar%4][k];if(m)tVib(mtof(m),t,.03,sd*1.9,5.2,.008,'triangle');
+    if(k===4&&rnd()<.5)tPluck(mtof(c[4]+12),t,.012,3,'sine');return}
+  // Preacher 2: 뒤틀린 이단 — 트라이톤, 거꾸로 부푸는 합창, 북, 타는 소리
+  if(name==='m_preach2'){const bar=Math.floor(st/16),k=st%16,CH=[[38,44,50,53],[37,43,49,52],[39,45,51,54],[36,42,48,51]],c=CH[Math.floor(bar/2)%4],r=c[0]-12;
+    if([0,3,6,8,10,13].includes(k))tKick(t,k===0?95:75,32,k===0?.6:.38,.4);if(k===4||k===12){tNz(t,'lowpass',400,.35,.35);tNz(t,'bandpass',1200,.08,.2,2)}
+    if(k%2===1)tNz(t,'bandpass',3000+rnd()*3000,.015,.03,6);
+    const BS=[0,0,6,0,0,1,0,6,0,0,-1,0,6,0,1,0];if(k%2===0){const o=tOsc('sawtooth',mtof(r+BS[k]),t,.2),l=filt('lowpass',380,9);o.connect(l);trkEnv(l,.12,t,.004,.2)}
+    if(k===0&&bar%2===0){tSwell(c.map(n=>n+12),t,sd*32,.07,'sawtooth',1300,60);tChoir([c[1]+12,c[2]+12,c[3]+12],t,sd*32,.05)}
+    if(k===0)tOrgan([c[1],c[2]],t,sd*14,.02,900);
+    if(k===8&&bar%2===1){const f=mtof(c[3]+24);tVib(f,t,.035,sd*7,7,.03,'sawtooth')}
+    if(k===0&&bar%4===0){tBell(mtof(50)*.94,t,.07,6);tBell(mtof(56),t+sd*3,.04,5)}
+    if(rnd()<.2)tNz(t,'bandpass',600+rnd()*900,.03,.15,3);return}
+  // Surgeon 1: 수술실 — 심전도 신호음, 인공호흡기, 차갑고 깨끗한 화음, 기구 부딪히는 소리
+  if(name==='m_surg'){const bar=Math.floor(st/16),k=st%16,CH=[[45,52,57,60],[41,48,53,57],[43,50,55,59],[40,47,52,56]],c=CH[Math.floor(bar/2)%4];
+    if(k%4===0){tSq(1000,t,.03,.07,8000,'sine')}if(k%4===1)tKick(t,55,40,.12,.12);
+    if(k===0&&bar%2===0){const sN=AC.createBufferSource();sN.buffer=NOISE;const fl=filt('lowpass',900,1.5);sN.connect(fl);const g=AC.createGain(),D=sd*16;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+D*.45);g.gain.linearRampToValueAtTime(0,t+D*.5);g.gain.linearRampToValueAtTime(.035,t+D*.9);g.gain.linearRampToValueAtTime(0,t+D);fl.connect(g);g.connect(TRK.out);sN.start(t,rnd());sN.stop(t+D+.1)}
+    if(k===0&&bar%2===0){tPad(c.map(n=>n+12),t,sd*32,.022,2600);tPluck(mtof(c[0]-12),t,.08,sd*28,'sine')}
+    const AR=[c[1]+24,0,0,c[3]+24,0,0,c[2]+24,0,c[1]+24,0,0,c[3]+24,0,0,c[2]+31,0];if(AR[k])tPluck(mtof(AR[k]),t,.012,1.2,'sine');
+    if(rnd()<.06){const f=2800+rnd()*2400;for(const[r,a]of[[1,1],[2.7,.5],[5.1,.25]]){const o=tOsc('sine',f*r,t,.3);trkEnv(o,.012*a,t,.002,.3)}}
+    if(k===8&&bar%4===3)tBell(mtof(88),t,.015,2.5);return}
+  // Surgeon 2: 응급실 — 빨라진 심박, 경보음, 사이렌, 몰아치는 맥박
+  if(name==='m_surg2'){const bar=Math.floor(st/16),k=st%16,CH=[[45,48,52,57],[44,47,52,56],[42,45,50,54],[41,44,48,53]],c=CH[bar%4],r=c[0]-12;
+    if(k%3===0)tSq(1180,t,.035,.05,9000,'sine');
+    if([0,8,10].includes(k))tKick(t,110,45,.5,.25);if(k===4||k===12){tNz(t,'bandpass',1800,.18,.12,1.2);tNz(t,'lowpass',260,.2,.15)}tNz(t,'highpass',7000,k%2?.012:.022,.02);
+    tSq(mtof(r+(k%4===2?12:0)),t,.06,.1,700,'sawtooth');
+    if(k===0){for(let i=0;i<2;i++){tSq(960,t+i*sd*2,.03,sd*1.6,3000);tSq(1280,t+i*sd*2+sd,.03,sd*.9,3000)}}
+    if(k===0&&bar%4===2)tSweep(620,1240,t,sd*16,.035,'triangle');
+    if(k===8&&bar%2===1){for(let i=0;i<3;i++)tSq(2093,t+i*sd*.6,.02,.04,9000,'sine')}
+    if(k===0&&bar%2===0)tPad([c[1]+12,c[2]+12,c[3]+12],t,sd*32,.03,1500);
+    if(k===14&&bar%8===7)tSq(1000,t,.03,sd*2.5,9000,'sine');return}}
 function playTrack(name){if(!AC)return;if(TRK&&TRK.name===name)return;stopTrack();const T=TRACKS[name];
   const out=AC.createGain();out.gain.value=0;out.connect(MUSB||MASTER);const sd=AC.createGain();sd.gain.value=.35;out.connect(sd);if(revIn)sd.connect(revIn);out.gain.setTargetAtTime(T.vol,AC.currentTime,1.2);
   TRK={name,out,step:0,next:AC.currentTime+.15};const stepDur=60/T.bpm/T.div;
   TRK.timer=setInterval(()=>{if(!TRK||TRK.name!==name)return;while(TRK.next<AC.currentTime+.3){try{trkStep(name,TRK.next,TRK.step,stepDur)}catch(e){}TRK.next+=stepDur;TRK.step++}},60)}
 function stopTrack(){if(!TRK)return;const k=TRK;TRK=null;clearInterval(k.timer);k.out.gain.setTargetAtTime(0,AC.currentTime,.6);setTimeout(()=>{try{k.out.disconnect()}catch(e){}},4000)}
 function bossOn(){const b=G.boss;if(!b||b.dead||!P)return false;if(G.fin&&(G.fin.st==='birth'||G.fin.st==='fight'))return true;return !!G.bossSeen&&Math.hypot(b.x-P.x,b.y-P.y)<26}
+function midTrack(){const b=G.boss;if(!b)return null;const t=b.type;if(t==='watch')return'm_watch';if(t==='seam')return'm_seam';if(t==='preach')return(b.ph2||G.p2)?'m_preach2':'m_preach';if(t==='surgeon')return(b.rage||G.surgRage)?'m_surg2':'m_surg';return null}
 function musicTick(){if(!AC||!G)return;const st=G.state;let want=null;
   if(st==='title')want='lobby';
   else if(st==='ending')want=G.endTrack||null;
   else if((st==='play'||st==='pause'||st==='codex'||st==='sbox')&&G.fin){const fs=G.fin.st;want=fs==='walk'?'hope':fs==='open'?'hope2':fs==='odie'?null:(fs==='block'&&G.fin.t<1.3)?null:'origin'}
-  else if(st==='play'||st==='pause'||st==='codex'||st==='sbox'||st==='note')want=bossOn()?(G.fin&&G.boss&&G.boss.type==='origin'?'origin':'boss'):null;
-  const cur=TRK&&TRK.name;if(want===cur)return;if(want){if(want==='boss'||want==='origin'){if(G.chase)chaseMusic(false)}playTrack(want)}else stopTrack()}
+  else if(st==='play'||st==='pause'||st==='codex'||st==='sbox'||st==='note')want=bossOn()?(G.fin&&G.boss&&G.boss.type==='origin'?'origin':midTrack()||'boss'):(G.p2&&G.p2.k==='preach'&&!G.p2.safe?'m_preach2':null);
+  const cur=TRK&&TRK.name;if(want===cur)return;if(want){if(want==='boss'||want==='origin'||want.startsWith('m_')){if(G.chase)chaseMusic(false)}playTrack(want)}else stopTrack()}
 
 // ================= 샌드박스 =================
 const SB={on:false,god:false,inv:false,freeze:false,lockSan:null,used:false};
@@ -4367,7 +4433,7 @@ function caveFX(){const Q=G.p2;if(!Q||!Q.cave)return;const k=clamp(Q.cave.t/1.5,
   ctx.fillStyle='#2a2622';ctx.fillRect(0,0,W,h);ctx.fillStyle='#3e3832';for(let x=0;x<W;x+=7)ctx.fillRect(x+((x*13)%5),0,3,h*.9);ctx.fillStyle='#14110e';for(let i=0;i<12;i++){const x=(i*53)%W;ctx.fillRect(x,h-6-(i%3)*3,18,2)}
   ctx.fillStyle='#6a4a30';for(let i=0;i<6;i++)ctx.fillRect((i*71+20)%W,h-2,2,8);ctx.fillStyle=`rgba(120,110,96,${.35*k})`;ctx.fillRect(0,0,W,H)}
 // ---- 집도의 ----
-function surgRage(m,remote){if(!remote){m.rage=1;m.stun=1.8;m.spd=MT.surgeon.spd*1.35;m.grc=3}
+function surgRage(m,remote){G.surgRage=1;if(!remote){m.rage=1;m.stun=1.8;m.spd=MT.surgeon.spd*1.35;m.grc=3}
   if(NET.host&&!remote)netSend({t:'p2',k:'surg'});
   p2Banner('THE SURGEON','광폭','"가만히 있어. 마취는 없어."','#ff3a2a');shake(.9);if(G.tint){G.tint.c=[255,40,30];G.tint.tk=.6;G.tint.pulse=4}
   for(let i=0;i<4;i++)blip(620+i*90,.9,'sawtooth',.14,180,i*.06,0,.4);burst(1,'bandpass',900,.4,2);
