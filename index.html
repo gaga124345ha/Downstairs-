@@ -16,6 +16,7 @@ html,body{height:100%;margin:0;background:var(--void);color:var(--ink);font-fami
 #view{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;object-fit:cover;display:block;cursor:crosshair}
 #vig{--vi:42%;--vm:78%;--va:.5;position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent var(--vi),rgba(0,0,0,var(--va)) var(--vm),rgba(0,0,0,.95) 100%)}
 #silv{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;object-fit:cover;pointer-events:none}
+body.prt #view,body.prt #silv{object-fit:contain}body.prt{background:#000}
 #hurtfx{position:fixed;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(150,10,5,.75) 100%)}
 #dreadfx{position:fixed;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,.9) 90%)}
 #fade{position:fixed;inset:0;background:#000;pointer-events:none;opacity:0;transition:opacity .6s}
@@ -74,7 +75,7 @@ body.touchon #belt{display:none}
 #tjBase.idle{opacity:.45}
 #tjBase.run{border-color:rgba(255,120,90,.8);background:rgba(120,30,20,.18)}
 #tjKnob{position:absolute;left:50%;top:50%;width:calc(var(--U)*.95);height:calc(var(--U)*.95);margin:calc(var(--U)*-.475) 0 0 calc(var(--U)*-.475);border-radius:50%;background:rgba(214,196,166,.32);border:1.5px solid rgba(255,232,200,.5)}
-#tRot{position:absolute;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translateX(-50%);padding:6px 12px;border-radius:12px;background:rgba(0,0,0,.7);color:#e8dcc4;font:700 12px var(--ui);display:none;pointer-events:none;white-space:nowrap}
+#tRot{position:absolute;left:50%;top:calc(var(--U)*1.05 + 18px + env(safe-area-inset-top,0px));transform:translateX(-50%);padding:6px 12px;border-radius:12px;background:rgba(0,0,0,.7);color:#e8dcc4;font:700 12px var(--ui);display:none;pointer-events:none;white-space:nowrap}
 @media (orientation:portrait){#tRot{display:block}}
 #hud{position:fixed;inset:0;pointer-events:none;font-size:13px}
 #hud[hidden]{display:none!important}
@@ -212,6 +213,8 @@ button:disabled{opacity:.35;cursor:not-allowed}
 .achBtn{font-size:15px;padding:13px 22px;letter-spacing:.12em;border:1px solid var(--amber)!important;color:var(--amber)!important;background:rgba(236,184,61,.06)}.achBtn:hover{background:var(--amber)!important;color:#140d0a!important}
 @media (max-width:760px){#title{justify-items:center;padding-left:max(16px,env(safe-area-inset-left,0px))}#title::after{background:rgba(5,5,6,.68)}#title .tmenu{justify-items:center;text-align:center}}
 .tmenu{display:grid;justify-items:center;gap:14px;text-align:center;max-width:620px}
+.ov{align-content:safe center}
+@media (max-height:520px){.tmenu{gap:6px}.tmenu h1{font-size:clamp(34px,7vw,56px)}.sub{font-size:14px;margin:-2px 0 2px}.lore{font-size:13px;margin:0 0 4px}.tmenu button{padding:6px 14px}.ov{padding-block:10px}}
 .tmenu h1{font-family:var(--disp);font-weight:800;font-size:clamp(48px,9.5vw,112px);margin:0;letter-spacing:.12em;line-height:1;color:var(--ink);text-shadow:0 0 30px rgba(160,30,20,.35)}
 .sub{font-family:var(--num);font-size:20px;letter-spacing:.6em;color:var(--dim);margin:-6px 0 6px}
 .lore{font-family:var(--disp);font-size:17px;color:#bfae9a;margin:0 0 10px}
@@ -744,10 +747,12 @@ function sh(r,g,b,br,d){
 // 화면 비율에 맞춘 내부 해상도 + 손전등 원뿔 마스크
 const RES_H=[216,192,168,144];let RES_I=0,RES_FT=0,RES_N=0,RES_CD=0;
 // 프레임이 무거우면 내부 해상도를 낮추고, 여유가 생기면 다시 올린다
-function resTick(ms){if(OPT&&OPT.res===0)return;RES_FT=RES_FT*.95+ms*.05;RES_N++;RES_CD-=ms;if(RES_N<90||RES_CD>0)return;
+function resTick(ms){viewCheck(ms);if(OPT&&OPT.res===0)return;RES_FT=RES_FT*.95+ms*.05;RES_N++;RES_CD-=ms;if(RES_N<90||RES_CD>0)return;
   if(RES_FT>24&&RES_I<RES_H.length-1){RES_I++;RES_N=0;RES_CD=3000;setupView()}else if(RES_FT<11&&RES_I>0){RES_I--;RES_N=0;RES_CD=6000;setupView()}}
+let VW0=0,VH0=0,VPRT=null;
 function setupView(){
-  const asp=Math.max(.5,innerWidth/Math.max(1,innerHeight));
+  VW0=innerWidth;VH0=innerHeight;const prt=innerHeight>innerWidth*1.05;document.body.classList.toggle('prt',prt);if(VPRT!==null&&VPRT!==prt){try{touchReset()}catch(e){}if(typeof P!=='undefined'&&P)P.ads=false}VPRT=prt;
+  const asp=prt?1.12:Math.max(1,innerWidth/Math.max(1,innerHeight));
   H=RES_H[RES_I];W=clamp(Math.round(H*asp/2)*2,Math.round(240*H/216/2)*2,Math.round(560*H/216/2)*2);
   cv.width=W;cv.height=H;ctx.imageSmoothingEnabled=false;{const sv=document.getElementById('silv');if(sv){sv.width=W;sv.height=H}}
   img=ctx.createImageData(W,H);buf=new Uint32Array(img.data.buffer);zbuf=new Float32Array(W);
@@ -758,7 +763,10 @@ function setupView(){
   }
 }
 setupView();
-let rsT=0;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{setupView();if(G&&G.state!=='play'&&TX.wall)render()},150)});
+let rsT=0;function viewFix(){setupView();try{tzApply()}catch(e){}try{if(G&&G.state!=='play'&&TX.wall)render()}catch(e){}}
+function viewLater(){clearTimeout(rsT);rsT=setTimeout(viewFix,150);for(const t of[400,900,1600])setTimeout(()=>{if(innerWidth!==VW0||innerHeight!==VH0)viewFix()},t)}
+addEventListener('resize',viewLater);addEventListener('orientationchange',viewLater);try{if(window.visualViewport)visualViewport.addEventListener('resize',viewLater)}catch(e){}try{if(screen.orientation)screen.orientation.addEventListener('change',viewLater)}catch(e){}
+let vchkT=0;function viewCheck(ms){vchkT+=ms;if(vchkT<300)return;vchkT=0;if(innerWidth!==VW0||innerHeight!==VH0)viewFix()}
 
 // ================= 텍스처 =================
 function mkTex(fn){const d=new Uint8Array(TS*TS*3);for(let y=0;y<TS;y++)for(let x=0;x<TS;x++){const c=fn(x,y),i=(y*TS+x)*3;d[i]=clamp(c[0],0,255);d[i+1]=clamp(c[1],0,255);d[i+2]=clamp(c[2],0,255)}return d}
