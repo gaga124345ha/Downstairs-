@@ -614,7 +614,7 @@ body.pxwait .ov,body.pxwait #hud{visibility:hidden}
   <div class="tb" id="tX" data-k="x">X<small>스킬</small></div>
   <div class="tb" id="tR" data-k="r">R<small>장전</small></div>
   <div class="tb" id="tQ" data-k="q">Q<small>교체</small></div>
-  <div id="tTop"><div class="tb sq" id="tC" data-k="c">C<small>숙임</small></div><div class="tb sq" id="tF" data-k="f">F<small>전등</small></div><div class="tb sq" id="tWh" data-k="wh">휘<small>휘파람</small></div><div class="tb sq" id="tTab" data-k="tab">도감</div><div class="tb sq" id="tPause" data-k="pause">멈춤</div><div class="tb sq" id="tSB" data-k="sb" style="display:none">샌드</div></div>
+  <div id="tTop"><div class="tb sq" id="tC" data-k="c">C<small>숙임</small></div><div class="tb sq" id="tF" data-k="f">F<small>전등</small></div><div class="tb sq" id="tWh" data-k="wh">휘<small>휘파람</small></div><div class="tb sq on" id="tAu" data-k="au">자동<small>공격</small></div><div class="tb sq" id="tTurn" data-k="turn">뒤로<small>돌기</small></div><div class="tb sq" id="tTab" data-k="tab">도감</div><div class="tb sq" id="tPause" data-k="pause">멈춤</div><div class="tb sq" id="tSB" data-k="sb" style="display:none">샌드</div></div>
   <div id="tBelt"><div class="tb sq" data-k="b3">약<span class="cnt nopx">0</span></div><div class="tb sq" data-k="b4">각성<span class="cnt nopx">0</span></div><div class="tb sq" data-k="b5">마약<span class="cnt nopx">0</span></div><div class="tb sq" data-k="b6">C4<span class="cnt nopx">0</span></div><div class="tb sq" data-k="gj" id="tGJ">던지기<span class="cnt nopx">0</span></div></div>
 </div>
 <div id="fade"></div>
@@ -1042,7 +1042,7 @@ function buildSprites(){
   SPR.candle=mkSprite(6,20,(g,gg,R,E)=>{R(g,'#2a2420',2,8,2,12);R(g,'#2a2420',0,18,6,2);R(g,'#d8cfb8',1,4,4,4);R(gg,'#ffb040',2,0,2,4);R(gg,'#fff0c0',2,1,1,2)});
   SPR.sewtable=mkSprite(22,16,(g,gg,R,E)=>{R(g,'#5a3a20',0,8,22,3);R(g,'#3a2412',1,11,2,5);R(g,'#3a2412',19,11,2,5);R(g,'#1a1a1c',5,2,10,6);R(g,'#2a2a2c',5,2,3,3);R(g,'#c0b080',12,1,2,2);R(g,'#c8a088',14,6,7,3);R(g,'#a87860',15,7,5,4);for(let x=15;x<21;x+=2)R(g,'#2a1a14',x,7,1,1)});
   SPR.manneq=mkSprite(12,32,(g,gg,R,E)=>{R(g,'#3a2a20',5,22,2,8);R(g,'#3a2a20',2,30,8,2);E(g,'#c8a088',6,12,4.5,8);E(g,'#a87860',4,10,2,3);for(let y=6;y<20;y+=2)R(g,'#2a1a14',6,y,1,1);R(g,'#3a2a20',5,2,2,3);E(g,'#6a4a38',6,3,1.5,1.2);for(const[x,y,c]of[[3,9,'#c02020'],[8,13,'#2060c0']]){R(g,'#c0c0c8',x,y,1,2);R(g,c,x,y-1,1,1)}});
-  {const PC=[['#c8a040','#8a6a20'],['#4a8ac8','#2a5a8a'],['#c84a4a','#8a2a2a'],['#4ac86a','#2a8a42']];PC.forEach(([c,d],i)=>{SPR['pl'+i]=mkSprite(20,48,(g,gg,R,E)=>{R(g,c,6,16,8,16);R(g,d,6,24,8,2);R(g,c,3,17,3,12);R(g,c,14,17,3,12);R(g,'#b88a68',3,29,3,3);R(g,'#b88a68',14,29,3,3);R(g,d,7,32,3,13);R(g,d,11,32,3,13);R(g,'#1e1a16',6,45,4,3);R(g,'#1e1a16',11,45,4,3);E(g,'#b88a68',10,10,4,4.6);R(g,'#2a2420',6,5,8,3);R(g,'#1a1410',8,10,1,1);R(g,'#1a1410',11,10,1,1);R(g,'#3a3a3a',15,25,3,6);R(gg,'#fff0c0',16,24,2,1)})});
+  {window.PLC=[['#c8a040','#8a6a20'],['#4a8ac8','#2a5a8a'],['#c84a4a','#8a2a2a'],['#4ac86a','#2a8a42']];window.plBase=(g,gg,R,E,c,d)=>{R(g,c,6,16,8,16);R(g,d,6,24,8,2);R(g,c,3,17,3,12);R(g,c,14,17,3,12);R(g,'#b88a68',3,29,3,3);R(g,'#b88a68',14,29,3,3);R(g,d,7,32,3,13);R(g,d,11,32,3,13);R(g,'#1e1a16',6,45,4,3);R(g,'#1e1a16',11,45,4,3);E(g,'#b88a68',10,10,4,4.6);R(g,'#2a2420',6,5,8,3);R(g,'#1a1410',8,10,1,1);R(g,'#1a1410',11,10,1,1);R(g,'#3a3a3a',15,25,3,6);R(gg,'#fff0c0',16,24,2,1)};PLC.forEach(([c,d],i)=>{SPR['pl'+i]=mkSprite(20,48,(g,gg,R,E)=>plBase(g,gg,R,E,c,d))});
    SPR.plD=mkSprite(30,10,(g,gg,R,E)=>{E(g,'#4a0806',15,8,13,2);R(g,'#6a6a60',7,4,12,4);E(g,'#b88a68',4,5,3,2.4);R(g,'#4a4a44',18,5,9,3);R(g,'#2a2a2a',22,1,3,2)})}
   SPR.singS=mkSprite(16,16,(g,gg,R,E)=>{for(let i=0;i<28;i++){const a=i/28*6.283,r=6+Math.sin(i*1.7)*.8;R(gg,i%3?'#ff3a24':'#ffd0b0',Math.round(8+Math.cos(a)*r),Math.round(8+Math.sin(a)*r),1,1)}E(g,'#060002',8,8,4.6,4.6);E(g,'#200404',8,8,2.6,2.6);R(gg,'#ff6a4a',7,7,1,1)});
   SPR.car=mkSprite(34,16,(g,gg,R,E)=>{const c=pick(['#4a5a6a','#6a3a32','#3a4a3a','#5a5650','#2a2a30']);R(g,c,1,5,32,8);R(g,c,6,1,20,5);R(g,'#1a2228',8,2,7,3);R(g,'#1a2228',17,2,7,3);R(g,'#141414',4,11,7,5);R(g,'#141414',23,11,7,5);R(g,'#3a3a3a',6,13,3,2);R(g,'#3a3a3a',25,13,3,2);R(gg,'#e8d8a0',31,7,2,2);R(g,'#7a1a14',1,7,2,2);R(g,'#000',1,10,32,1);R(g,'#2a2a2a',14,8,5,1)});
@@ -1470,16 +1470,16 @@ const ITEMS=[
   {id:'gum',r:0,n:'민트 껌',d:'숨 회복 +25%',f:()=>{S.stamRegen+=.25}},
   {id:'keyring',r:0,n:'엘리베이터 열쇠고리',d:'엘리베이터 방향이 화면 가운데 금색 점으로 보인다.',f:()=>{S.beacon++},uniq:1},
   {id:'antidep',r:0,n:'항우울제',d:'정신력을 50 회복한다. 정신이 무너지는 순간에도 손을 멈출 수 있다. [8]',f:()=>beltAdd('antidep'),cons:1},
-  {id:'vest',r:1,n:'방검 조끼',d:'받는 피해 -12%',f:()=>{S.armor+=.12}},
+  {id:'vest',r:1,n:'방검 조끼',d:'받는 피해 -12%, 최대 체력 +15',f:()=>{S.armor+=.12;S.maxHp+=15;P.hp+=15}},
   {id:'bigcell',r:1,n:'대용량 배터리 팩',d:'최대 배터리 +50, 소모 -15%',f:()=>{S.maxBat+=50;P.bat+=50;S.batDrain*=.85}},
-  {id:'pills',r:1,n:'진통제 병',d:'최대 체력 +25',f:()=>{S.maxHp+=25;P.hp+=25}},
+  {id:'pills',r:1,n:'진통제 병',d:'최대 체력 +30',f:()=>{S.maxHp+=30;P.hp+=30}},
   {id:'soles',r:1,n:'고무 밑창',d:'발소리 -25%',f:()=>{S.noise*=.75}},
   {id:'bar',r:1,n:'단백질 바 한 상자',d:'체력 재생 초당 +0.6',f:()=>{S.regen+=.6}},
   {id:'crowbar',r:1,n:'손목 보호대',d:'공격 속도 +15%, 사거리 +0.2',f:()=>{S.atkSpd+=.15;S.range+=.2}},
   {id:'stim',r:1,n:'각성제',d:'25초 동안 이동 속도 +35%. 괴물이 다가오거나 맞아도 화면이 좁아지거나 흔들리지 않는다. [9]',f:()=>beltAdd('stim'),cons:1},
-  {id:'taser',r:2,n:'전기충격기',d:'공격이 적을 0.9초 기절시킨다.',f:()=>{S.stun=Math.max(S.stun,.9)},uniq:1},
+  {id:'taser',r:2,n:'전기충격기',d:'공격이 적을 0.7초 기절시킨다.',f:()=>{S.stun=Math.max(S.stun,.7)},uniq:1},
   {id:'nv',r:2,n:'야간투시 렌즈',d:'불빛 없이도 주변이 희미하게 보인다.',f:()=>{S.nv+=.07}},
-  {id:'fang',r:2,n:'흡혈 송곳니',d:'준 피해의 12%만큼 체력 회복',f:()=>{S.lifesteal+=.12}},
+  {id:'fang',r:2,n:'흡혈 송곳니',d:'준 피해의 9%만큼 체력 회복',f:()=>{S.lifesteal+=.09}},
   {id:'glove',r:2,n:'탐욕의 장갑',d:'줍는 돈 +30%',f:()=>{S.moneyMult+=.3}},
   {id:'adren',r:2,n:'아드레날린 주사기',d:'이동 속도 +12%, 숨 회복 +40%',f:()=>{S.speed+=.12;S.stamRegen+=.4}},
   {id:'radar',r:2,n:'휴대용 레이더',d:'가까운 괴물의 방향이 화면 가운데 붉은 점으로 보인다.',f:()=>{S.radar++},uniq:1},
@@ -1488,14 +1488,14 @@ const ITEMS=[
   {id:'c4',r:2,n:'C4 폭약',d:'[6]으로 바닥에 설치하고 우클릭으로 터뜨린다. 반경 안의 괴물을 날려 버리지만 온 층이 듣는다. 너무 가까우면 너도 다친다.',f:()=>beltAdd('c4'),cons:1},
   {id:'halo',r:4,n:'금 간 후광',d:'설교자의 제단 뒤에서 나온 금속 고리. 정신력 소모 -50% · 초당 체력 2.5 회복 · 최대 체력 +40.',f:()=>{S.sanK=(S.sanK||0)-.5;S.regen=(S.regen||0)+2.5;S.maxHp+=40;P.hp+=40},uniq:1},
   {id:'wardcoat',r:4,n:'경비반장의 외투',d:'무전기가 꿰매진 두꺼운 외투. 방어 +20% · 기척 -15% · 최대 전지 +40 · 최대 체력 +50.',f:()=>{S.armor=(S.armor||0)+.2;S.noise=(S.noise||0)-.15;S.maxBat=(S.maxBat||100)+40;S.maxHp+=50;P.hp+=50},uniq:1},
-  {id:'surgkit',r:4,n:'집도의의 메스 세트',d:'한 번도 소독한 적 없는 메스들. 치명타 +22% · 흡혈 +8% · 근접 피해 +6.',f:()=>{S.crit=(S.crit||0)+.22;S.lifesteal=(S.lifesteal||0)+.08;S.dmg+=6},uniq:1},
+  {id:'surgkit',r:4,n:'집도의의 메스 세트',d:'한 번도 소독한 적 없는 메스들. 치명타 +22% · 흡혈 +10% · 근접 피해 +16.',f:()=>{S.crit=(S.crit||0)+.22;S.lifesteal=(S.lifesteal||0)+.1;S.dmg+=16},uniq:1},
   {id:'thread',r:4,n:'재봉사의 금실',d:'끊어지지 않는 금빛 실. 손목에 감으면 팔이 저절로 움직인다. 공격 속도 +28% · 사거리 +0.45 · 치명타 +6%.',f:()=>{S.atkSpd=(S.atkSpd||1)+.28;S.range=(S.range||0)+.45;S.crit=(S.crit||0)+.06},uniq:1},
-  {id:'reaperhood',r:4,n:'회수자의 두건',d:'안쪽에 누군가의 이름이 빽빽이 적혀 있다. 치명타 +18% · 근접 피해 +14 · 이동 속도 +4%.',f:()=>{S.crit=(S.crit||0)+.18;S.dmg+=14;S.speed+=.04},uniq:1},
-  {id:'censer',r:3,n:'은 향로',d:'연기가 몸의 냄새를 덮는다. 기척 -18% · 정신력 소모 -15%.',f:()=>{S.noise=(S.noise||0)-.18;S.sanK=(S.sanK||0)-.15},uniq:1},
-  {id:'bonecharm',r:3,n:'뼈 부적',d:'손가락뼈를 엮은 부적. 최대 체력 +30 · 방어 +5%.',f:()=>{S.maxHp+=30;P.hp+=30;S.armor=(S.armor||0)+.05},uniq:1},
+  {id:'reaperhood',r:4,n:'회수자의 두건',d:'안쪽에 누군가의 이름이 빽빽이 적혀 있다. 치명타 +22% · 근접 피해 +30 · 이동 속도 +6%.',f:()=>{S.crit=(S.crit||0)+.22;S.dmg+=30;S.speed+=.06},uniq:1},
+  {id:'censer',r:3,n:'은 향로',d:'연기가 몸의 냄새를 덮는다. 기척 -25% · 정신력 소모 -30%.',f:()=>{S.noise=(S.noise||0)-.25;S.sanK=(S.sanK||0)-.3},uniq:1},
+  {id:'bonecharm',r:3,n:'뼈 부적',d:'손가락뼈를 엮은 부적. 최대 체력 +70 · 방어 +10%.',f:()=>{S.maxHp+=70;P.hp+=70;S.armor=(S.armor||0)+.1},uniq:1},
   {id:'scope',r:3,n:'저격 조준경',d:'총 피해 +18%.',f:()=>{S.gunK=(S.gunK||0)+.18},uniq:1},
   {id:'cartridge',r:3,n:'철갑탄 탄띠',d:'총 피해 +10% · 치명타 +6% · 재장전 10% 빠르게.',f:()=>{S.gunK=(S.gunK||0)+.1;S.crit=(S.crit||0)+.06;S.reloadK=(S.reloadK||1)-.1},uniq:1},
-  {id:'boots',r:3,n:'강화 군화',d:'이동 속도 +7% · 숨 회복 +25%.',f:()=>{S.speed+=.07;S.stamRegen=(S.stamRegen||1)+.25},uniq:1},
+  {id:'boots',r:3,n:'강화 군화',d:'이동 속도 +12% · 숨 회복 +45%.',f:()=>{S.speed+=.12;S.stamRegen=(S.stamRegen||1)+.45},uniq:1},
   {id:'pinger',r:1,mp:1,n:'핑 송신기',d:'멀티 전용. [T] 바라보는 곳에 표시를 찍어 동료에게 알린다 — 괴물·돈·여기를 알아서 구분한다. Shift+T는 "위험" 표시.',f:()=>{}},
   {id:'drink',r:0,n:'에너지 음료',d:'숨을 즉시 가득 채우고, 30초 동안 달릴 때 숨이 절반만 닳는다.',f:()=>{P.stam=100;P.stamB=30},cons:1},
   {id:'nade',r:1,n:'세열 수류탄',d:'[1] 핀을 뽑아 던진다. 벽과 바닥에 튕기다가 2초 뒤 터져 주변을 찢어 놓는다. 바닥의 기름에 불이 붙는다. 너무 가까우면 너도 다친다.',f:()=>beltAdd('nade'),cons:1},
@@ -1507,14 +1507,14 @@ const ITEMS=[
   {id:'exec',r:3,n:'처형자의 칼날',d:'공격력 +25, 치명타 확률 +20%',f:()=>{S.dmg+=25;S.crit+=.2}},
   {id:'watch',r:3,n:'멈춘 회중시계',d:'모든 괴물의 이동 속도 -18%',f:()=>{S.slow*=.82}},
   {id:'coat',r:3,n:'소음 흡수 코트',d:'기척 상승 -40%, 발소리 -30%',f:()=>{S.threat*=.6;S.noise*=.7}},
-  {id:'exo',r:3,n:'강화 외골격',d:'최대 체력 +50, 받는 피해 -15%',f:()=>{S.maxHp+=50;P.hp+=50;S.armor+=.15}},
+  {id:'exo',r:3,n:'강화 외골격',d:'최대 체력 +90, 받는 피해 -20%, 이동 속도 +5%',f:()=>{S.maxHp+=90;P.hp+=90;S.armor+=.2;S.speed+=.05}},
   {id:'heart',r:4,n:'불멸자의 심장',d:'최대 체력 +140, 체력 재생 초당 +3.5, 방어 +6%',f:()=>{S.maxHp+=140;P.hp+=140;S.regen+=3.5;S.armor=(S.armor||0)+.06}},
   {id:'midas',r:4,n:'황금 손',d:'줍는 돈 두 배 반 · 상점 가격 -10%',f:()=>{S.moneyMult+=1.5;S.priceMult=(S.priceMult||1)-.1}},
   {id:'sun',r:4,n:'태양의 조각',d:'배터리가 닳지 않고, 손전등 빛이 괴물을 태운다. 정신력 소모 -20%.',f:()=>{S.sun=1;P.bat=S.maxBat;S.sanK=(S.sanK||0)-.2},uniq:1},
   {id:'cloak',r:4,n:'그림자 망토',d:'괴물에게 들키는 거리 -55%, 발소리 -60%, 치명타 +10%',f:()=>{S.sight*=.45;S.noise*=.4;S.crit=(S.crit||0)+.1}},
   {id:'helmet',r:0,n:'공사장 안전모',d:'받는 피해 -8%. 괴물이 다가올 때 화면이 어두워지고 조여드는 효과 -20%',f:()=>{S.armor+=.08;vigMul(.8)}},
   {id:'medkit',r:1,n:'야전 구급 상자',d:'최대 체력 +40, 체력을 모두 회복한다',f:()=>{S.maxHp+=40;P.hp=S.maxHp}},
-  {id:'plate',r:1,n:'세라믹 방탄판',d:'받는 피해 -15%',f:()=>{S.armor+=.15}},
+  {id:'plate',r:1,n:'세라믹 방탄판',d:'받는 피해 -16%',f:()=>{S.armor+=.16}},
   {id:'goggle',r:2,n:'전술 고글',d:'비네트·화면 조임 효과 -50%. 어둠 속 시야가 조금 밝아진다',f:()=>{vigMul(.5);S.nv+=.03}},
   {id:'riot',r:2,n:'진압용 방탄복',d:'최대 체력 +80, 받는 피해 -18%',f:()=>{S.maxHp+=80;P.hp+=80;S.armor+=.18}},
   {id:'heavy',r:3,n:'중장갑 방호복',d:'최대 체력 +150, 받는 피해 -25%, 비네트 효과 -40%. 이동 속도 -5%',f:()=>{S.maxHp+=150;P.hp+=150;S.armor+=.25;vigMul(.6);S.speed-=.05}},
@@ -1532,25 +1532,25 @@ const WEP={
   pipe:{n:'쇠파이프',r:0,dmg:12,spd:1,range:1.5,arc:.6,wt:.8,kind:'blunt',d:'처음부터 쥐고 있던 녹슨 파이프.'},
   knife:{n:'식칼',r:0,dmg:9,spd:1.7,range:1.15,arc:.45,wt:.3,kind:'blade',crit:.1,d:'짧지만 아주 빠르다. 치명타 +10%.'},
   bat:{n:'못 박힌 야구 방망이',r:0,dmg:17,spd:.9,range:1.6,arc:.7,wt:1,kind:'blunt',knock:1,d:'맞은 괴물을 멀리 밀쳐 낸다.'},
-  fireaxe:{two:1,n:'소방 도끼',r:1,dmg:24,spd:.8,range:1.6,arc:.6,wt:1.2,kind:'blade',d:'느리지만 묵직하게 쪼갠다.'},
-  crowbar:{two:1,n:'쇠지렛대',r:1,dmg:20,spd:.85,range:1.8,arc:.75,wt:1.3,kind:'blunt',knock:1,d:'양손으로 휘두르는 묵직한 쇠막대. 맞은 괴물을 밀쳐 낸다.'},
+  fireaxe:{two:1,n:'소방 도끼',r:1,dmg:27,spd:.8,range:1.6,arc:.6,wt:1.2,kind:'blade',d:'느리지만 묵직하게 쪼갠다.'},
+  crowbar:{two:1,n:'쇠지렛대',r:1,dmg:23,spd:.85,range:1.8,arc:.75,wt:1.3,kind:'blunt',knock:1,d:'양손으로 휘두르는 묵직한 쇠막대. 맞은 괴물을 밀쳐 낸다.'},
   machete:{n:'마체테',r:1,dmg:17,spd:1.25,range:1.65,arc:.7,wt:.7,kind:'blade',bleed:4,d:'벤 괴물이 3초 동안 피를 흘린다.'},
   hammer:{n:'장도리',r:0,dmg:11,spd:1.3,range:1.2,arc:.5,wt:.4,kind:'blunt',crit:.05,d:'못 뽑는 쪽이 꽤 날카롭다. 가볍고 빠르다.'},
   wrench:{n:'파이프 렌치',r:0,dmg:15,spd:.95,range:1.45,arc:.6,wt:.8,kind:'blunt',stun:.25,d:'묵직한 강철 렌치. 맞으면 잠깐 휘청인다.'},
-  spade:{n:'야전삽',r:1,dmg:17,spd:1.1,range:1.6,arc:.7,wt:.7,kind:'blade',d:'날을 갈아 둔 접이식 삽. 베고 찍는다.'},
+  spade:{n:'야전삽',r:1,dmg:18,spd:1.1,range:1.6,arc:.7,wt:.7,kind:'blade',d:'날을 갈아 둔 접이식 삽. 베고 찍는다.'},
   cleaver:{n:'정육점 식칼',r:1,dmg:19,spd:1.2,range:1.2,arc:.5,wt:.5,kind:'blade',bleed:3,crit:.08,d:'뼈째 내리찍는 넓은 칼. 피를 흘리게 한다.'},
-  spear:{two:1,n:'용접한 창',r:2,dmg:26,spd:1,range:2.2,arc:.3,wt:.9,kind:'blade',crit:.12,d:'쇠파이프 끝에 칼날을 용접했다. 멀리서 찌른다.'},
-  pickaxe:{two:1,n:'곡괭이',r:2,dmg:36,spd:.7,range:1.7,arc:.55,wt:1.3,kind:'blade',crit:.2,d:'한 점에 모든 힘이 실린다. 치명타 +20%.'},
-  grinder:{n:'앵글 그라인더',r:3,dmg:16,spd:3.4,range:1.3,arc:.45,wt:.6,kind:'saw',bleed:4,loud:1,d:'고속으로 도는 절단 날. 갈아 버리지만 매우 시끄럽다.'},
-  warham:{two:1,n:'공성 해머',r:3,dmg:64,spd:.55,range:1.9,arc:1,wt:1.8,kind:'blunt',stun:1.2,knock:1,d:'철거 현장의 거대한 해머. 맞은 것은 모두 날아가고 기절한다.'},
-  lasersw:{n:'레이저 커터 검',r:4,dmg:64,spd:1.9,range:1.95,arc:.8,wt:.4,kind:'blade',bleed:8,crit:.18,burn:3,d:'공업용 레이저 커터를 칼자루에 박아 넣었다. 빛의 날이 스치기만 해도 살이 갈라지고 불이 붙는다. 아주 빠르다.'},
+  spear:{two:1,n:'용접한 창',r:2,dmg:28,spd:1,range:2.2,arc:.3,wt:.9,kind:'blade',crit:.12,d:'쇠파이프 끝에 칼날을 용접했다. 멀리서 찌른다.'},
+  pickaxe:{two:1,n:'곡괭이',r:2,dmg:40,spd:.7,range:1.7,arc:.55,wt:1.3,kind:'blade',crit:.2,d:'한 점에 모든 힘이 실린다. 치명타 +20%.'},
+  grinder:{n:'앵글 그라인더',r:3,dmg:14,spd:3.4,range:1.3,arc:.45,wt:.6,kind:'saw',bleed:4,loud:1,d:'고속으로 도는 절단 날. 갈아 버리지만 매우 시끄럽다.'},
+  warham:{two:1,n:'공성 해머',r:3,dmg:84,spd:.55,range:1.9,arc:1,wt:1.8,kind:'blunt',stun:1.2,knock:1,d:'철거 현장의 거대한 해머. 맞은 것은 모두 날아가고 기절한다.'},
+  lasersw:{n:'레이저 커터 검',r:4,dmg:52,spd:1.9,range:1.95,arc:.8,wt:.4,kind:'blade',bleed:8,crit:.18,burn:3,d:'공업용 레이저 커터를 칼자루에 박아 넣었다. 빛의 날이 스치기만 해도 살이 갈라지고 불이 붙는다. 아주 빠르다.'},
   scythe:{two:1,n:'회수자의 낫',r:4,dmg:125,spd:.62,range:2.85,arc:1.7,wt:1.5,kind:'blade',bleed:10,crit:.18,knock:1,reap:1,d:'Reaper가 떨어뜨린, 사람 키보다 큰 대낫. 크게 뒤로 젖혔다가 앞을 통째로 쓸어 벤다. 느리지만 한 번 휘두르면 범위 안의 모든 것이 베이고 밀려나며 오래 피를 흘린다.'},
-  exeblade:{two:1,n:'처형인의 대검',r:4,dmg:90,spd:.72,range:2.15,arc:.95,wt:1.6,kind:'blade',bleed:10,crit:.25,knock:1,d:'끝이 둥글게 갈린 처형용 대검. 느리지만 한 번에 끝낸다. 치명타 +25%.'},
-  censerw:{n:'향로 철퇴',r:4,dmg:60,spd:1.05,range:1.95,arc:.9,wt:1,kind:'blunt',stun:.7,knock:1,burn:1.5,d:'설교자의 쇠사슬 향로. 맞은 것은 휘청이고, 뜨거운 재에 불이 붙는다.'},
-  plasma:{n:'플라즈마 절단기',r:4,dmg:66,spd:1.6,range:2,arc:.75,wt:.6,kind:'blade',bleed:11,crit:.2,burn:2.5,d:'청백색 아크로 강철도 녹여 자른다. 벤 곳에 불이 붙고 계속 탄다. 치명타 +20%.'},
-  rib:{two:1,n:'기원의 갈비뼈',r:5,dmg:78,spd:1.25,range:2.25,arc:.95,wt:1.1,kind:'blade',bleed:8,crit:.25,knock:1,d:'The ORIGIN에게서 뜯어낸 거대한 갈비뼈. 휘두를 때마다 기원 스택이 쌓이고(최대 10), 좌클릭을 꾹 누르면 고쳐 쥐며 기원의 핵 잔재를 불러낸다. X: 바닥에 꽂아 살점 오염(다시 X로 뽑을 때까지 맨손). 종결급.'},
-  sledge:{two:1,n:'대형 해머',r:2,dmg:46,spd:.55,range:1.75,arc:.95,wt:1.6,kind:'blunt',stun:.9,d:'아주 느리지만 맞은 것은 모두 기절한다.'},
-  chainsaw:{two:1,n:'전기톱',r:2,dmg:8,spd:3.2,range:1.35,arc:.45,wt:.6,kind:'saw',bleed:3,loud:1,d:'멈추지 않고 갈아 버린다. 대신 온 층이 들을 만큼 시끄럽다.'},
+  exeblade:{two:1,n:'처형인의 대검',r:4,dmg:118,spd:.72,range:2.15,arc:.95,wt:1.6,kind:'blade',bleed:10,crit:.25,knock:1,d:'끝이 둥글게 갈린 처형용 대검. 느리지만 한 번에 끝낸다. 치명타 +25%.'},
+  censerw:{n:'향로 철퇴',r:4,dmg:76,spd:1.05,range:1.95,arc:.9,wt:1,kind:'blunt',stun:.7,knock:1,burn:1.5,d:'설교자의 쇠사슬 향로. 맞은 것은 휘청이고, 뜨거운 재에 불이 붙는다.'},
+  plasma:{n:'플라즈마 절단기',r:4,dmg:56,spd:1.6,range:2,arc:.75,wt:.6,kind:'blade',bleed:11,crit:.2,burn:2.5,d:'청백색 아크로 강철도 녹여 자른다. 벤 곳에 불이 붙고 계속 탄다. 치명타 +20%.'},
+  rib:{two:1,n:'기원의 갈비뼈',r:5,dmg:88,spd:1.25,range:2.25,arc:.95,wt:1.1,kind:'blade',bleed:8,crit:.25,knock:1,d:'The ORIGIN에게서 뜯어낸 거대한 갈비뼈. 휘두를 때마다 기원 스택이 쌓이고(최대 10), 좌클릭을 꾹 누르면 고쳐 쥐며 기원의 핵 잔재를 불러낸다. X: 바닥에 꽂아 살점 오염(다시 X로 뽑을 때까지 맨손). 종결급.'},
+  sledge:{two:1,n:'대형 해머',r:2,dmg:52,spd:.55,range:1.75,arc:.95,wt:1.6,kind:'blunt',stun:.9,d:'아주 느리지만 맞은 것은 모두 기절한다.'},
+  chainsaw:{two:1,n:'전기톱',r:2,dmg:9,spd:3.2,range:1.35,arc:.45,wt:.6,kind:'saw',bleed:3,loud:1,d:'멈추지 않고 갈아 버린다. 대신 온 층이 들을 만큼 시끄럽다.'},
   // ---- 유물 무기 ----
   r_hammer:{two:1,n:'증기 피스톤 망치',relic:1,dmg:22,spd:.75,range:1.7,arc:.8,wt:1.4,kind:'blunt',stun:.4,skn:'압력 방출',d:'보일러와 피스톤이 달린 망치. 계기판 바늘이 늘 붉은 선에 가 있다.'},
   r_tesla:{n:'테슬라 코일 곤봉',relic:1,dmg:15,spd:1.1,range:1.6,arc:.6,wt:.8,kind:'blunt',stun:.3,skn:'연쇄 방전',d:'구리 코일을 감은 곤봉. 끝의 구체에서 늘 파란 불꽃이 튄다.'},
@@ -1606,22 +1606,22 @@ const GUN={
   d_grav:{dev:1,n:'반중력 총',r:5,dmg:0,rate:.5,mag:99,spread:0,range:16,noise:3,reload:1,kick:.5,len:30,d:'[개발자] 맞은 괴물을 공중에 띄워 3초 동안 무력하게 만든 뒤 떨어뜨린다.'},
   d_portal:{dev:1,n:'포탈 건',r:5,dmg:0,rate:.35,mag:99,spread:0,range:30,noise:2,reload:1,kick:.3,len:28,d:'[개발자] 벽 앞에 파랑·주황 포탈을 번갈아 연다. 들어가면 다른 쪽으로 나온다. 괴물도 지나간다.'},
   nailgun:{n:'네일건',r:0,dmg:9,rate:.15,mag:24,spread:.045,range:9,noise:4.5,reload:1.7,kick:.25,len:24,d:'공사장 못 박는 기계. 조용한 편이고 빨리 쏜다.'},
-  flare:{n:'신호탄 권총',r:1,dmg:22,rate:1,mag:1,spread:0,range:14,noise:6,reload:1.5,kick:.8,len:23,flare:1,d:'맞은 곳이 12초 동안 환하게 타오르며 근처 괴물을 태운다.'},
+  flare:{n:'신호탄 권총',r:1,dmg:30,rate:1,mag:1,spread:0,range:14,noise:6,reload:1.5,kick:.8,len:23,flare:1,d:'맞은 곳이 12초 동안 환하게 타오르며 근처 괴물을 태운다.'},
   revolver:{n:'리볼버',r:1,dmg:36,rate:.42,mag:6,spread:.018,range:15,noise:11,reload:2.3,kick:.9,len:24,d:'여섯 발. 한 발 한 발이 묵직하다.'},
-  shotgun:{n:'펌프 산탄총',r:2,dmg:13,pellets:7,rate:.85,mag:5,spread:.13,range:8,falloff:.7,noise:13,reload:2.6,kick:1.3,len:44,d:'가까이서는 무엇이든 찢는다. 멀어질수록 약해진다.'},
-  smg:{n:'기관단총',r:3,dmg:13,rate:.085,mag:30,spread:.06,range:12,noise:12,reload:2,kick:.22,len:24,auto:1,d:'누르고 있으면 연사한다. 탄을 빨리 먹는다.'},
-  teslacell:{n:'테슬라 전지 발사기',relic:1,r:4,dmg:48,rate:.55,mag:0,cell:10,spread:0,range:16,noise:8,reload:1,kick:.7,len:44,d:'손전등 전지를 넣어 쏘는 태엽·코일 장치. 한 발에 전지 10. 맞은 곳에서 번개가 터져 주변 괴물 셋에게 옮겨 간다. 우클릭: 과충전 방전(전지 35) — 앞을 꿰뚫는 거대한 번개.'},
+  shotgun:{n:'펌프 산탄총',r:2,dmg:14,pellets:7,rate:.85,mag:5,spread:.13,range:8,falloff:.7,noise:13,reload:2.6,kick:1.3,len:44,d:'가까이서는 무엇이든 찢는다. 멀어질수록 약해진다.'},
+  smg:{n:'기관단총',r:3,dmg:15,rate:.085,mag:30,spread:.06,range:12,noise:12,reload:2,kick:.22,len:24,auto:1,d:'누르고 있으면 연사한다. 탄을 빨리 먹는다.'},
+  teslacell:{n:'테슬라 전지 발사기',relic:1,r:4,dmg:58,rate:.55,mag:0,cell:10,spread:0,range:16,noise:8,reload:1,kick:.7,len:44,d:'손전등 전지를 넣어 쏘는 태엽·코일 장치. 한 발에 전지 10. 맞은 곳에서 번개가 터져 주변 괴물 셋에게 옮겨 간다. 우클릭: 과충전 방전(전지 35) — 앞을 꿰뚫는 거대한 번개.'},
   pistol:{n:'9mm 권총',r:0,dmg:18,rate:.28,mag:12,spread:.03,range:13,noise:9,reload:1.5,kick:.5,len:20,d:'흔한 경찰용 권총. 믿을 만하다.'},
   dbarrel:{n:'쌍열 산탄총',r:1,dmg:12,pellets:8,rate:.26,mag:2,spread:.15,range:7,falloff:.7,noise:15,reload:2,kick:1.5,len:36,d:'총열을 짧게 자른 쌍열총. 두 발에 모든 것을 건다.'},
-  crossbow:{n:'복합 석궁',r:2,dmg:78,rate:.5,mag:1,spread:0,range:22,pierce:2,noise:2,reload:1.4,kick:.4,len:34,d:'거의 소리가 나지 않는다. 화살이 둘까지 꿰뚫는다.'},
+  crossbow:{n:'복합 석궁',r:2,dmg:95,rate:.5,mag:1,spread:0,range:22,pierce:2,noise:2,reload:1.2,kick:.4,len:34,d:'거의 소리가 나지 않는다. 화살이 둘까지 꿰뚫는다.'},
   carbine:{n:'반자동 카빈',r:2,dmg:30,rate:.2,mag:15,spread:.02,range:18,noise:12,reload:2.1,kick:.6,len:42,d:'가볍고 정확한 반자동 소총.'},
   ar:{n:'돌격소총',r:3,dmg:22,rate:.095,mag:30,spread:.045,range:18,noise:14,reload:2.2,kick:.3,len:44,auto:1,d:'군용 자동소총. 누르고 있으면 연사한다.'},
-  amr:{n:'대물 저격총',r:4,dmg:340,rate:1.7,mag:4,spread:0,range:34,pierce:6,noise:22,reload:3.2,kick:2,len:60,d:'장갑을 뚫는 탄. 한 줄로 선 괴물 여섯까지 꿰뚫는다. 쏘면 온 층이 듣는다.'},
+  amr:{n:'대물 저격총',r:4,dmg:380,rate:1.7,mag:4,spread:0,range:34,pierce:6,noise:22,reload:3.2,kick:2,len:60,d:'장갑을 뚫는 탄. 한 줄로 선 괴물 여섯까지 꿰뚫는다. 쏘면 온 층이 듣는다.'},
   rail:{n:'가우스 레일건',r:5,dmg:44,cdmg:520,rate:.085,mag:60,spread:.025,range:24,pierce:2,noise:9,reload:2.6,kick:.18,len:56,auto:1,energy:1,d:'The ORIGIN의 척추를 레일로 깎아 만든 살아 있는 총. 등 위의 핵이 맥동하며 붉은 에너지를 밀어낸다. 좌클릭: 에너지탄 연사 (둘까지 관통). 우클릭을 누르고 있으면 주변의 전기를 끌어모아 손전등 전지를 태우며 충전하고, 놓으면 일직선상의 모든 것을 꿰뚫는 차징샷을 쏜다. X: 「특이점」 — 탄 10발과 전지 25를 태워 검붉은 구체를 쏜다. 구체는 2초 동안 주변의 괴물(과 너)을 빨아들이며 갈아 낸 뒤 안쪽으로 무너지며 폭발한다 (재사용 16초). 종결급.'},
   gatling:{n:'게틀링 건',r:4,dmg:20,rate:.05,mag:150,spread:.07,range:15,noise:17,reload:3.8,kick:.1,len:58,auto:1,spin:1,d:'여섯 개의 총열이 회전하며 탄을 쏟아낸다. 누르고 있으면 총열이 돌기 시작하고, 다 돌면 무엇이든 갈아 버린다. 무거워서 들고 있으면 느려진다.'},
   hcannon:{n:'핸드캐논',r:4,dmg:150,rate:.85,mag:5,spread:.012,range:22,pierce:3,noise:18,reload:2.6,kick:.8,len:36,hc:1,d:'곰 사냥용 탄을 쓰는 대구경 리볼버. 탄이 괴물 셋을 꿰뚫는다 · 보스 피해 +40% · 치명타 확률 +25%, 치명타는 3배 · 맞은 괴물은 크게 밀려나며 기절 · 처치하면 탄 1발이 즉시 장전 · 실린더의 마지막 한 발은 2.5배 피해와 함께 터진다.'},
   flamer:{n:'화염방사기',r:3,dmg:7,rate:.07,mag:120,fuel:1,spread:.1,range:5,noise:8,reload:2.2,kick:.05,len:46,auto:1,flame:1,d:'기름을 태워 불길을 뿜는다. 맞은 괴물은 불이 붙어 계속 타며 느려진다. 바닥의 기름에 닿으면 화재가 난다. 탄약 대신 기름통으로 연료를 채운다 (R 또는 [5]).'},
-  rifle:{n:'사냥용 소총',r:3,dmg:88,rate:1.15,mag:5,spread:0,range:24,pierce:3,noise:14,reload:2.7,kick:1.4,len:50,d:'멀리 있는 것도 꿰뚫는다. 한 줄로 선 괴물 셋까지 관통.'},
+  rifle:{n:'사냥용 소총',r:3,dmg:110,rate:1.15,mag:5,spread:0,range:24,pierce:3,noise:14,reload:2.7,kick:1.4,len:50,d:'멀리 있는 것도 꿰뚫는다. 한 줄로 선 괴물 셋까지 관통.'},
 };
 const GITEMS=Object.keys(GUN).filter(k=>!GUN[k].relic&&!GUN[k].dev).map(k=>{const g=GUN[k];return{id:'g_'+k,gun:k,r:g.r,n:g.n,cons:1,
   d:`총 · 피해 ${g.dmg}${g.pellets?'×'+g.pellets:''} · 탄창 ${g.mag} — ${g.d}`,f:()=>{giveGun(k);addAmmo(2,true)}}});
@@ -1767,11 +1767,11 @@ function drawWeapon(px,py,a,C){
     case 'fireaxe':shaft(-7,54,3,i=>i<6?C(70,46,30):C(160,40,30));for(let j=-3;j<=10;j++)for(let q=-3;q<=3;q++)P1(50+q,j,j>8?C(200,196,186):j<0?C(80,80,80):C(132,132,128),1,1);break;
     case 'lasersw':{shaft(-7,8,4,i=>i<-2?C(30,30,34):i<5?C(70,72,80):C(140,144,152));P1(8,-3,C(200,60,40),2,6);
       const fl=.85+.15*Math.sin(tGlobal*40);for(let i=10;i<=54;i++){ctx.fillStyle=`rgba(90,200,255,${(.35*fl).toFixed(2)})`;const x=Math.round(px+dx*i),y=Math.round(py+dy*i);ctx.fillRect(x-3,y-3,6,6);ctx.fillStyle=i>50?'#c8f0ff':'#f2fcff';ctx.fillRect(x-1,y-1,2,2)}break}
-    case 'scythe':{const K=1.55,Q=(i,j,c,w,h)=>P1(i*K,j*K,c,w||3,h||3);shaft(-12,100,5,i=>i<14?C(30,22,16):i%17===0?C(40,30,20):i%17===1?C(110,84,56):C(84,60,38));
+    case 'scythe':{const K=1.8,Q=(i,j,c,w,h)=>P1(i*K,j*K,c,w||3,h||3);shaft(-12,116,5,i=>i<14?C(30,22,16):i%17===0?C(40,30,20):i%17===1?C(110,84,56):C(84,60,38));
       for(let i=-6;i<=10;i+=4)Q(i,0,C(120,40,30),3,3);for(let i=6;i<=12;i++)Q(i,-1.6,C(60,44,30),2,2);
-      for(let q=0;q<=30;q+=.5){const ii=64-q*q/34,jj=-q,ed=q>3;Q(ii,jj,C(150,152,160));Q(ii-1.2,jj,C(86,88,96),2,3);if(ed)Q(ii+1.4,jj,C(228,230,238),2,2);if(ed&&q%4<.5)Q(ii+2.2,jj,C(140,20,16),2,2);if(q>24)Q(ii+.6,jj,C(200,202,210),2,2)}
+      for(let q=0;q<=30;q+=.5){const ii=64-q*q/55,jj=-q,ed=q>3;Q(ii,jj,C(150,152,160));Q(ii-1.2,jj,C(86,88,96),2,3);if(ed)Q(ii+1.4,jj,C(228,230,238),2,2);if(ed&&q%4<.5)Q(ii+2.2,jj,C(140,20,16),2,2);if(q>24)Q(ii+.6,jj,C(200,202,210),2,2)}
       Q(61,-1,C(56,56,60),6,6);Q(62.5,-2.5,C(170,150,90),3,3);
-      if(P.swing>.34&&P.swing<.56){ctx.fillStyle='rgba(255,255,255,.85)';for(let q=6;q<28;q+=2){const ii=(64-q*q/34+1.6)*K,jj=-q*K;ctx.fillRect(Math.round(px+dx*ii+nx*jj),Math.round(py+dy*ii+ny*jj),2,2)}}break}
+      if(P.swing>.34&&P.swing<.56){ctx.fillStyle='rgba(255,255,255,.85)';for(let q=6;q<28;q+=2){const ii=(64-q*q/55+1.6)*K,jj=-q*K;ctx.fillRect(Math.round(px+dx*ii+nx*jj),Math.round(py+dy*ii+ny*jj),2,2)}}break}
     case 'exeblade':{shaft(-8,4,4,i=>i%3?C(60,30,20):C(90,50,30));for(let j=-7;j<=7;j++)P1(5,j,C(150,120,60),2,1);for(let i=7;i<=64;i++){const w=i>58?Math.round((64-i)*.8):4;for(let j=-w;j<=w;j++)P1(i,j,j===0?C(110,112,118):Math.abs(j)===w?C(210,214,220):C(160,162,170),1,1)}break}
     case 'censerw':{shaft(-6,30,3,i=>i<0?C(60,40,24):C(150,120,50));const sw=Math.sin(tGlobal*3)*3;for(let i=31;i<=46;i+=2)P1(i,sw*(i-30)/16,C(120,110,90),2,2);const bi=50,bj=sw;
       for(let a=0;a<6.28;a+=.25)for(let r=0;r<6;r++)P1(bi+Math.cos(a)*r,bj+Math.sin(a)*r,r>4?C(110,80,30):C(170,130,50),1,1);for(let q=0;q<5;q++){const a=q*1.25;ctx.fillStyle='rgba(255,140,40,.9)';ctx.fillRect(Math.round(px+dx*(bi+Math.cos(a)*3)+nx*(bj+Math.sin(a)*3)),Math.round(py+dy*(bi+Math.cos(a)*3)+ny*(bj+Math.sin(a)*3)),1,1)}
@@ -2740,7 +2740,7 @@ function render(){
     let spr,hS,lift=0,jit=0;
     if(e.isPh){spr=SPR[e.type];hS=MT[e.type].h;jit=rnd()<.3?ri(-2,2):0}else if(e.isMon){if(e.disguised){spr=SPR[MSPR[moneyTier(e.fake||0)]];hS=.2+Math.min(.18,e.fake/500)}else if(e.type==='origin'){spr=SPR[e.spr||'origin0'];hS=e.hs||1.3;lift=e.lift||0;jit=e.jit?ri(-e.jit,e.jit):0}else if(e.type==='glitch'){spr=SPR['glitch'+((tGlobal*14|0)%3)];hS=MT.glitch.h;jit=ri(-4,4)}else{spr=e.spr&&SPR[e.spr]?SPR[e.spr]:e.berserk&&SPR[e.type+'R']?SPR[e.type+'R']:SPR[e.type];hS=MT[e.type].h*(e.berserk?1.12:1)*(e.hk||1);if(e.dopN)hS=.74;if(e.berserk&&rnd()<.4)jit=ri(-3,3)}
       if(e.type==='flicker'&&!e.disguised&&rnd()<.25)jit=ri(-2,2);}
-    else if(e.gib){spr=SPR[e.spr];hS=e.h;lift=e.z}else if(e.isRP){const hl=e.hl>0&&!e.dead&&SPR[e.hlS];spr=SPR[e.dead?'plD':hl?e.hlS:'pl'+e.ci];hS=e.dead?.26:hl?MT[e.hlS].h:.74}else if(e.isAlly||e.isNpc){spr=SPR[e.type];hS=FT[e.type].h}else if(e.kind){spr=SPR[pickSpr(e)];hS=e.h;lift=e.z||0}else{spr=SPR.acid;hS=.14;lift=.35}
+    else if(e.gib){spr=SPR[e.spr];hS=e.h;lift=e.z}else if(e.isRP){const hl=e.hl>0&&!e.dead&&SPR[e.hlS];const lkS=!e.dead&&!hl&&e.lk?plLook(e.ci,e.lk):null;spr=lkS||SPR[e.dead?'plD':hl?e.hlS:'pl'+e.ci];hS=lkS?.894:e.dead?.26:hl?MT[e.hlS].h:.74}else if(e.isAlly||e.isNpc){spr=SPR[e.type];hS=FT[e.type].h}else if(e.kind){spr=SPR[pickSpr(e)];hS=e.h;lift=e.z||0}else{spr=SPR.acid;hS=.14;lift=.35}
     if(!spr||!spr.w)continue;if(e.isMon&&e.gz)lift=(lift||0)+e.gz;
     if(e.isMon&&e.stun>0&&MT[e.type].undying&&!e.spr)hS*=.42;
     const DF=e.isMon?monDeform(e):null,unit=H*VS/tY,scrX=(W/2)*(1+e._tx/tY)+jit+(DF?DF.dx*unit:0),sH=unit*hS*(DF?DF.sy:1),sW=unit*hS*spr.w/spr.h*(DF?DF.sx:1);
@@ -2793,7 +2793,7 @@ function smooth(t){return t*t*(3-2*t)}
 // 휘두르기 키프레임: 들어올림(예비 동작) → 가속하며 내려침 → 관성으로 더 넘어감 → 천천히 제자리
 // 무기 실제 크기: 픽셀 2배로 그린다. 휘두르기는 어깨 위 → 뒤로 젖힘 → 대각선으로 내려침 → 관성 → 복귀
 const WK=2;
-const WLEN={lasersw:56,exeblade:68,censerw:58,r_piston:40,hammer:30,wrench:44,spade:52,cleaver:30,spear:74,pickaxe:56,grinder:34,warham:64,plasma:52,rib:52,scythe:112,crowbar:60,knife:31,bat:58,sledge:61,r_hammer:60,r_tesla:60,r_rivet:30,r_claw:54,r_disc:50,r_clock:62};
+const WLEN={lasersw:56,exeblade:68,censerw:58,r_piston:40,hammer:30,wrench:44,spade:52,cleaver:30,spear:74,pickaxe:56,grinder:34,warham:64,plasma:52,rib:52,scythe:128,crowbar:60,knife:31,bat:58,sledge:61,r_hammer:60,r_tesla:60,r_rivet:30,r_claw:54,r_disc:50,r_clock:62};
 function swingPose(s){const p=swingPose0(s);if(P.bigSw&&s>0){p.x*=1.8;p.y*=1.9;p.a=lerp(-2.02,p.a,1.25);if(s<.42){const k=Math.sin(s/.42*Math.PI);p.y-=k*30;p.a+=k*.55;p.x+=k*26}}return p}
 const SWK=()=>({reap:[[0,0,0,-2.02,null],[.3,-4,-62,-1.05,easeOut],[.42,-2,-70,-.9,smooth],[.53,-W*.62,16,-3.95,easeIn],[.7,-W*.7,44,-4.45,easeOut],[1,0,0,-2.02,smooth]],
   reapB:[[0,0,0,-2.02,null],[.3,-W*.42,-50,-3.5,easeOut],[.42,-W*.45,-56,-3.6,smooth],[.52,48,14,-.55,easeIn],[.68,56,40,-.2,easeOut],[1,0,0,-2.02,smooth]],
@@ -2851,6 +2851,7 @@ function drawHands0(){
   if(S.weapon==='r_piston'){drawPistonHands(C);return}
   if(S.weapon==='rib'&&P.ribPlant){drawEmptyHands(C);return}
   const s=P.swing>0?Math.min(P.swing,1):0,pose=swingPose(s);
+  if(S.weapon==='scythe'){const k=1-bump(s,.02,.16,.8,1);pose.a+=.3*k;pose.y+=4*k;pose.x+=16*k}
   if(S.weapon==='rib'){pose.a+=.2;pose.y-=2;pose.x-=2;const g=smooth(clamp(P.ribG||0,0,1));if(g>0){const sh=(P.ribSh||0)>0?(rnd()-.5)*4:0;pose.x=lerp(pose.x,-W*.17+sh,g);pose.y=lerp(pose.y,-24+sh,g);pose.a=lerp(pose.a,-1.62,g)}}
   {const hl=grabHol();if(hl>0){pose.a+=hl*.7;pose.x+=hl*18}}
   if(WS().kind==='saw'&&(P.sawPT||0)>0&&!(P.swing>0)){const k=smooth(P.sawPT);pose.x=lerp(pose.x,-W*.2,k);pose.y=lerp(pose.y,-34,k);pose.a=lerp(pose.a,-1.92,k);pose.x+=(rnd()-.5)*2*k;pose.y+=(rnd()-.5)*2*k}
@@ -4472,7 +4473,7 @@ function hazTick(dt){if(G.state!=='play'&&G.state!=='dying')return;hzReset();try
     if(q.life<=0&&!q.rem&&rnd()<.05)fireAt(q.x,q.y,.55,2.5,false)}
   G.flm=G.flm.filter(q=>{if(q.life<=0){if(q.fx)q.fx.life=0;return false}return true});
   if(G.state==='play')burnTick(dt);
-  gmTick(dt);gravTick(dt);if(G.state==='play'){try{p2Tick(dt)}catch(e){console.error(e)}try{grabTick(dt)}catch(e){console.error(e)}burntTick(dt);try{preachFXTick(dt);safeTick(dt);halluTick(dt);traitTick(dt);pingTick(dt);gdollTick(dt)}catch(e){console.error(e)}
+  gmTick(dt);gravTick(dt);if(G.state==='play'){try{p2Tick(dt)}catch(e){console.error(e)}try{grabTick(dt)}catch(e){console.error(e)}burntTick(dt);try{mobAssist(dt)}catch(e){console.error(e)}try{preachFXTick(dt);safeTick(dt);halluTick(dt);traitTick(dt);pingTick(dt);gdollTick(dt)}catch(e){console.error(e)}
     if(P.useGun&&S.gun&&attOf().light&&flashPower())G.tmpL.push({x:P.x+Math.cos(P.a)*2.2,y:P.y+Math.sin(P.a)*2.2,r:3.8,i:.55,ttl:.05,type:'muz'})}}
 function burnTick(dt){
   for(const m of G.mon){if(!(m.burn>0))continue;if(m.dead||MT[m.type].immune||MT[m.type].fireIm){m.burn=0;continue}m.burn-=dt;
@@ -5317,6 +5318,7 @@ function buildCredits(mode,money){
   <div class="cb"><p class="ch">프로그래밍</p><p class="cn">Claude</p></div>
   <div class="cb"><p class="ch">픽셀 아트</p><p class="cn">Claude</p></div>
   <div class="cb"><p class="ch">사운드 · 음악</p><p class="cn">Claude (Web Audio 실시간 합성)</p></div>
+  <div class="cb"><p class="ch">베타 플레이</p><p class="cn">윤석열</p></div>
   <div class="cb"><p class="ch">등장 괴물</p>${mons}</div>
   <div class="cb"><p class="ch">상점 주인</p><p class="cn">Merchant</p></div>
   <div class="cb"><p class="ch">함께 걸어 준 동료</p><p class="cn">Stray Hound</p><p class="cn">Rusted Guard</p></div>
@@ -5984,9 +5986,10 @@ function resoFX(){if(!(S.fleshR>0))return;const r=reso(),inv=(P.invT||0)>0;
 
 // ================= 상호작용 =================
 function facingTarget(){
-  let best=null,bd=1.4;
+  if(G._forceT){const t=G._forceT;G._forceT=null;if(G.pick.includes(t))return t}
+  let best=null,bd=touchOn()?1.6:1.4;
   const cand=G.pick.filter(p=>p.kind!=='lockerH'&&p.kind!=='drawerO').concat(G.mon.filter(m=>m.disguised&&!m.dead),G.npcs||[],G.fx.filter(f=>f.talk));
-  for(const p of cand){const d=Math.hypot(p.x-P.x,p.y-P.y);if(d>bd)continue;if(d>.55&&Math.abs(angDiff(Math.atan2(p.y-P.y,p.x-P.x),P.a))>.6)continue;bd=d;best=p}
+  for(const p of cand){const d=Math.hypot(p.x-P.x,p.y-P.y);if(d>bd)continue;if(d>(touchOn()?.75:.55)&&Math.abs(angDiff(Math.atan2(p.y-P.y,p.x-P.x),P.a))>(touchOn()?.85:.6))continue;bd=d;best=p}
   return best;
 }
 function allyFacing(){let best=null,bd=1.6;for(const a of G.allies||[]){const d=Math.hypot(a.x-P.x,a.y-P.y);if(d>bd)continue;if(Math.abs(angDiff(Math.atan2(a.y-P.y,a.x-P.x),P.a))>.45)continue;bd=d;best=a}return best}
@@ -6110,7 +6113,7 @@ function netRecv(from,d){if(!d||!d.t)return;const T=d.t;
     if(T==='hi'){if(NET.peers[from]){NET.peers[from].lastT=performance.now();netTo(from,{t:'welcome',ci:NET.peers[from].ci});netLobbyPush();return}if(Object.keys(NET.peers).length>=3){netTo(from,{t:'full'});return}const used=new Set(Object.values(NET.peers).map(r=>r.ci));let ci=1;while(used.has(ci))ci++;
       NET.peers[from]={id:from,name:String(d.name||'?').slice(0,10),ci,x:0,y:0,a:0,dead:0,hp:100,inE:0,lastT:performance.now()};netTo(from,{t:'welcome',ci});netLobbyPush();if(G.state!=='title'){netTo(from,{t:'start',nm:SAVE.nm?1:0});setTimeout(netSendFloor,600)}return}
     const r=NET.peers[from];if(!r)return;r.lastT=performance.now();
-    if(T==='u'){Object.assign(r,{x:d.x,y:d.y,a:d.a,dead:d.dead,hp:d.hp,mhp:d.mhp,inE:d.inE,mo:d.mo||0,hidden:d.hd,crouch:d.cr,run:d.rn,flash:d.fl})}
+    if(T==='u'){Object.assign(r,{x:d.x,y:d.y,a:d.a,dead:d.dead,hp:d.hp,mhp:d.mhp,inE:d.inE,mo:d.mo||0,hidden:d.hd,crouch:d.cr,run:d.rn,flash:d.fl,lk:String(d.lk||'').slice(0,44)})}
     else if(T==='dmg'){for(const k in d.v){const m=NET.mm[k];if(!m||m.dead)continue;G._netK=from;damageMon(m,d.v[k],!!(d.ml&&d.ml[k]));G._netK=null}}
     else if(T==='pk'){netApplyPk(d);netSend(d)}
     else if(T==='nfx'){try{nadeRemote(d)}catch(e){}netSend(d)}
@@ -6160,7 +6163,7 @@ function netApplyFloor(pk){G._netSpawn=0;genFloor(pk.f);N=pk.N;map=Uint8Array.fr
 // ---- 스냅숏 (호스트 → 모두, 초당 12번)
 function netSnapOut(){const m=[];for(const o of G.mon){if(o.dead)continue;if(o.nid==null){o.nid=NET.mid++;NET.mm[o.nid]=o}NET.mm[o.nid]=o;
     const fl=(o.disguised?1:0)|(o.moving?2:0)|(o.hit>0?4:0)|(o.stun>0?8:0)|(o.atkFx>0?16:0)|(o.scrFx>0?32:0);const row=[o.nid,o.type,Math.round(o.x*100),Math.round(o.y*100),Math.round(o.hp||0),Math.round(isFinite(o.maxHp)?o.maxHp:-1),fl,o.fake||0];if(o.type==='origin'||o.spr)row.push(o.spr||null,o.hs||null,o.lift||0);if(o.dopN)row.push(o.dopN,o.dopC||0);m.push(row)}
-  const pl=[{id:'h',n:NET.name,ci:0,x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,fl:P.flash?1:0,hp:P.hp,mhp:S.maxHp,inE:inElev()?1:0,mo:Math.floor(P.money)}].concat(Object.values(NET.peers).map(r=>({id:r.id,n:r.name,ci:r.ci,x:r.x,y:r.y,a:r.a,dead:r.dead,fl:r.fl,hp:r.hp,mhp:r.mhp,inE:r.inE,mo:r.mo||0})));
+  const pl=[{id:'h',n:NET.name,ci:0,x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,fl:P.flash?1:0,hp:P.hp,mhp:S.maxHp,inE:inElev()?1:0,mo:Math.floor(P.money),lk:netLook()}].concat(Object.values(NET.peers).map(r=>({id:r.id,n:r.name,ci:r.ci,x:r.x,y:r.y,a:r.a,dead:r.dead,fl:r.fl,hp:r.hp,mhp:r.mhp,inE:r.inE,mo:r.mo||0,lk:r.lk})));
   const d={t:'s',f:G.floor,m,pl,b:G.boss&&!G.boss.dead?G.boss.nid:null,k:NET.killed.splice(0)};if(++NET.pkT%12===0)d.pk=G.pick.filter(p=>p.nid!=null).map(pickPack);netSend(d);netParty(pl)}
 function netSnapIn(d){if(d.f!==G.floor||G.state==='title')return;const seen={};
   for(const row of d.m){const [id,type,x,y,hp,mx,fl,fake]=row;seen[id]=1;let o=NET.mm[id];if(!o){G._netSpawn=1;o=spawn(type,x/100,y/100);G._netSpawn=0;o.nid=id;o.aggro=0;o.atkCd=99;NET.mm[id]=o;if(o.voice){try{o.voice.stop()}catch(e){}o.voice=null}}
@@ -6172,7 +6175,59 @@ function netSnapIn(d){if(d.f!==G.floor||G.state==='title')return;const seen={};
   if(d.pk){const by={};for(const p of G.pick)if(p.nid!=null)by[p.nid]=p;const keep=G.pick.filter(p=>p.nid==null);const now=performance.now();const out=[];for(const q of d.pk){const o=by[q.nid];if(o){if(o._lt&&now-o._lt<800){out.push(o);continue}Object.assign(o,q);out.push(o)}else out.push(q)}
     for(const p of G.pick)if(p.nid!=null&&p._lt&&now-p._lt<800&&!out.includes(p))out.push(p);G.pick=out.concat(keep)}
   netParty(d.pl)}
-function netAv(r){let a=NET.av[r.id];if(!a){a=NET.av[r.id]={isRP:1,id:r.id,x:r.x,y:r.y,h:.95}}a.tx=r.x;a.ty=r.y;a.a=r.a;a.ci=r.ci;a.name=r.n;a.dead=r.dead;a.fl=r.fl;a.inE=r.inE}
+const LK_BODY=['oskin','eod','heavy','exo','riot','wardcoat','cloak','coat','plate','vest'],LK_HEAD=['reaperhood','nv','goggle','helmet'];
+function netLook(){try{const o=G.owned||[],b=LK_BODY.find(k=>o.includes(k))||'',h=LK_HEAD.find(k=>o.includes(k))||'',w=P.useGun&&S.gun?'g_'+S.gun:(P.ribPlant&&S.weapon==='rib'?'':S.weapon||'');return b+','+h+(o.includes('halo')?'*':'')+','+w}catch(e){return''}}
+let LKN=0;
+function plLook(ci,lk){if(typeof lk!=='string'||lk.length>44||!/^[a-z0-9_,*]*$/.test(lk)||!window.plBase)return null;const key='plk'+(ci|0)+'|'+lk;if(SPR[key])return SPR[key];if(LKN>160)return null;LKN++;
+  const q=lk.split(','),b=q[0]||'',halo=(q[1]||'').endsWith('*'),h=(q[1]||'').replace('*',''),w=q[2]||'',pc=PLC[ci|0]||PLC[0];
+  return SPR[key]=mkSprite(30,58,(g,gg,R0,E0)=>{const R=(c,col,x,y,ww,hh)=>R0(c,col,x+5,y+10,ww,hh),E=(c,col,x,y,rx,ry)=>E0(c,col,x+5,y+10,rx,ry),B=(col,x,y,ww,hh)=>R(g,col,x,y,ww,hh),L=(col,x,y,ww,hh)=>R(gg,col,x,y,ww,hh);
+    plBase(g,gg,R,E,pc[0],pc[1]);
+    // 몸
+    if(b==='vest'){B('#28303c',6,16,8,10);B('#3a4454',6,16,8,1);B('#1a2028',9,17,2,8)}
+    else if(b==='plate'){B('#6e727a',6,17,8,8);B('#9a9ea6',6,17,8,1);B('#4a4e56',6,21,8,1)}
+    else if(b==='riot'){B('#17191d',6,16,8,12);B('#2c3038',6,16,8,1);for(const x of[2,14]){B('#17191d',x,16,4,4);B('#2c3038',x,16,4,1)}B('#17191d',7,36,3,3);B('#17191d',11,36,3,3);B('#e8e8e0',8,19,4,1)}
+    else if(b==='heavy'){B('#465034',5,15,10,14);B('#5c6846',5,15,10,1);B('#343c26',5,22,10,1);for(const x of[2,14])B('#465034',x,15,4,6);B('#465034',6,31,4,7);B('#465034',10,31,4,7);B('#343c26',6,37,8,1)}
+    else if(b==='eod'){B('#5a6848',4,14,12,18);B('#70805a',4,14,12,1);B('#5a6848',1,15,4,14);B('#5a6848',15,15,4,14);B('#5a6848',5,32,5,13);B('#5a6848',10,32,5,13);B('#3e4a30',4,23,12,1);B('#2a321e',10,33,1,12);B('#5a6848',5,11,10,4);B('#70805a',6,3,8,4);B('#28303a',7,7,6,4);B('#4a5a6a',8,8,4,1)}
+    else if(b==='oskin'){B('#6a1c1c',5,15,10,16);B('#8a2c28',5,15,10,1);for(const y of[18,21,24,27])B('#d8ccb0',6,y,8,1);B('#6a1c1c',2,16,3,13);B('#6a1c1c',15,16,3,13);B('#561616',6,32,4,12);B('#561616',10,32,4,12);L('#ff3020',9,19,2,1);L('#ff5030',9,22,2,1);L('#ff3020',9,25,2,1)}
+    else if(b==='exo'){for(const x of[2,17])B('#b89a30',x,17,1,13);for(const x of[6,13])B('#b89a30',x,32,1,13);B('#8a8e96',5,15,10,2);B('#8a8e96',6,23,8,2);B('#5a5e66',8,17,4,6);L('#60d0ff',9,19,2,1)}
+    else if(b==='wardcoat'||b==='coat'){const c1=b==='coat'?'#4a3a28':'#1e2a44',c2=b==='coat'?'#62503a':'#2c3a5a',c3=b==='coat'?'#342818':'#141c30';B(c1,5,16,10,24);B(c2,5,16,10,1);for(const x of[2,14])B(c1,x,16,4,14);B(c3,9,17,2,22);if(b==='wardcoat'){B('#c8b040',7,19,1,1);B('#c8b040',7,23,1,1);B('#2a2a2a',13,17,2,3);L('#ff4030',13,17,1,1)}}
+    else if(b==='cloak'){E(g,'#101014',10,8,6,6.5);B('#101014',3,14,14,28);B('#1e1e26',3,14,14,1);B('#1e1e26',9,15,1,26);E(g,'#b88a68',10,11,3,3.2);B('#1a1410',8,11,1,1);B('#1a1410',11,11,1,1)}
+    // 머리
+    if(b!=='eod'){if(h==='helmet'){B('#d6ae20',5,3,10,4);B('#f0cc40',5,3,10,1);B('#b08c14',4,7,12,1)}
+      else if(h==='goggle'){B('#2c3036',6,9,8,3);B('#7ab0d8',7,10,2,1);B('#7ab0d8',11,10,2,1)}
+      else if(h==='reaperhood'){E(g,'#0c0c10',10,9,6,7);E(g,'#3a2e2a',10,11,3,3.4);B('#d8d0c0',8,11,1,1);B('#d8d0c0',11,11,1,1)}}
+    if(h==='nv'){B('#22262a',6,8,8,4);B('#22262a',7,6,6,2);L('#70ff90',7,9,2,2);L('#70ff90',11,9,2,2)}
+    if(halo){L('#ffe080',6,0,8,1);L('#ffe080',5,1,1,1);L('#ffe080',14,1,1,1);L('#ffe080',6,2,8,1)}
+    // 손에 든 것
+    if(w.startsWith('g_')){const k=w.slice(2),gd=GUN[k];if(gd){const wood=['shotgun','dbarrel','rifle','crossbow'].includes(k);
+        if(k==='gatling'){B('#3a3c40',-3,26,14,4);B('#5a5c62',-3,26,14,1);B('#c8a030',8,30,4,3)}
+        else if(k==='flamer'){B('#a82a20',14,16,4,11);B('#c84a3a',14,16,4,1);B('#5a5c60',-2,27,11,2);L('#ffb040',-3,26,1,3)}
+        else if(k==='rail'){B('#3a1414',-3,26,15,3);L('#ff3a20',-1,27,10,1)}
+        else if(k==='teslacell'){B('#6a5a30',-2,26,13,3);L('#80d0ff',-3,25,2,3)}
+        else if(k==='amr'){B('#2a2c30',-5,27,19,2);B('#1a1a1e',5,25,4,2);B('#2a2c30',11,29,2,4)}
+        else if(gd.len<30){const c=k==='hcannon'?'#c8a850':k==='flare'?'#d87028':'#2a2c30';B(c,k==='hcannon'?-1:1,27,k==='hcannon'?7:5,2);B(k==='hcannon'?'#6a3420':'#1a1a1e',4,29,2,3)}
+        else{for(let i=0;i<13;i++)B(i>9&&wood?'#5a4028':'#2e3034',1+i,31-Math.round(i*.55),2,2);if(wood)B('#5a4028',3,29,3,2)}}}
+    else if(w&&WEP[w]){const two=!!WEP[w].two,S1=(col,y0,y1,x)=>B(col,x==null?4:x,y0,1,y1-y0+1);
+      if(w==='knife')S1('#d0d4dc',23,29);else if(w==='cleaver'){B('#c8ccd4',3,22,3,6);S1('#3a2a1a',28,30)}
+      else if(w==='hammer'){S1('#6a4a2a',23,30);B('#8a8a8a',3,22,3,2)}else if(w==='wrench'){S1('#8a8e96',21,30);B('#8a8e96',3,20,3,2)}
+      else if(w==='spear'){S1('#7a5a34',-4,31);S1('#d0d4dc',-8,-5)}
+      else if(w==='scythe'){S1('#6a4a2c',-7,32);for(let i=0;i<10;i++)B('#c8ccd4',5+i,-8+Math.round(i*i/12),1,2);B('#8a1c16',14,-1,1,2)}
+      else if(w==='sledge'||w==='warham'){S1('#6a4a2a',6,31);if(w==='warham')B('#5a5e66',1,0,7,6);else B('#6a6e76',2,2,5,4)}
+      else if(w==='exeblade'){B('#b8bcc4',3,0,3,26);B('#d8dce4',3,0,1,26);B('#5a4a30',2,26,5,1);S1('#3a2a1a',27,31)}
+      else if(w==='rib'){for(let i=0;i<18;i++)B(i<4?'#7a2420':'#e0d4b8',4+Math.round(Math.sin(i/17*2.4)*2.5),30-i,2,1);L('#ff4030',5,20,1,1)}
+      else if(w==='lasersw'){S1('#3a3a40',26,30);L('#ff4a3a',4,9,1,17)}else if(w==='plasma'){S1('#3a3a40',25,30);L('#8adcff',4,10,1,15);L('#e0f6ff',4,10,1,2)}
+      else if(w==='censerw'){S1('#6a6a6a',18,30);B('#b89a40',3,14,3,4);L('#ffb060',4,15,1,1)}
+      else if(w==='fireaxe'){S1('#7a5a34',10,31);B('#b02820',2,10,4,3);B('#d8dce4',1,10,1,3)}
+      else if(w==='pickaxe'){S1('#7a5a34',10,31);B('#7a7e86',1,10,7,1);B('#7a7e86',1,11,1,1);B('#7a7e86',7,11,1,1)}
+      else if(w==='spade'){S1('#7a5a34',14,31);B('#8a8e96',3,10,3,4)}
+      else if(w==='machete'){S1('#3a2a1a',27,30);B('#c8ccd4',4,12,2,15)}
+      else if(w==='bat'){S1('#8a6a40',13,30);B('#8a6a40',3,12,3,7);B('#c8ccd4',2,14,1,1);B('#c8ccd4',6,16,1,1)}
+      else if(w==='crowbar'){S1('#6a2a24',12,30);B('#6a2a24',5,12,2,1)}
+      else if(w==='grinder'){B('#d8a020',3,23,3,6);E(g,'#c8ccd4',4.5,20.5,2.5,2.5)}
+      else if(w==='chainsaw'){B('#c04020',2,24,4,5);B('#8a8e96',3,12,2,12)}
+      else if(w.startsWith('r_')){S1('#b08a30',two?8:14,30);B('#8a6a20',2,two?5:11,5,4);L('#ffd070',4,two?6:12,1,1)}
+      else S1('#8a8a86',13,30)}})}
+function netAv(r){let a=NET.av[r.id];if(!a){a=NET.av[r.id]={isRP:1,id:r.id,x:r.x,y:r.y,h:.95}}a.tx=r.x;a.ty=r.y;a.a=r.a;a.ci=r.ci;a.name=r.n;a.dead=r.dead;a.fl=r.fl;a.inE=r.inE;a.lk=r.lk}
 function netAvatars(){if(!NET.on)return[];return Object.values(NET.av)}
 function netClientMon(dt){const k=Math.min(1,dt*12);for(const m of G.mon){if(m.dead)continue;if(m.tx!=null){m.x+=(m.tx-m.x)*k;m.y+=(m.ty-m.y)*k}if(m.moving)m.bobT=(m.bobT||0)+dt*8;m.hit=Math.max(0,(m.hit||0)-dt);if(m.atkFx>0)m.atkFx-=dt;if(m.scrFx>0)m.scrFx-=dt}}
 // ---- 호스트: 괴물이 가장 가까운 사람을 노린다
@@ -6265,9 +6320,9 @@ function netTick(dt){try{downTick(dt)}catch(e){}if(P&&P.snapT>0){P.snapT-=dt;P.a
   if(!NET.on||G.state==='title')return;const now=performance.now();
   if(NET.cl&&NET.tx==='room'){if((NET.hT||0)&&now-NET.hT>40000&&G.state!=='title'){NET.hT=0;msg('호스트와 연결이 끊겼다','warn',3000);netLost();return}if(NET.needFl&&now-NET.needFl>3500){NET.needFl=now;netSend({t:'need'})}}
   if(NET.cl){if(NET.pend&&$('shop').hidden&&(G.state==='play'||G.state==='elevIn')&&NET.pend.f!==NET.floorF&&!NET.waiting){const pk=NET.pend;NET.pend=null;netApplyFloor(pk)}
-    if(now-NET.uT>66){NET.uT=now;netSend({t:'u',x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,hp:P.hp,mhp:S.maxHp,inE:(inElev()||(G.edoor&&G.edoor.board))?1:0,hd:P.hidden?1:0,cr:P.crouch?1:0,rn:P.run?1:0,fl:flashPower()>0?1:0,mo:Math.floor(P.money)});
+    if(now-NET.uT>66){NET.uT=now;netSend({t:'u',x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,hp:P.hp,mhp:S.maxHp,inE:(inElev()||(G.edoor&&G.edoor.board))?1:0,hd:P.hidden?1:0,cr:P.crouch?1:0,rn:P.run?1:0,fl:flashPower()>0?1:0,mo:Math.floor(P.money),lk:netLook()});
       if(Object.keys(NET.dq).length){netSend({t:'dmg',v:NET.dq,ml:NET.dqm});NET.dq={};NET.dqm={}}}}
-  else{if(now-NET.sT>80){NET.sT=now;netSnapOut()}for(const id in NET.peers){const r=NET.peers[id];if((NET.tx==='bc'||NET.tx==='room')&&now-r.lastT>(NET.tx==='room'?30000:6000))netDrop(id);else netAv({id,n:r.name,ci:r.ci,x:r.x,y:r.y,a:r.a,dead:r.dead,fl:r.flash,inE:r.inE})}if(P.netDead)netCheckWipe()}
+  else{if(now-NET.sT>80){NET.sT=now;netSnapOut()}for(const id in NET.peers){const r=NET.peers[id];if((NET.tx==='bc'||NET.tx==='room')&&now-r.lastT>(NET.tx==='room'?30000:6000))netDrop(id);else netAv({id,n:r.name,ci:r.ci,x:r.x,y:r.y,a:r.a,dead:r.dead,fl:r.flash,inE:r.inE,lk:r.lk})}if(P.netDead)netCheckWipe()}
   const k=Math.min(1,dt*12);for(const id in NET.av){const a=NET.av[id];if(a.tx!=null){a.x+=(a.tx-a.x)*k;a.y+=(a.ty-a.y)*k}if(a.fl&&!a.dead)G.tmpL.push({x:a.x+Math.cos(a.a||0)*.6,y:a.y+Math.sin(a.a||0)*.6,r:3.2,i:.55,ttl:.04,type:'muz'})}}
 function netParty(pl){const e=$('party');if(!e)return;NET.pl=pl;if(!NET.on||G.state==='title'||G.state==='ending'){e.hidden=true;return}e.hidden=false;const tot=pl.reduce((a,r)=>a+(r.id===NET.id?Math.floor(P.money):(r.mo||0)),0);e.innerHTML=`<div class="ptot">팀 전체 ◈ ${tot} · <kbd>M</kbd> 돈 떨어뜨리기</div>`+pl.map(r=>{const me=r.id===NET.id,hp=me?P.hp/S.maxHp:(r.mhp?r.hp/r.mhp:1);return`<div style="--pc:${PCOL[r.ci]}">${me?'▶ ':''}${String(r.n||'').replace(/[<>&]/g,'')} <small>◈${me?Math.floor(P.money):(r.mo||0)}</small>${r.dead?' · 쓰러짐':r.inE?' · 탑승':''}<i><b style="width:${Math.max(0,Math.min(1,hp))*100|0}%"></b></i></div>`}).join('')}
 function netTags(){if(!NET.on||!CAM)return;ctx.font='8px monospace';ctx.textAlign='center';for(const id in NET.av){const a=NET.av[id];if(a._sx==null||a._ty==null||a._ty<.2||a._ty>14)continue;const x=a._sx|0,y=Math.max(8,(a._sy|0)-3);ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillText(a.name||'',x+1,y+1);ctx.fillStyle=PCOL[a.ci||0];ctx.fillText(a.name||'',x,y);a._sx=null}
@@ -7511,7 +7566,7 @@ function tjRest(){tjB.style.left=`calc(${(TU*1.6).toFixed(0)}px + env(safe-area-
 tjRest();addEventListener('resize',tzApply);addEventListener('orientationchange',()=>setTimeout(tzApply,300));
 function touchBtn(k,down){if(!G||G.state!=='play'||!P)return;
   if(!down){if(k==='atk')priUp();else if(k==='alt')secUp();return}
-  switch(k){case'wh':whistle();break;case'atk':priDown();break;case'alt':secDown();break;case'e':interact();break;case'x':useSkill();break;case'r':if(P.useGun)startReload();break;case'q':swapWeapon();break;
+  switch(k){case'au':OPT.tauto=OPT.tauto===0?1:0;optSave();$('tAu').classList.toggle('on',OPT.tauto!==0);if(!OPT.tauto&&G._autoHold){G._autoHold=0;mouseHeld=false}msg(OPT.tauto?'자동 공격 · 켬 — 조준점에 든 괴물을 알아서 공격한다':'자동 공격 · 끔','gold',1600);break;case'turn':G._turn=Math.PI;break;case'wh':whistle();break;case'atk':priDown();break;case'alt':secDown();break;case'e':interact();break;case'x':useSkill();break;case'r':if(P.useGun)startReload();break;case'q':swapWeapon();break;
     case'f':toggleFlash();break;case'c':TJ.crouch=!TJ.crouch;keys.KeyC=TJ.crouch;break;case'pause':touchReset();pause();break;case'sb':if(SB.on){touchReset();openSB()}break;case'tab':touchReset();openCodex('play');break;
     case'b3':useBelt('antidep');break;case'b4':useBelt('stim');break;case'b5':useBelt('drug');break;case'b6':useBelt('c4');break;case'gj':throwJunk();break}}
 function touchReset(){for(const id in tcBtn){const b=tcBtn[id];b.classList.remove('dn');touchBtn(b.dataset.k,false);delete tcBtn[id]}TJ.id=null;TJ.f=TJ.s=0;TJ.run=false;TL.id=null;tjRest()}
@@ -7525,13 +7580,34 @@ tc.addEventListener('pointermove',e=>{if(!G||G.state!=='play'||!P)return;
   if(e.pointerId===TJ.id){let dx=e.clientX-TJ.ox,dy=e.clientY-TJ.oy;const d=Math.hypot(dx,dy),R0=TU*1.05;
     if(d>R0*1.6){const k=(d-R0*1.6)/d;TJ.ox+=dx*k;TJ.oy+=dy*k;tjB.style.left=TJ.ox+'px';tjB.style.top=TJ.oy+'px';dx=e.clientX-TJ.ox;dy=e.clientY-TJ.oy}
     const dd=Math.hypot(dx,dy);let vx=dx,vy=dy;if(dd>R0){vx*=R0/dd;vy*=R0/dd}tjK.style.transform=`translate(${vx.toFixed(1)}px,${vy.toFixed(1)}px)`;
-    const m=Math.min(1,dd/R0),dz=.12;const k=m<dz?0:(m-dz)/(1-dz)/(m||1);TJ.s=vx/R0*k;TJ.f=-vy/R0*k;TJ.run=dd>R0*.95&&TJ.f>.6;tjB.classList.toggle('run',TJ.run);return}
+    const m=Math.min(1,dd/R0),dz=.12;const k=m<dz?0:(m-dz)/(1-dz)/(m||1);TJ.s=vx/R0*k;TJ.f=-vy/R0*k;TJ.run=TJ.run?(dd>R0*.5&&TJ.f>.25):(dd>R0*.9&&TJ.f>.5);tjB.classList.toggle('run',TJ.run);return}
   if(e.pointerId===TL.id){const mx=e.clientX-TL.x,my=e.clientY-TL.y;TL.x=e.clientX;TL.y=e.clientY;touchLook(mx,my)}});
 function tcEnd(e){const b=tcBtn[e.pointerId];if(b){b.classList.remove('dn');delete tcBtn[e.pointerId];touchBtn(b.dataset.k,false);return}
   if(e.pointerId===TJ.id){TJ.id=null;TJ.f=TJ.s=0;TJ.run=false;tjRest()}if(e.pointerId===TL.id)TL.id=null}
 tc.addEventListener('pointerup',tcEnd);tc.addEventListener('pointercancel',tcEnd);tc.addEventListener('contextmenu',e=>e.preventDefault());
+// ---- 모바일 보조: 자동 공격 · 조준 보정 · 자동 줍기 · 뒤로 돌기 ----
+function mobTarget(){let best=null,bs=1e9;const gun=!!(P.useGun&&S.gun),g=gun?GUN[S.gun]:null,rng=gun?Math.min(g.range*.9,14):S.range+.05;
+  for(const m of G.mon){if(m.dead||m.disguised||m.isPh)continue;const t=MT[m.type];if(!t||t.immune||(t.undying&&m.stun>0))continue;
+    const d=Math.hypot(m.x-P.x,m.y-P.y);if(d>Math.max(rng,6)+(t.boss?.7:0))continue;const da=Math.abs(angDiff(Math.atan2(m.y-P.y,m.x-P.x),P.a));if(da>.5)continue;if(!los(P.x,P.y,m.x,m.y))continue;
+    const sc=da*3+d*.15;if(sc<bs){bs=sc;best={m,d,da,t,rng,gun,g}}}
+  return best}
+function mobAssist(dt){if(!touchOn())return;
+  if(G._turn>0){const st=Math.min(G._turn,dt*Math.PI/.16);P.a+=st;G._turn-=st}
+  if(P.hidden||P.netDead||P.carry||G.cut||P.selfT!=null||P.latch)return;
+  const T=mobTarget(),held=Object.values(tcBtn).some(b=>b.dataset.k==='atk');let inGun=false;
+  if(T){const near=T.m.aggro>0||T.d<4.5;
+    // 조준 보정: 조준점 가까이의 괴물 쪽으로 살짝 끌어당긴다
+    if(OPT.taim!==0&&near&&!(G._turn>0)){const df=angDiff(Math.atan2(T.m.y-P.y,T.m.x-P.x),P.a);if(Math.abs(df)>.012)P.a+=df*Math.min(1,dt*(held||G._autoHold||P.swing>0?6:2.6))}
+    if(OPT.tauto!==0&&!(P.grab&&grabHol()>.4)){
+      if(!T.gun){if(S.weapon!=='r_piston'&&T.d<=T.rng+(T.t.boss?.7:0)&&T.da<Math.min(.5,WS().arc*.7)&&!(P.atkCd>0)&&!(P.swing>0))attack()}
+      else if(!T.g.dev&&near&&T.d<=T.rng&&T.da<Math.max(.06,Math.atan(.32/T.d))&&(P.mag>0||P.ammo>0||T.g.cell||T.g.fuel)){inGun=true;
+        if((T.g.auto||T.g.spin)&&!mouseHeld){mouseHeld=true;G._autoHold=1}if(!(P.gcd>0)&&!(P.reloadT>0)&&!(P.drawT>0))attack()}}}
+  if(G._autoHold&&!inGun){G._autoHold=0;if(!held)mouseHeld=false}
+  // 자동 줍기: 돈과 탄약은 가까이 가면 줍는다 (위장한 것은 직접 눌러야 한다)
+  G._apT=(G._apT||0)-dt;if(OPT.tpick!==0&&G._apT<=0&&!(P.grab&&grabHol()>.2)&&!safePrompt()){let p=null,bd=.9;for(const q of G.pick){if(q.kind!=='money'&&q.kind!=='ammo')continue;const d=Math.hypot(q.x-P.x,q.y-P.y);if(d<bd&&los(P.x,P.y,q.x,q.y)){bd=d;p=q}}
+    if(p){G._apT=.35;G._forceT=p;interact();G._forceT=null}}}
 function touchSync(dt){const want=!!(G&&G.state==='play'&&touchOn());document.body.classList.toggle('touchon',want);if(tc.hidden===want){tc.hidden=!want;if(!want)touchReset()}if(!want)return;
-  tcSyncT-=dt;if(tcSyncT>0)return;tcSyncT=.2;$('tF').classList.toggle('on',!!P.flash);$('tC').classList.toggle('on',!!keys.KeyC);
+  tcSyncT-=dt;if(tcSyncT>0)return;tcSyncT=.2;$('tF').classList.toggle('on',!!P.flash);$('tAu').classList.toggle('on',OPT.tauto!==0);$('tC').classList.toggle('on',!!keys.KeyC);
   const bl=P.belt||{};for(const el of $('tBelt').children){const k={b3:'antidep',b4:'stim',b5:'drug',b6:'c4'}[el.dataset.k],n=el.dataset.k==='gj'?(P.junk||[]).length:bl[k]||0,c=el.querySelector('.cnt');if(c.textContent!==String(n))c.textContent=n;el.classList.toggle('zero',!n)}
   $('tSB').style.display=SB.on?'':'none';$('tR').style.display=P.useGun&&S.gun?'':'none';$('tQ').style.display=S.gun?'':'none';
   {const raw=G._pr||'',hot=/<kbd>E<\/kbd>/.test(raw)&&!P.hidden,txt=raw.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),lb=hot?((()=>{const tk=txt.replace(/^.*?\bE\b\s*/,'').split(' ').filter(w=>w&&w!=='·');return tk.filter(w=>/기$/.test(w)).pop()||tk[0]||'조사'})()):(P.hidden?'나가기':'조사'),el=$('tE'),sm=el.querySelector('small');el.classList.toggle('hot',hot);if(el._lb!==lb){el._lb=lb;sm.textContent=lb.slice(0,5);pxify(sm)}}
