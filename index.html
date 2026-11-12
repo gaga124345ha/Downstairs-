@@ -178,6 +178,11 @@ body.touchon #belt{display:none}
 #tvV.on .crtS{animation:crtOn .5s ease-out}@keyframes crtOn{0%{transform:scaleY(.01) scaleX(1.1);filter:brightness(4)}60%{transform:scaleY(1) scaleX(1)}100%{filter:none}}
 #tvV.off .crtS{animation:crtOff .35s ease-in forwards}@keyframes crtOff{0%{transform:none}60%{transform:scaleY(.01) scaleX(1);filter:brightness(3)}100%{transform:scale(0,0);filter:brightness(5)}}
 #rushBtn.lock{opacity:.45}
+#p2T{position:fixed;top:calc(44px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:19;font:700 30px var(--num,monospace);color:#ffb070;letter-spacing:.1em;text-align:center;text-shadow:0 0 12px rgba(255,80,20,.8),0 2px 0 #000;pointer-events:none;min-width:160px}
+#p2T small{display:block;font:700 11px var(--ui);letter-spacing:.3em;color:#ff8a50}#p2T i{display:block;height:3px;margin-top:4px;background:linear-gradient(90deg,#ff3a10,#ffb040);box-shadow:0 0 8px #ff5a20}
+#p2T.low{color:#ff4a30;animation:cxblink .5s steps(2) infinite}
+#grabV{position:fixed;left:50%;top:62%;transform:translateX(-50%);z-index:21;display:grid;gap:4px;text-align:center;pointer-events:none;padding:10px 18px;background:rgba(30,0,0,.75);border:1px solid #a02a20}
+#grabV[hidden]{display:none}#grabV b{font:800 20px var(--disp,serif);color:#ff6a50;letter-spacing:.2em}#grabV span{font-size:12px;color:#e8c8c0}#grabV i{display:block;height:6px;background:#2a0808;border:1px solid #6a1a14}#grabV em{display:block;height:100%;width:0;background:#ff5a3a}
 #rushT{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:19;font:700 15px var(--num,monospace);color:#e8c070;letter-spacing:.14em;text-shadow:0 2px 0 #000;pointer-events:none}#rushR{line-height:1.9;color:var(--ink)}
 #rvP{position:fixed;left:50%;bottom:24%;transform:translateX(-50%);z-index:21;padding:6px 14px;background:rgba(8,6,4,.8);border:1px solid #6a5a3a;color:#e8d8b8;font-size:13px;letter-spacing:.06em;pointer-events:none;text-align:center}#rvP i{display:block;height:3px;margin-top:5px;background:linear-gradient(90deg,#7fcf8a var(--p,0%),rgba(255,255,255,.1) var(--p,0%))}
 #wtH{font:10px var(--num,monospace);color:var(--dim);letter-spacing:.08em;margin-top:2px}#wtH.hv{color:#e0a040}#wtH.ov{color:#e05040;animation:cxblink 1s steps(2) infinite}
@@ -727,6 +732,8 @@ body.pxwait .ov,body.pxwait #hud{visibility:hidden}
 <div id="netDown" hidden><b>쓰러졌다</b><span>동료가 응급 처치 키트로 일으켜 줘야 한다 · 동료가 업고 옮길 수 있다</span></div>
 <div id="rvP" hidden></div>
 <div id="rushT" hidden></div>
+<div id="p2T" hidden></div>
+<div id="grabV" hidden><b>붙잡혔다!</b><span>아무 키나 연타해서 벗어나라</span><i><em id="grabB"></em></i></div>
 <div id="rushV" class="ov" hidden><div class="menu"><h2>보스 러시 완주</h2><p id="rushR"></p><div class="row"><button id="rushAgain" class="primary">다시 도전</button><button id="rushTitle">타이틀로</button></div></div></div>
 <div id="tvV" class="ov" hidden><div class="crt"><div class="crtS"><canvas id="tvCv" width="160" height="120"></canvas><div class="crtL"></div><div class="crtO" id="tvOsd"></div><div class="crtSub" id="tvSub"></div></div><div class="crtB"><span class="crtK"></span><span class="crtK"></span><span class="crtLed"></span><span class="crtBr">TRINITRON-ish</span></div></div><p class="tvHint">E · 클릭 · Esc — 끄기</p></div>
 <div id="party" hidden></div>
@@ -1069,10 +1076,41 @@ function buildSprites(){
     R(g,'#c8a040',12,24,3,3);R(g,'#3a3a3a',10,40,16,2);R(g,'#8a8a8a',16,40,4,2);for(let i=0;i<4;i++)R(g,'#3a4a6a',11+i*4,30,2,6);
     R(g,'#1a1a1a',30,30,3,22);R(gg,'#6ab0ff',30,50,3,3);R(gg,'#d0e8ff',31,51,1,1);E(g,'#c8a088',6,46,2,2);
     for(const[x,y,w,h,a]of[[10,8,8,6,0],[17,4,9,6,0],[12,12,7,5,1],[19,10,8,6,1],[8,3,6,5,1]]){R(g,'#5a5e64',x,y,w,h);R(g,'#2a2c30',x,y+h-1,w,1);E(g,'#0a0a0a',x+w-2,y+h/2,1.8,1.8);E(gg,a?'#ff2a18':'#fff6d0',x+w-2,y+h/2,1,1)}R(g,'#2a2c30',16,15,4,5);for(let y=16;y<22;y+=2)R(g,'#5a5e64',13+(y&2),y,1,1)});
-  SPR.preach=mkSprite(36,68,(g,gg,R,E)=>{for(let y=24;y<67;y++){const w=6+(y-24)*.32;R(g,'#3a0a0c',18-w,y,w*2,1);if(y%4===0)R(g,'#5a1414',18-w+1,y,w*2-2,1)}R(g,'#c8a040',16,26,4,40);for(let y=30;y<64;y+=6)R(g,'#8a1a16',16,y,4,2);
+  const PREACHF=(g,gg,R,E)=>{for(let y=24;y<67;y++){const w=6+(y-24)*.32;R(g,'#3a0a0c',18-w,y,w*2,1);if(y%4===0)R(g,'#5a1414',18-w+1,y,w*2-2,1)}R(g,'#c8a040',16,26,4,40);for(let y=30;y<64;y+=6)R(g,'#8a1a16',16,y,4,2);
     for(const[x,y]of[[10,40],[24,50],[13,58],[22,34]])E(g,'#9a2a22',x,y,2.4,1.8);R(g,'#3a0a0c',5,24,6,20);R(g,'#3a0a0c',25,24,6,20);E(g,'#c8a088',6,44,2,2);E(g,'#c8a088',30,44,2,2);
     R(g,'#2a2018',4,8,2,40);E(gg,'#ff6a2a',5,7,3,3);E(gg,'#fff0c0',5,7,1.2,1.2);
-    R(g,'#e8dcc8',13,4,10,20);for(let y=6;y<24;y+=3)R(g,'#c8b8a0',13,y,10,1);R(g,'#c8a040',12,4,12,2);E(g,'#1a0404',18,12,2.4,2);E(gg,'#ff4a1a',18,12,1.2,1);R(g,'#c8a040',17,0,2,5);R(g,'#c8a040',15,1,6,1);R(g,'#2a1a14',14,20,8,6)});
+    R(g,'#e8dcc8',13,4,10,20);for(let y=6;y<24;y+=3)R(g,'#c8b8a0',13,y,10,1);R(g,'#c8a040',12,4,12,2);E(g,'#1a0404',18,12,2.4,2);E(gg,'#ff4a1a',18,12,1.2,1);R(g,'#c8a040',17,0,2,5);R(g,'#c8a040',15,1,6,1);R(g,'#2a1a14',14,20,8,6)};
+  SPR.preach=mkSprite(36,68,PREACHF);
+  SPR.preachS=mkSprite(36,68,(g,gg,R,E)=>{PREACHF(g,gg,R,E);
+    // 머리가 반으로 갈라지고, 틈 사이로 기원의 살점과 눈이 보인다
+    for(let y=0;y<22;y++){const w=y<14?3.4-y*.12:1.2;R(g,'#120202',18-w,y,w*2,1);if(y>2&&y<16)R(g,'#6a0a0a',18-w+1,y,Math.max(1,w*2-2),1)}
+    R(g,'#e8dcc8',10,6,3,14);R(g,'#e8dcc8',23,6,3,14);R(g,'#c8b8a0',10,10,3,1);R(g,'#c8b8a0',23,13,3,1);
+    E(g,'#8a0a0a',18,9,2.2,3);E(gg,'#ff4a1a',18,9,1.6,2.2);E(gg,'#ffd8a0',18,9,.7,.9);
+    for(const[x0,dx]of[[17,-1],[19,1],[18,0]])for(let y=0;y<5;y++)R(gg,y%2?'#c01010':'#ff3a22',x0+dx*Math.round(y*.6),y,1,1);
+    E(g,'#1a0404',13.5,12,1.4,1.4);E(gg,'#ff4a1a',13.5,12,.7,.7);E(g,'#1a0404',22.5,12,1.4,1.4);E(gg,'#ff4a1a',22.5,12,.7,.7);
+    for(const[x,y]of[[9,30],[27,30],[12,46],[24,54]]){R(gg,'#c01010',x,y,1,4);R(gg,'#ff3a22',x,y+4,1,1)}});
+  for(const fr of[0,1])SPR[fr?'burntB':'burnt']=mkSprite(30,60,(g,gg,R,E)=>{
+    // 등에 멘 산소통 두 개와 머리로 이어진 호스
+    for(const x of[5,21]){R(g,'#4a5a4c',x,10,4,22);R(g,'#6a7a6a',x+1,11,1,20);R(g,'#8a8e94',x,8,4,2);R(g,'#2a2a2a',x+1,6,2,2)}R(g,'#222',8,7,4,1);R(g,'#222',18,7,4,1);
+    // 짚으로 채운 허수아비 다리
+    R(g,'#5a4028',12,44,2,16);R(g,'#5a4028',17,44,2,16);for(const x of[10,13,16,19])R(g,'#c8a050',x,57,1,3);R(g,'#c8a050',11,44,1,3);R(g,'#c8a050',19,45,1,3);
+    // 삼베 자루 몸통 · 밧줄 · 탄 자국
+    E(g,'#8a7048',15,33,7,11.5);for(let y=24;y<44;y+=3)R(g,'#6a5434',9,y,12,1);R(g,'#3a2a18',8,38,14,2);R(g,'#5a4628',15,23,1,20);
+    E(g,'#1a1410',12,30,2.5,2);E(g,'#1a1410',18,41,2,1.5);E(g,'#24180e',17,28,1.5,2);
+    // 가로대 팔과 짚 손
+    R(g,'#4a3420',1,21,28,2);R(g,'#8a7048',3,23,5,6);R(g,'#8a7048',22,23,5,6);for(const x of[0,1,2])R(g,'#c8a050',x,20+(x%2)*3,1,4);for(const x of[27,28,29])R(g,'#c8a050',x,20+(x%2)*3,1,4);
+    // 방독면 머리
+    E(g,'#2a2826',15,12,6.2,7.2);E(g,'#3a3634',15,10,5,4.5);E(g,'#111',12.4,10,2,2);E(g,'#111',17.6,10,2,2);E(gg,'#ff8a2a',12.4,10,1.3,1.3);E(gg,'#ff8a2a',17.6,10,1.3,1.3);E(gg,'#ffe0a0',12.4,9.6,.5,.5);E(gg,'#ffe0a0',17.6,9.6,.5,.5);
+    E(g,'#4a4a48',15,16.5,2.6,2.2);R(g,'#2a2a2a',13,16,5,1);R(g,'#6a6a66',14,18,3,1);
+    // 꺼지지 않는 불길
+    const fl=(x,y,h)=>{for(let i=0;i<h;i++){const w=Math.max(0,Math.round((h-i)/h*2.2));R(gg,i<h*.35?'#fff0a0':i<h*.7?'#ffb030':'#e85010',x-w+((i+fr)%2?1:0),y-i,w*2||1,1)}};
+    fl(15,4,fr?6:5);fl(4,20,fr?4:6);fl(26,20,fr?6:4);fl(7,8,fr?3:5);fl(23,8,fr?5:3);fl(11,36,fr?4:3);fl(19,30,fr?3:4)});
+  SPR.patient=mkSprite(24,40,(g,gg,R,E)=>{const sk='#c8b8a8',gw='#8ab0a8';
+    R(g,sk,9,30,2,10);R(g,sk,13,30,2,10);R(g,'#7a1410',9,34,2,1);
+    for(let y=12;y<32;y++){const w=4+(y-12)*.2;R(g,gw,12-w,y,w*2,1)}for(let y=14;y<31;y+=4)for(let x=8;x<17;x+=4)R(g,'#6a908a',x+(y%8?2:0),y,1,1);R(g,'#5a807a',11,12,2,19);
+    R(g,sk,4,13,2,17);R(g,sk,18,13,2,17);E(g,sk,5,31,1.4,1.6);E(g,sk,19,31,1.4,1.6);R(g,'#e8e0d0',18,20,2,2);R(g,'#c8d8e0',19,22,1,14);R(g,'#c8d8e0',20,35,1,3);
+    for(let i=0;i<5;i++)R(g,'#7a1410',9+i,18+i*.6,1,1);
+    R(g,sk,11,9,2,4);E(g,'#e8e0d0',12,6,4.6,5.4);for(let y=2;y<11;y+=2)R(g,'#c8c0b0',8,y,9,1);E(g,'#120808',13.5,6,1.3,1.3);R(gg,'#ff3a22',13,6,1,1);R(g,'#3a1010',10,9,4,1);for(let x=10;x<14;x+=1)R(g,'#c8b8a8',x,9,1,1);R(g,'#9a3a30',9,4,2,1)});
   SPR.cultist=mkSprite(22,38,(g,gg,R,E)=>{for(let y=10;y<38;y++){const w=4+(y-10)*.22;R(g,'#4a0e10',11-w,y,w*2,1)}E(g,'#4a0e10',11,8,5.5,6);E(g,'#120404',11,9,3.5,4);E(gg,'#ff5a2a',10,9,.7,.7);E(gg,'#ff5a2a',12.5,9,.7,.7);R(g,'#3a0a0c',3,14,3,14);R(g,'#3a0a0c',16,14,3,14);E(g,'#c8a088',4,28,1.6,1.6);E(g,'#c8a088',17,28,1.6,1.6);R(g,'#c8a040',10,16,2,8);R(g,'#c8a040',8,18,6,1)});
   SPR.cultistK=mkSprite(22,28,(g,gg,R,E)=>{for(let y=10;y<28;y++){const w=5+(y-10)*.35;R(g,'#4a0e10',11-w,y,w*2,1)}E(g,'#4a0e10',11,9,5.5,5.5);E(g,'#120404',11,10,3,3);R(g,'#3a0a0c',8,12,6,8);E(g,'#c8a088',11,14,2.2,1.8);R(g,'#c8a040',10,18,2,4)});
   SPR.surgeon=mkSprite(38,66,(g,gg,R,E)=>{const c='#b8c4b0',d='#8a968a';R(g,c,11,20,16,30);R(g,d,11,40,16,10);for(const[x,y]of[[14,28],[20,36],[16,44],[22,24]])E(g,'#7a1410',x,y,2.4,3);R(g,'#4a5a4a',12,50,6,14);R(g,'#4a5a4a',20,50,6,14);
@@ -1287,6 +1325,8 @@ const MT={
   preach:{hp:1000,dmg:22,spd:1.0,h:1.55,reach:1,boss:1,vol:1.4,elev:1},
   surgeon:{hp:1100,dmg:26,spd:2.0,h:1.5,reach:1.1,boss:1,vol:1.4,elev:1},
   cultist:{hp:52,dmg:13,spd:1.35,h:.9,reach:.82,vol:.8},
+  burnt:{hp:115,dmg:16,spd:1.65,h:1.05,reach:.85,vol:1,fireIm:1},
+  patient:{hp:58,dmg:12,spd:1.9,h:.95,reach:.82,vol:.9},
   specimen:{hp:40,dmg:10,spd:2.9,h:.42,reach:.7,vol:.8},
   seam:{hp:1150,dmg:24,spd:1.35,h:1.6,reach:1.05,boss:1,vol:1.4,elev:1},
   puppet:{hp:44,dmg:13,spd:1.5,h:.92,reach:.82,vol:.9},
@@ -1296,7 +1336,7 @@ const MT={
   censor:{hp:95,dmg:24,spd:.7,h:1.08,reach:.9,vol:1},
 };
 const UNLOCK={shooter:9,censor:14,puppet:21,queen:8,parasite:3,joe:4,dread:8,stalker:5,wanderer:1,listener:1,sprinter:2,leech:3,mimic:3,statue:4,flicker:6,swarm:7};
-const ORDER=['wanderer','listener','sprinter','leech','mimic','statue','flicker','swarm','shooter','censor','stalker','dread','joe','parasite','queen','glitch','reaper','butcher','mother','warden','juggernaut','watch','seam','puppet','preach','cultist','surgeon','specimen','bomber','brat','dreg','origin','husk','hound','guard','merchant'];
+const ORDER=['wanderer','listener','sprinter','leech','mimic','statue','flicker','swarm','shooter','censor','stalker','dread','joe','parasite','queen','glitch','reaper','butcher','mother','warden','juggernaut','watch','seam','puppet','preach','cultist','burnt','surgeon','specimen','patient','bomber','brat','dreg','origin','husk','hound','guard','merchant'];
 const FT={hound:{hp:55,dmg:8,spd:3.1,h:.5,reach:.9,cost:55},guard:{hp:130,dmg:15,spd:1.9,h:.95,reach:1,cost:110}};
 const CODEX={
   wanderer:{n:'Wanderer',tag:'일반',t:'느리지만 한 번 냄새를 맡으면 끝까지 따라온다. 길게 늘어진 팔로 할퀸다. 낮게 앓는 듯한 신음이 들리면 근처에 있다.',tip:'정면으로 상대할 수 있다. 한 대 치고 물러나기를 반복하라.'},
@@ -1325,9 +1365,11 @@ const CODEX={
   dreg:{n:'Dreg',tag:'최종',t:'뼈가 모조리 으스러진 채 살점 속에 무너져 내린 사람의 형상. 척추는 휘어 버렸고 갈비뼈는 조각만 남았다. 짓눌린 두개골을 끌고 한 팔로 느리게 기어 오다가, 갑자기 곁으로 순간이동한다.',tip:'순간이동한 직후가 빈틈이다. 하얀 가루가 흩날리면 뒤를 확인하라.'},
   juggernaut:{n:'Juggernaut',tag:'보스',t:'여러 괴물이 녹아 하나로 붙어 버린 거대한 덩어리. 엄청난 힘을 얻은 대신 눈·귀·코가 거의 다 먹통이 되어 멍청해졌다. 몇 초에 한 번씩만 네 위치를 떠올리고, 그 자리를 향해 몸을 낮춘 뒤 정해 둔 방향으로만 돌진한다. 얇은 벽은 그대로 부수고, 길을 막은 괴물은 짓밟는다.',tip:'몸을 낮추는 순간 방향은 이미 정해졌다. 옆으로 비켜라. 두꺼운 벽 앞으로 유인하면 처박혀 한참 비틀거린다. 그때 공격하라.'},
   watch:{n:'Night Watch',tag:'중간 보스 · B10',t:'건물의 첫 번째 경비원이었던 것. 머리가 있던 자리에 감시 카메라와 손전등이 엉겨 붙었다. 서치라이트로 보안 통제실을 천천히 훑다가, 빛에 걸린 것에게 곧장 돌진한다. 놓치지 않으면 전기 충격 다트를 쏜다. 멀리서 공격당하면 1초 뒤 서치라이트를 공격이 날아온 곳에 고정한다.',tip:'멀리서 쏘고 나면 바로 자리를 옮겨라. 1초 뒤 빛이 그 자리를 비춘다. 돌진하다 벽에 부딪히면 한동안 멍해지고, 그때는 훨씬 아프게 맞는다.'},
-  preach:{n:'The Preacher',tag:'중간 보스 · B35',t:'지하 예배당에서 기원을 섬기던 사제. 살점이 스며든 제의를 입고 끝없이 설교한다. 제단 앞에 무릎 꿇은 신도가 하나라도 기도하고 있으면 기도의 힘이 몸을 감싸 거의 다치지 않는다. 합창이 끝나는 순간 정신을 찢는 파동이 퍼진다.',tip:'기도하는 신도부터 쓰러뜨려라. 합창 소리가 커지면 멀리 떨어져라. 천천히 따라오는 불씨는 기둥으로 막을 수 있다.'},
+  preach:{n:'The Preacher',tag:'중간 보스 · B35',t:'지하 예배당에서 기원을 섬기던 사제. 살점이 스며든 제의를 입고 끝없이 설교한다. 제단 앞에 무릎 꿇은 신도가 하나라도 기도하고 있으면 기도의 힘이 몸을 감싸 거의 다치지 않는다. 합창이 끝나는 순간 정신을 찢는 파동이 퍼진다.',tip:'기도하는 신도부터 쓰러뜨려라. 합창 소리가 커지면 멀리 떨어져라. 천천히 따라오는 불씨는 기둥으로 막을 수 있다. 신도가 모두 쓰러지면 머리가 반으로 갈라지며 2페이즈 — 예배당이 불타기 시작하고, 제한 시간 안에 설교자를 쓰러뜨리고 엘리베이터로 탈출하지 못하면 천장이 무너진다.'},
+  burnt:{n:'Burnt',tag:'일반 · B35 (2페이즈)',t:'기원의 불길에 몸을 바친 신도들. 속을 짚으로 채운 허수아비 몸에 방독면을 쓰고, 등에 멘 산소통 두 개가 끝없이 불을 먹인다. 몸이 꺼지지 않고 계속 탄다.',tip:'닿으면 불이 옮겨붙는다. 쓰러뜨리면 등의 산소통이 터진다 — 설교자 곁에서 터뜨리면 설교자도 다친다.'},
   cultist:{n:'Cultist',tag:'일반 · B35',t:'기원을 숭배하는 신도. 제단 앞에 무릎 꿇고 기도하며 설교자에게 힘을 보낸다. 건드리거나 가까이 가면 일어나 덤벼든다.',tip:'기도하는 동안은 무방비다. 한 명씩 끊어라.'},
-  surgeon:{n:'The Surgeon',tag:'중간 보스 · B45',t:'연구실에서 샘플 A-0을 다루던 집도의. 네 개의 팔로 메스를 부채꼴로 던지고, 팔을 치켜든 뒤 돌진해 벤다. 마취 가스 통을 던지고, 수조 속 표본을 깨워 풀어놓는다.',tip:'가스 구역에 들어가면 몸이 둔해진다. 메스가 날아오면 옆으로 비켜라. 수조가 깨지는 소리가 나면 표본부터 처리하라.'},
+  surgeon:{n:'The Surgeon',tag:'중간 보스 · B45',t:'연구실에서 샘플 A-0을 다루던 집도의. 네 개의 팔로 메스를 부채꼴로 던지고, 팔을 치켜든 뒤 돌진해 벤다. 마취 가스 통을 던지고, 수조 속 표본을 깨워 풀어놓는다.',tip:'가스 구역에 들어가면 몸이 둔해진다. 메스가 날아오면 옆으로 비켜라. 수조가 깨지는 소리가 나면 표본부터 처리하라. 체력이 줄면 광폭해진다 — 잠긴 창고에서 환자들이 풀려나고, 팔을 벌렸다 달려들어 너를 수술대로 끌고 간다. 끌려가는 동안 아무 키나 연타하면 풀려난다. 수술대에 눕혀지면 몸의 일부를 영구히 잃는다.'},
+  patient:{n:'Patient',tag:'일반 · B45 (광폭)',t:'집도의의 잠긴 창고에 갇혀 있던 환자들. 수술복 차림에 머리를 붕대로 칭칭 감았고, 팔에는 아직 수액 줄이 매달려 있다. 몇 번이고 다시 꿰매진 몸이라 아픔을 모른다.',tip:'무리 지어 몰려와 길을 막는다. 집도의가 네 팔을 벌리면 환자 사이로 몰리지 말고 옆으로 피하라.'},
   specimen:{n:'Specimen',tag:'일반 · B45',t:'수조에서 기르던 실험체. 여러 사람의 팔다리를 이어 붙인 몸으로 바닥을 미친 듯이 기어 다닌다.',tip:'빠르지만 약하다. 한두 번이면 터진다.'},
   seam:{n:'The Seamstress',tag:'중간 보스 · B25',t:'죽은 사람들의 가죽을 기워 인형을 만드는 키 큰 재봉사. 머리 대신 바늘이 꽂힌 재봉틀 몸통이 달려 있고, 치마는 꿰매 붙인 인형들로 이루어져 있다. 바늘을 세 개씩 던지고, 실을 쏘아 사람을 끌어당긴다. 체력이 깎일 때마다 치마에서 인형이 뜯겨 나오고, 쓰러진 인형의 가죽을 다시 기워 일으킨다.',tip:'인형이 쓰러지면 남는 가죽 더미에 다가가 E로 찢어라. 재봉사가 가죽을 기우는 동안에는 몸이 열려 있어 훨씬 아프게 맞는다. 실이 날아오기 전 팽팽해지는 소리가 들리면 기둥 뒤로 숨어라.'},
   shooter:{n:'Shooter',tag:'일반 · B9~',t:'오른팔이 뼈와 힘줄로 된 석궁으로 자라난 Wanderer. 팔꿈치 뼈를 활대 삼아 힘줄을 끌어당겨 장전하고, 뼛조각 화살을 쏜다. 장전에는 5초가 걸린다. 장전이 끝나면 팔이 끼익 하고 팽팽해진다.',tip:'끼익 하는 소리가 나면 곧 쏜다. 기둥 뒤로 숨거나 옆으로 비켜라. 쏜 직후가 다가갈 기회다. 가까이 붙으면 뒷걸음질친다.'},
@@ -2015,7 +2057,9 @@ function midRoom(bt,ar){const T=midTex(bt);TX.wall[1]=T[1];TX.wall[2]=T[1];TX.wa
     lamps.push({x:G.altar.x,y:G.altar.y,r:4,i:.8,type:'steady',ph:0})}
   if(bt==='surgeon'){G.tanks=[];for(let x=ar.x+5;x<ar.x+ar.w-6;x+=7)for(const y of[ar.y+6,ar.y+ar.h-7]){if(blk(x,y))deco('optable',x+.5,y+.5,.42);if(blk(x+1,y))deco('optable',x+1.5,y+.5,.42);fk(x-1,y-1,x+2,y+1)}
     for(let x=ar.x+3;x<ar.x+ar.w-3;x+=6)for(const y of[ar.y+1.6,ar.y+ar.h-1.6]){const t={type:'deco',gib:1,spr:'tank',h:1.05,z:0,x:x+.5,y,life:1e9,tank:1};G.fx.push(t);G.tanks.push(t);lamps.push({x:x+.5,y,r:2,i:.3,type:'steady',ph:0})}
-    for(let x=ar.x+4;x<ar.x+ar.w-3;x+=7)lamps.push({x,y:cy+.5,r:4,i:.55,type:'steady',ph:0})}
+    for(let x=ar.x+4;x<ar.x+ar.w-3;x+=7)lamps.push({x,y:cy+.5,r:4,i:.55,type:'steady',ph:0});
+    TX.wall[5]=mkTex((x,y)=>{const v=96+rnd()*10;if(x<2||x>29||y<2)return[60,62,60];if(x>13&&x<18&&y>12&&y<20)return(x+y)%3?[150,130,60]:[110,90,40];if(y%10===0)return[70,72,70];return[v,v+2,v-2]});
+    G.closets=[];const cxs=[ar.x+4,ar.x+Math.round(ar.w/2)-1,ar.x+ar.w-6];for(const x of cxs)for(const top of[1,0]){const iy=top?1:N-2,dy=top?2:N-3;const doors=[dy*N+x,dy*N+x+1];map[iy*N+x]=0;map[iy*N+x+1]=0;map[doors[0]]=5;map[doors[1]]=5;G.closets.push({ix:x+1,iy:iy+.5,ox:x+1,oy:top?dy+1.2:dy-.2,doors});deco('c_open',x+1,iy+.5,.3)}}
   midCorpses(bt,ar,cy,deco)}
 // 중간 보스 방: 그것에게 쓰이고 버려진 시신들
 function midCorpses(bt,ar,cy,deco){const free=(x,y)=>map[(y|0)*N+(x|0)]===0&&!(x>N-10&&Math.abs(y-cy)<3);
@@ -2061,7 +2105,7 @@ function bossFor(f){return MIDB[f]?MIDB[f]:['butcher','mother','warden','juggern
 function genFloor(f){if(G)G.portals=[];if(P){P.carry=null;P.rvT=0}if(G&&G.cut){G.cut=null;document.body.classList.remove('cutting')}
   stopAllVoices();
   if(AC)stopAllVoices();
-  G.floor=f;G.threat=0;G.tint=null;G.wdrops=null;G.br=null;G.fk=null;G.wdt=null;G.fdt=null;G.altar=null;G.tanks=null;G.mgas=[];G.alarm=0;G.mi=null;G.midDone=0;G.door=null;G.lampK=1;G.mon=[];G.pick=[];G.proj=[];G.t1=G.t2=G.reaper=false;G.floorEarn=0;G.got=0;G.piles=0;G.parts=[];G.splat=[];G.npcs=[];G.gibs=[];G.fx=[];G.tmpL=[];G.tracers=[];G.bolts=[];G.slowT=0;G.lockers=0;G.lockOpen=0;if(!G.allies)G.allies=[];G.boss=null;G.bossFloor=f%5===0&&f!==50;G.fin=null;G.ph=[];G.eyes=[];G._stk=0;G._drd=0;G._qn=0;if(P){P.latch=null;P.selfT=null;P.ribPlant=null;P.ribG=0}G.flz=[];G.gEv=null;G.glitchBoost=0;G.glitchAt=(f>=4&&f%5!==0&&rnd()<.07)?25+rnd()*40:0;$('evT').hidden=true;G.ft=0;G.chase=null;G.halT=6;
+  G.floor=f;G.threat=0;G.tint=null;G.wdrops=null;G.br=null;G.fk=null;G.wdt=null;G.fdt=null;G.altar=null;G.tanks=null;G.p2=null;G.closets=null;G.cultK=0;G.cultP=[];if(P){P.grab=null;P.op=null}{const e=document.getElementById('p2T');if(e)e.hidden=true;const g=document.getElementById('grabV');if(g)g.hidden=true}G.mgas=[];G.alarm=0;G.mi=null;G.midDone=0;G.door=null;G.lampK=1;G.mon=[];G.pick=[];G.proj=[];G.t1=G.t2=G.reaper=false;G.floorEarn=0;G.got=0;G.piles=0;G.parts=[];G.splat=[];G.npcs=[];G.gibs=[];G.fx=[];G.tmpL=[];G.tracers=[];G.bolts=[];G.slowT=0;G.lockers=0;G.lockOpen=0;if(!G.allies)G.allies=[];G.boss=null;G.bossFloor=f%5===0&&f!==50;G.fin=null;G.ph=[];G.eyes=[];G._stk=0;G._drd=0;G._qn=0;if(P){P.latch=null;P.selfT=null;P.ribPlant=null;P.ribG=0}G.flz=[];G.gEv=null;G.glitchBoost=0;G.glitchAt=(f>=4&&f%5!==0&&rnd()<.07)?25+rnd()*40:0;$('evT').hidden=true;G.ft=0;G.chase=null;G.halT=6;
   G.chaseAt=(f>=4&&f%5!==0&&rnd()<.06)?35+rnd()*40:0;if(P)P.san=Math.min(100,(P.san==null?100:P.san)+10);
   chooseTrait(f);if(G.traitK&&G.state!=='title'){const st=AS();if(!st.traits.includes(G.traitK)){st.traits.push(G.traitK);persist()}if(st.traits.length>=5)ach('traits5')}
   buildTextures(f);traitTex();wallVariants(f);
@@ -2741,7 +2785,7 @@ function update(dt){
   try{devTick(dt)}catch(e){}try{rushTick(dt)}catch(e){}
   if(G.blackout>0)G.blackout-=dt;
   // 이동
-  const hid=!!P.hidden||!!P.netDead;
+  const hid=!!P.hidden||!!P.netDead||!!P.grab||!!P.op;
   const f=hid?0:clamp((keys.KeyW?1:0)-(keys.KeyS?1:0)+TJ.f,-1,1),s=hid?0:clamp((keys.KeyD?1:0)-(keys.KeyA?1:0)+TJ.s,-1,1);
   if(keys.ArrowLeft)P.a-=2.4*dt;if(keys.ArrowRight)P.a+=2.4*dt;
   if(keys.ArrowUp)P.pitch=Math.min(H*.48,(P.pitch||0)+H*.9*dt);if(keys.ArrowDown)P.pitch=Math.max(-H*.48,(P.pitch||0)-H*.9*dt);
@@ -3121,9 +3165,13 @@ function damageMon(m,dmg,melee,quiet){m._dk=melee?(WS().kind==='blade'||WS().kin
   if(S.lifesteal&&melee)P.hp=Math.min(S.maxHp,P.hp+dmg*S.lifesteal);
   if(m.hp<=0&&!m.dead)killMon(m);
 }
-function killMon(m){if(m.type==='bomber'&&!m._boomed&&!m._boomQ){m._boomQ=1;setTimeout(()=>bomberBoom(m),0)}if(['watch','seam','preach','surgeon'].includes(m.type)&&G.tint)G.tint.tk=0;
+function killMon(m){if(m.type==='bomber'&&!m._boomed&&!m._boomQ){m._boomQ=1;setTimeout(()=>bomberBoom(m),0)}
+  if(m.type==='cultist'){G.cultK=(G.cultK||0)+1;(G.cultP=G.cultP||[]).push({x:m.x,y:m.y})}
+  if(m.type==='burnt'&&!m._nb&&!m.dead){const x=m.x,y=m.y;setTimeout(()=>{try{hzReset();boomAt(x,y,2.3,48+G.floor,false);fireAt(x,y,1,4,true);msg('산소통이 터졌다','warn',1000)}catch(e){}},120)}
+  if(m.type==='preach'&&G.p2&&G.p2.k==='preach'){G.p2.dead=1;setTimeout(()=>msg('설교자가 쓰러졌다 — 건물이 무너진다! 엘리베이터로 달려라!','warn',4000),400);if(NET.host)netSend({t:'p2',k:'pdead'})}
+  if(m.type==='surgeon'&&P.grab&&P.grab.m===m)grabFree(false);if(['watch','seam','preach','surgeon'].includes(m.type)&&G.tint)G.tint.tk=0;
   if(m.type==='queen')queenDie(m);
-  m.dead=true;if(G._netK){netTo(G._netK,{t:'kill',ty:m.type})}else{G.kills++;achKill(m);gainXp(m)}NET.killed&&NET.killed.push(m.nid);if(m.elite)eliteDrop(m);if(m.type==='puppet')G.pick.push({x:m.x,y:m.y,kind:'skin',h:.1,t:0});if(['watch','seam','preach','surgeon'].includes(m.type)){midDoorOpen();setTimeout(()=>{if(['watch','seam','preach','surgeon'].every(k=>SAVE.codex[k]&&SAVE.codex[k].kills))ach('mid_all')},50);for(const o of G.mon)if(!o.dead&&(o.type==='cultist'||o.type==='specimen'))killMon(o);G.mgas=[];G.alarm=0}if(m.type==='seam'){ach('seam_kill');for(const o of G.mon)if(!o.dead&&o.type==='puppet')killMon(o);for(let i=G.pick.length-1;i>=0;i--)if(G.pick[i].kind==='skin')G.pick.splice(i,1);G.thread=null}if(S.killHeal)P.hp=Math.min(S.maxHp,P.hp+S.killHeal);const k=MT[m.type].codex||m.type;const c=SAVE.codex[k]||(SAVE.codex[k]={seen:1,kills:0,floor:G.floor});c.seen=1;c.kills++;persist();
+  m.dead=true;if(G._netK){netTo(G._netK,{t:'kill',ty:m.type})}else{G.kills++;achKill(m);gainXp(m)}NET.killed&&NET.killed.push(m.nid);if(m.elite)eliteDrop(m);if(m.type==='puppet')G.pick.push({x:m.x,y:m.y,kind:'skin',h:.1,t:0});if(['watch','seam','preach','surgeon'].includes(m.type)){midDoorOpen();setTimeout(()=>{if(['watch','seam','preach','surgeon'].every(k=>SAVE.codex[k]&&SAVE.codex[k].kills))ach('mid_all')},50);for(const o of G.mon)if(!o.dead&&(o.type==='cultist'||o.type==='specimen'||o.type==='burnt'||o.type==='patient')){o._nb=1;killMon(o)}G.mgas=[];G.alarm=0}if(m.type==='seam'){ach('seam_kill');for(const o of G.mon)if(!o.dead&&o.type==='puppet')killMon(o);for(let i=G.pick.length-1;i>=0;i--)if(G.pick[i].kind==='skin')G.pick.splice(i,1);G.thread=null}if(S.killHeal)P.hp=Math.min(S.maxHp,P.hp+S.killHeal);const k=MT[m.type].codex||m.type;const c=SAVE.codex[k]||(SAVE.codex[k]={seen:1,kills:0,floor:G.floor});c.seen=1;c.kills++;persist();
   sfxDie(m);sfxSplat(1.7,m);setTimeout(()=>sfxSplat(.6,m),120);
   {const dk=corpseFx(m);if(dk!=='energy'&&dk!=='void')spawnGibs(m);if(dk==='blast')spawnGibs(m);if(Math.hypot(m.x-P.x,m.y-P.y)<2.2&&dk!=='energy'&&dk!=='void')splatScreen(dk==='blast'?6:ri(2,4))}
   originAbsorb();
@@ -3187,6 +3235,7 @@ function hurtPlayer(amt,src){if(!G.netT&&amt>3&&(GEAR('plate')||GEAR('riot')||GE
   if(SB.god){P.hurt=.3;return}
   if((P.invT||0)>0){P.hurt=.2;return}
   if(src&&src.snap)dopFx('snap');
+  if(src&&src.type==='burnt')P.burn=Math.max(P.burn||0,2.4);
   if(originFight())amt*=.75;
   amt*=TRv('dmg',1);amt*=1-Math.min(.8,S.armor);P.hp-=amt;G.lastHit={amt:Math.round(amt),type:src&&src.type,boss:!!(src&&src.isMon&&MT[src.type]&&MT[src.type].boss)};
   if(OPT.hitstop&&amt>=Math.max(16,S.maxHp*.13)&&!noFX()){G.hitstop=Math.min(.2,.07+amt/S.maxHp*.45);G.hsMax=G.hitstop;blip(55,.3,'sine',.6,28,0,0,.2);burst(.12,'lowpass',500,.6,1,0,0,.15)}P.hurt=noFX()?0:1;sfxHurt();
@@ -3534,7 +3583,7 @@ function watchTick(m,spd,dt,d,hasLos){if(m.la==null){m.la=Math.PI;m.st='patrol';
     if(m.dcd<=0&&hasLos&&d<12){m.dcd=4.2;G.proj.push({x:m.x+Math.cos(aP)*.7,y:m.y+Math.sin(aP)*.7,vx:Math.cos(aP)*8,vy:Math.sin(aP)*8,life:2.5,dmg:m.dmg*.3,kind:'dart',h:.08,z:.55,src:'watch'});sfxZap()}
     m.cc=(m.cc||8)-dt;if(m.cc<=0&&hasLos&&d>3&&d<10){m.cc=11;m.st='spot';m.timer=.7}
     if(m.timer<=0){m.st='patrol';msg('서치라이트가 다시 천천히 돈다','gold',1400)}}}
-function preachTick(m,spd,dt,d,hasLos){m.ob=(m.ob==null?2.5:m.ob)-dt;m.ser=(m.ser==null?7:m.ser)-dt;m.cs=(m.cs==null?12:m.cs)-dt;
+function preachTick(m,spd,dt,d,hasLos){if(m.ph2){preachP2Tick(m,spd,dt,d,hasLos);return}if(G.midDone&&!G.mi&&(G.cultK||0)>=2&&!G.mon.some(o=>!o.dead&&o.type==='cultist')){preachP2(m);return}m.ob=(m.ob==null?2.5:m.ob)-dt;m.ser=(m.ser==null?7:m.ser)-dt;m.cs=(m.cs==null?12:m.cs)-dt;
   const pr=G.mon.filter(o=>!o.dead&&o.type==='cultist'&&o.st==='pray');m.shield=pr.length>0;m.pray=pr;
   if(m.st==='chant'){m.timer-=dt;m.ch=(m.ch||0)-dt;if(m.ch<=0){m.ch=.3;const f=[110,130.8,164.8][(rnd()*3)|0]*(rnd()<.5?2:1);blip(f,.6,'sawtooth',.05,f,0,panOf(m),.6)}
     if(m.timer<=0){m.st='walk';if(d<10){P.san=Math.max(0,P.san-14);hurtPlayer(m.dmg*.4,m);P.wobble=Math.max(P.wobble||0,1.6);msg('설교가 머릿속을 찢는다','warn',1600)}G.preachP=.6;blip(55,1.2,'sawtooth',.4,30,0,0,.6);burst(.8,'lowpass',500,.5,0,0,0,.5,100)}return}
@@ -3542,7 +3591,7 @@ function preachTick(m,spd,dt,d,hasLos){m.ob=(m.ob==null?2.5:m.ob)-dt;m.ser=(m.se
   if(m.ob<=0&&hasLos&&d<14){m.ob=4.2;const a0=Math.atan2(P.y-m.y,P.x-m.x);for(const da of[-.35,0,.35]){const a=a0+da;G.proj.push({x:m.x+Math.cos(a)*.7,y:m.y+Math.sin(a)*.7,vx:Math.cos(a)*3.4,vy:Math.sin(a)*3.4,life:6,dmg:m.dmg*.6,kind:'eball',h:.22,z:.5,src:'preach',home:1.1})}blip(300,.5,'sine',.1,150,0,panOf(m),.4)}
   if(m.cs<=0&&G.altar){m.cs=15;const n=G.mon.filter(o=>!o.dead&&o.type==='cultist').length;if(n<6)for(let i=0;i<2;i++){const a=rnd()*6.28,c=spawn('cultist',G.altar.x-2+Math.cos(a)*1.8,G.altar.y+Math.sin(a)*1.8);if(solid(c.x,c.y)){c.x=m.x;c.y=m.y}c.st='pray';c.spr='cultistK';c.hk=.66}msg('신도들이 제단 앞에 무릎 꿇는다','warn',1600)}
   const ax=G.altar?G.altar.x-2.5:m.x,ay=G.altar?G.altar.y:m.y;if(d<4){const a=Math.atan2(m.y-P.y,m.x-P.x);moveEnt(m,Math.cos(a)*spd*dt,Math.sin(a)*spd*dt,.4);m.moving=true}else if(Math.hypot(m.x-ax,m.y-ay)>4){m.moving=stepToward(m,spd,dt)}}
-function surgTick(m,spd,dt,d,hasLos){m.sc=(m.sc==null?2.2:m.sc)-dt;m.lc=(m.lc==null?3:m.lc)-dt;m.gc=(m.gc==null?7:m.gc)-dt;m.tc=(m.tc==null?9:m.tc)-dt;const aP=Math.atan2(P.y-m.y,P.x-m.x);
+function surgTick(m,spd,dt,d,hasLos){if(!m.rage&&G.midDone&&!G.mi&&m.hp<m.maxHp*.42)surgRage(m);if(surgP2Tick(m,spd,dt,d,hasLos))return;m.sc=(m.sc==null?2.2:m.sc)-dt;m.lc=(m.lc==null?3:m.lc)-dt;m.gc=(m.gc==null?7:m.gc)-dt;m.tc=(m.tc==null?9:m.tc)-dt;const aP=Math.atan2(P.y-m.y,P.x-m.x);
   if(m.st==='wind'){m.timer-=dt;m.cdir=aP;if(m.timer<=0){m.st='lunge';m.timer=.4;m.chit=0;burst(.2,'highpass',3000,.4,0,0,panOf(m),.2)}return}
   if(m.st==='lunge'){m.timer-=dt;moveEnt(m,Math.cos(m.cdir)*9*dt,Math.sin(m.cdir)*9*dt,.4);m.moving=true;if(!m.chit&&d<1.3){m.chit=1;hurtPlayer(m.dmg*1.5,m);splatScreen(4)}if(m.timer<=0)m.st='walk';return}
   if(m.lc<=0&&d<4.5&&hasLos){m.lc=4;m.st='wind';m.timer=.38;for(let i=0;i<4;i++)modal(2400+i*300,[[1,.04,.1]],1,i*.05,panOf(m),.2);return}
@@ -4188,28 +4237,28 @@ function hazTick(dt){if(G.state!=='play'&&G.state!=='dying')return;hzReset();
     F.ct-=dt;if(F.ct<=0){F.ct=.25+rnd()*.3;const dd=Math.hypot(F.x-P.x,F.y-P.y);if(dd<9)burst(.12,'bandpass',900+rnd()*1600,.06*clamp(1.2-dd/9,0,1)*k,3,0,0,.1)}
     if(k<.15)continue;
     for(const o of G.oil)if(!o.lit&&Math.hypot(o.x-F.x,o.y-F.y)<F.r+o.r*.8){o.lit=1;const ox=o.x,oy=o.y,orr=o.r,rem=F.rem;setTimeout(()=>{if(G.fire)fireAt(ox,oy,orr+.25,10,rem)},250+rnd()*300)}
-    if(!F.rem)for(const m of G.mon){if(m.dead||m.disguised||MT[m.type].immune)continue;if(Math.hypot(m.x-F.x,m.y-F.y)<F.r+.25)m.burn=Math.max(m.burn||0,3)}
+    if(!F.rem)for(const m of G.mon){if(m.dead||m.disguised||MT[m.type].immune||MT[m.type].fireIm)continue;if(Math.hypot(m.x-F.x,m.y-F.y)<F.r+.25)m.burn=Math.max(m.burn||0,3)}
     if(!DEV.fly&&!P.netDead&&Math.hypot(P.x-F.x,P.y-F.y)<F.r+.15&&!SB.god)P.burn=Math.max(P.burn||0,2.6)}
   G.fire=G.fire.filter(F=>{if(F.t<=0){for(const o of F.fl)o.life=0;floorMark(F.x,F.y,F.r*.8,'scorch');return false}return true});
   if(G.oil.length>60)G.oil.splice(0,G.oil.length-60);
   // 화염방사기 불길
   for(const q of G.flm){q.life-=dt;q.r+=dt*.9;if(!q.fx){q.fx={type:'flame',gib:1,spr:'flm0',h:.12,z:0,x:q.x,y:q.y,life:9,ph:rnd()*9};G.fx.push(q.fx)}{const o=q.fx,u=1-q.life/.62;o.x=q.x;o.y=q.y;o.h=.14+u*.42;o.z=Math.max(0,q.z-o.h*.55);o.spr='flm'+((tGlobal*14+o.ph|0)%3);if(q.life<=0)o.life=0}const nx=q.x+q.vx*dt,ny=q.y+q.vy*dt;if(solid(nx,ny)){q.life=Math.min(q.life,.05);q.vx*=.1;q.vy*=.1}else{q.x=nx;q.y=ny}q.vx*=1-dt*1.2;q.vy*=1-dt*1.2;
     if(rnd()<.5)G.parts.push({x:q.x+(rnd()-.5)*q.r,y:q.y+(rnd()-.5)*q.r,z:q.z+(rnd()-.5)*.15,vx:q.vx*.3,vy:q.vy*.3,vz:.3+rnd()*.6,g:-1.2,life:.18+rnd()*.2,col:pick([[255,230,140],[255,170,50],[250,110,20],[220,70,10]]),sz:.5+q.r*1.3,rest:0});
-    if(!q.rem)for(const m of G.mon){if(m.dead||m.disguised||q.hit.has(m))continue;if(Math.hypot(m.x-q.x,m.y-q.y)<q.r+.35){q.hit.add(m);if(MT[m.type].immune)continue;G.dmgK='fire';damageMon(m,q.dmg,false,q.hit.size>1);G.dmgK=null;m.burn=Math.max(m.burn||0,3.5);m.aggro=Math.max(m.aggro||0,8);see(m.type)}}
+    if(!q.rem)for(const m of G.mon){if(m.dead||m.disguised||q.hit.has(m))continue;if(Math.hypot(m.x-q.x,m.y-q.y)<q.r+.35){q.hit.add(m);if(MT[m.type].immune)continue;G.dmgK='fire';damageMon(m,q.dmg*(MT[m.type].fireIm?.35:1),false,q.hit.size>1);G.dmgK=null;if(!MT[m.type].fireIm)m.burn=Math.max(m.burn||0,3.5);m.aggro=Math.max(m.aggro||0,8);see(m.type)}}
     for(const o of G.oil)if(!o.lit&&Math.hypot(o.x-q.x,o.y-q.y)<o.r*.9)igniteNear(o.x,o.y,.1,q.rem);
     if(q.life<=0&&!q.rem&&rnd()<.05)fireAt(q.x,q.y,.55,2.5,false)}
   G.flm=G.flm.filter(q=>{if(q.life<=0){if(q.fx)q.fx.life=0;return false}return true});
   if(G.state==='play')burnTick(dt);
-  gmTick(dt);gravTick(dt);}
+  gmTick(dt);gravTick(dt);if(G.state==='play'){try{p2Tick(dt)}catch(e){console.error(e)}try{grabTick(dt)}catch(e){console.error(e)}burntTick(dt)}}
 function burnTick(dt){
-  for(const m of G.mon){if(!(m.burn>0))continue;if(m.dead||MT[m.type].immune){m.burn=0;continue}m.burn-=dt;
+  for(const m of G.mon){if(!(m.burn>0))continue;if(m.dead||MT[m.type].immune||MT[m.type].fireIm){m.burn=0;continue}m.burn-=dt;
     G.dmgK='fire';damageMon(m,(6+G.floor*.45)*dt,false,true);G.dmgK=null;
     if(rnd()<dt*14){const h=MT[m.type].h;G.parts.push({x:m.x+(rnd()-.5)*.4,y:m.y+(rnd()-.5)*.4,z:rnd()*h,vx:0,vy:0,vz:.6+rnd(),g:-1.4,life:.3+rnd()*.3,col:pick([[255,200,80],[255,130,30],[230,70,10]]),sz:.5+rnd()*.4,rest:0})}
     if(rnd()<dt*4)G.tmpL.push({x:m.x,y:m.y,r:2.4,i:.7,ttl:.08,type:'muz'})}
   if(P.burn>0){P.burn-=dt;P.burnA=(P.burnA||0)+dt;if(P.burnA>=.4){P.burnA=0;hurtPlayer(2.4*(1+G.floor*.015),{type:'fire'});if(rnd()<.35)burst(.2,'bandpass',1400,.1,2)}
     if(!G.burnMsg||tGlobal-G.burnMsg>5){G.burnMsg=tGlobal;msg('몸에 불이 붙었다! 불길에서 벗어나라','warn',2000)}}else P.burnA=0;
   if(P.flashB>0){P.flashB-=dt}}
-function hazFX(){if(G.state!=='play'&&G.state!=='dying')return;
+function hazFX(){if(G.state!=='play'&&G.state!=='dying')return;try{opFX();caveFX()}catch(e){}
   // 연기 속: 아무것도 안 보인다
   if(G.smoke&&G.smoke.length){let k=0;for(const c of G.smoke){const d=Math.hypot(P.x-c.x,P.y-c.y);if(d<c.r)k=Math.max(k,clamp((c.r-d)/1+.35,0,1))}
     if(k>0){ctx.fillStyle=`rgba(96,96,90,${(.5+.42*k).toFixed(3)})`;ctx.fillRect(0,0,W,H);ctx.fillStyle=`rgba(140,140,132,${(.25*k).toFixed(3)})`;for(let i=0;i<14;i++){const x=(Math.sin(tGlobal*.4+i*2.3)*.5+.5)*W,y=(Math.cos(tGlobal*.3+i*1.7)*.5+.5)*H;ctx.fillRect(x-20|0,y-12|0,40,24)}}}
@@ -4276,6 +4325,101 @@ function exitTry(dt){const md=beingOK()?'being':'escape';if(!NET.on){startEnding
   if(keys.KeyE){G.btT=(G.btT||0)+dt;if(!G.btM||tGlobal-G.btM>.45){G.btM=tGlobal;msg(`문을 닫는 중… ${Math.min(100,G.btT/1.8*100|0)}%`,'warn',500)}
     if(G.btT>=1.8){NET.endBy=NET.id;NET.endMo=teamMoney();startEnding('betray')}}
   else{G.btT=0;if(!G.btW||tGlobal-G.btW>4.5){G.btW=tGlobal;msg(`${far.length}명이 아직 오지 않았다 · 기다리거나, E를 길게 눌러 혼자 문을 닫는다 (배신)`,'warn',4000)}}}
+
+// ================= 2페이즈: 설교자(갈라진 머리 · 화재 · 붕괴) / 집도의(광폭 · 창고 · 잡기) =================
+function p2Banner(en,ko,ds,col){try{showBanner(en,ko,ds,col)}catch(e){}}
+function preachP2(m,remote){if(!remote){m.ph2=1;m.spr='preachS';m.stun=2.6;m.hp=Math.min(m.maxHp,m.hp+m.maxHp*.2);m.spd=MT.preach.spd*1.35;m.shield=false;
+    const pts=(G.cultP||[]).slice(-6),out=[];for(const p of pts)if(!out.some(o=>Math.hypot(o.x-p.x,o.y-p.y)<1.2))out.push(p);
+    while(out.length<4&&G.altar){const a=rnd()*6.28;out.push({x:G.altar.x-2.5+Math.cos(a)*2.2,y:G.altar.y+Math.sin(a)*2.2})}
+    for(const p of out){let x=p.x,y=p.y;if(solid(x,y)){x=m.x;y=m.y}const b=spawn('burnt',x,y);if(b){b.aggro=10;b.stun=1.2}fireAt(x,y,.8,2.2,true)}}
+  G.p2={k:'preach',T:85,t:0,dead:0,safe:0,fireT:1.5,cave:null};hzReset();
+  if(NET.host&&!remote)netSend({t:'p2',k:'preach'});
+  p2Banner('THE PREACHER','갈라진 머리','"기원이여… 이 몸을 열어 드리나이다."','#ff5a2a');shake(1);
+  burst(1.2,'lowpass',260,.9,1);for(let i=0;i<6;i++)modal(180+rnd()*120,[[1,.2,.3],[2.6,.1,.2]],1,i*.08,0,.5);blip(46,3,'sawtooth',.35,30,0,0,.7);
+  for(const f of[110,116.5,164.8,174.6])blip(f,4,'sawtooth',.06,f*.5,.4,0,.8);
+  if(G.tint){G.tint.c=[255,96,28];G.tint.tk=.5;G.tint.pulse=3.2}
+  msg('신도들이 타오르며 일어났다 — 제한 시간 안에 설교자를 쓰러뜨리고 엘리베이터로 탈출하라!','warn',4200)}
+function preachP2Tick(m,spd,dt,d,hasLos){m.ob=(m.ob==null?1.5:m.ob)-dt;m.tl=(m.tl==null?4:m.tl)-dt;m.ser=(m.ser==null?6:m.ser)-dt;m.spr='preachS';
+  // 기원과 이어진 붉은 실: 갈라진 머리에서 천장으로
+  if(rnd()<dt*26)G.parts.push({x:m.x+(rnd()-.5)*.3,y:m.y+(rnd()-.5)*.3,z:1.5,vx:(rnd()-.5)*.4,vy:(rnd()-.5)*.4,vz:1.2+rnd(),g:0,life:.7,col:pick([[255,40,30],[200,10,20],[255,140,90]]),sz:.25,rest:0});
+  if(rnd()<.4)G.tmpL.push({x:m.x,y:m.y,r:3.2,i:.6,ttl:.06,type:'muz'});
+  if(m.st==='chant'){m.timer-=dt;if(m.timer<=0){m.st='walk';if(d<11){P.san=Math.max(0,P.san-18);hurtPlayer(m.dmg*.5,m);P.wobble=Math.max(P.wobble||0,2);msg('갈라진 머리 속에서 기원이 속삭인다','warn',1600)}G.preachP=.8;blip(48,1.4,'sawtooth',.45,26,0,0,.6);
+      for(let i=0;i<10;i++){const a=i/10*6.283;fireAt(m.x+Math.cos(a)*2.4,m.y+Math.sin(a)*2.4,.5,3.5,true)}}return}
+  if(m.ser<=0){m.ser=8+rnd()*2;m.st='chant';m.timer=1.5;msg('기원의 합창 — 멀어져라','warn',1400);return}
+  if(m.ob<=0&&hasLos&&d<15){m.ob=2.8;const a0=Math.atan2(P.y-m.y,P.x-m.x);for(const da of[-.5,-.25,0,.25,.5]){const a=a0+da;G.proj.push({x:m.x+Math.cos(a)*.7,y:m.y+Math.sin(a)*.7,vx:Math.cos(a)*4.2,vy:Math.sin(a)*4.2,life:6,dmg:m.dmg*.6,kind:'eball',h:.24,z:.6,src:'preach',home:1.4})}blip(260,.5,'sine',.12,120,0,panOf(m),.4)}
+  // 불의 혀: 플레이어를 향해 바닥을 따라 불길이 뻗는다
+  if(m.tl<=0&&d<12){m.tl=6.5;const a=Math.atan2(P.y-m.y,P.x-m.x);let k=0;for(let r=1;r<8;r+=.7){const x=m.x+Math.cos(a)*r,y=m.y+Math.sin(a)*r;if(solid(x,y))break;const dl=k++*90;setTimeout(()=>{if(G.p2)fireAt(x,y,.55,4,true)},dl)}burst(.9,'lowpass',300,.5,1,0,panOf(m),.4)}
+  if(d>2.2)m.moving=stepToward(m,spd,dt);else{const a=Math.atan2(m.y-P.y,m.x-P.x);moveEnt(m,Math.cos(a)*spd*dt,Math.sin(a)*spd*dt,.4);m.moving=true}}
+function p2Tick(dt){const Q=G.p2;if(!Q)return;Q.t+=dt;const el=$('p2T');
+  if(Q.k==='preach'){
+    const left=Math.max(0,Q.T-Q.t);
+    if(el){el.hidden=!!Q.safe;if(!Q.safe){el.classList.toggle('low',left<15);el.innerHTML=`<small>${Q.dead?'엘리베이터로 탈출하라':'붕괴까지'}</small>${Math.floor(left/60)}:${String(Math.floor(left%60)).padStart(2,'0')}<i style="width:${(left/Q.T*100).toFixed(1)}%"></i>`}}
+    if(Q.safe)return;
+    if(Q.dead&&inElev()){Q.safe=1;if(el)el.hidden=true;msg('엘리베이터에 몸을 던졌다 — 등 뒤에서 예배당이 무너져 내린다','gold',3600);shake(.8);burst(3,'lowpass',160,.9,1);return}
+    // 배경이 점점 불탄다
+    if(G.tint){G.tint.c=[255,96,28];G.tint.tk=Math.min(1,.45+Q.t/Q.T*.6)}
+    Q.fireT-=dt;if(Q.fireT<=0){Q.fireT=Math.max(.45,2.4-Q.t/Q.T*2);for(let k=0;k<12;k++){const x=13+rnd()*(N-16),y=3+rnd()*(N-6);if(solid(x,y)||Math.hypot(x-P.x,y-P.y)<2.6||(x<15&&Math.abs(y-N/2)<2))continue;fireAt(x,y,.6+rnd()*.6,7+rnd()*4,true);break}}
+    if(rnd()<dt*(1.2+Q.t/18)){const x=P.x+(rnd()-.5)*7,y=P.y+(rnd()-.5)*7;for(let i=0;i<5;i++)G.parts.push({x:x+(rnd()-.5)*.4,y:y+(rnd()-.5)*.4,z:1,vx:0,vy:0,vz:-rnd(),life:1.2,col:pick([[90,84,76],[60,56,50],[130,120,110]]),sz:.35+rnd()*.4,rest:0});if(rnd()<.4){burst(.4,'lowpass',220,.25,1);shake(.12+Q.t/Q.T*.2)}}
+    if(left<10&&rnd()<dt*2){shake(.25);burst(.6,'lowpass',120,.5,1)}
+    if(left<=0&&!Q.cave){Q.cave={t:0};if(el)el.hidden=true;burst(3,'lowpass',90,1,1);blip(30,3,'sawtooth',.6,20);msg('천장이 무너진다','warn',2000)}
+    if(Q.cave){Q.cave.t+=dt;shake(1);if(Q.cave.t>1.5&&!Q.cave.done){Q.cave.done=1;for(const m of G.mon)if(!m.dead&&m.type==='burnt')m.dead=true;if(!P.netDead){P.invT=0;const rv=S.revive;S.revive=0;P.endCd=99;hurtPlayer(99999,{type:'ceil'});S.revive=rv}}}}}
+function caveFX(){const Q=G.p2;if(!Q||!Q.cave)return;const k=clamp(Q.cave.t/1.5,0,1),h=H*k*k*1.05;
+  ctx.fillStyle='#2a2622';ctx.fillRect(0,0,W,h);ctx.fillStyle='#3e3832';for(let x=0;x<W;x+=7)ctx.fillRect(x+((x*13)%5),0,3,h*.9);ctx.fillStyle='#14110e';for(let i=0;i<12;i++){const x=(i*53)%W;ctx.fillRect(x,h-6-(i%3)*3,18,2)}
+  ctx.fillStyle='#6a4a30';for(let i=0;i<6;i++)ctx.fillRect((i*71+20)%W,h-2,2,8);ctx.fillStyle=`rgba(120,110,96,${.35*k})`;ctx.fillRect(0,0,W,H)}
+// ---- 집도의 ----
+function surgRage(m,remote){if(!remote){m.rage=1;m.stun=1.8;m.spd=MT.surgeon.spd*1.35;m.grc=3}
+  if(NET.host&&!remote)netSend({t:'p2',k:'surg'});
+  p2Banner('THE SURGEON','광폭','"가만히 있어. 마취는 없어."','#ff3a2a');shake(.9);if(G.tint){G.tint.c=[255,40,30];G.tint.tk=.6;G.tint.pulse=4}
+  for(let i=0;i<4;i++)blip(620+i*90,.9,'sawtooth',.14,180,i*.06,0,.4);burst(1,'bandpass',900,.4,2);
+  openClosets(remote);G.lampK=1}
+function openClosets(remote){if(!G.closets)return;let n=0;for(const c of G.closets){if(c.open)continue;c.open=1;for(const i of c.doors)map[i]=0;
+    for(let q=0;q<20;q++)G.parts.push({x:c.ox,y:c.oy,z:rnd()*.9,vx:(rnd()-.5)*2,vy:(c.oy<N/2?1:-1)*rnd()*2,vz:rnd(),life:.9,col:[150,150,146],sz:.4,rest:0});
+    const pn=clamp(Math.sin(Math.atan2(c.oy-P.y,c.ox-P.x)-P.a),-1,1);_clank(n*.12,300,.12);burst(.4,'lowpass',500,.4,1,n*.12,pn,.3);
+    if(!remote)for(let k=0;k<1;k++){const p=spawn('patient',c.ix+(k?.4:-.4),c.iy);if(p){p.aggro=10;p.stun=.6+k*.4}}n++}
+  if(n)msg('잠긴 창고 문이 열렸다 — 환자들이 풀려났다','warn',2600)}
+function surgP2Tick(m,spd,dt,d,hasLos){
+  if(m.rage){m.sc-=dt*.5;m.lc-=dt*.5;m.gc-=dt*.3;m.grc=(m.grc==null?3:m.grc)-dt;if(rnd()<dt*3)G.parts.push({x:m.x,y:m.y,z:.9+rnd()*.4,vx:(rnd()-.5),vy:(rnd()-.5),vz:-.5,life:.6,col:[150,10,8],sz:.3,rest:0})}
+  if(m.st==='gwind'){m.timer-=dt;m.cdir=Math.atan2(P.y-m.y,P.x-m.x);if(m.timer<=0){m.st='gdash';m.timer=.85;burst(.25,'highpass',2500,.4,0,0,panOf(m),.2)}return true}
+  if(m.st==='gdash'){m.timer-=dt;moveEnt(m,Math.cos(m.cdir)*10.5*dt,Math.sin(m.cdir)*10.5*dt,.4);m.moving=true;if(d<1.2&&!P.grab&&!P.op&&!P.netDead&&!P.hidden&&!DEV.fly){grabStart(m);return true}if(m.timer<=0){m.st='walk'}return true}
+  if(m.st==='drag'){if(!P.grab||P.grab.m!==m){m.st='walk';return true}return true}
+  if(m.st==='opr')return true;
+  if(m.rage&&m.grc<=0&&d<9&&d>1.6&&hasLos&&!P.grab&&!P.op){m.grc=11;m.st='gwind';m.timer=.75;msg('집도의가 네 팔을 활짝 벌린다 — 피하라!','warn',1500);for(let i=0;i<3;i++)modal(1800+i*400,[[1,.06,.15]],1,i*.08,panOf(m),.3);return true}
+  return false}
+function optSpots(){const o=[];for(const f of G.fx)if(f.spr==='optable'&&f.life>0)o.push(f);return o}
+function grabStart(m){const tb=optSpots();let best=null,bd=1e9;for(const t of tb){const dd=Math.hypot(t.x-m.x,t.y-m.y);if(dd<bd){bd=dd;best=t}}
+  let tx=m.x,ty=m.y;if(best){tx=best.x;ty=best.y+(best.y<N/2?1.3:-1.3);if(solid(tx,ty))ty=best.y+(best.y<N/2?-1.3:1.3)}
+  P.grab={m,mash:0,need:12,t:0,tx,ty};m.st='drag';P.ads=false;try{mouseHeld=false}catch(e){}P.run=false;
+  hurtPlayer(m.dmg*.4,m);splatScreen(3);shake(.6);sfxFlesh&&sfxFlesh(m,30,true);burst(.3,'lowpass',400,.7,1);
+  const g=$('grabV');if(g){g.hidden=false}msg('붙잡혔다! 연타해서 벗어나라','warn',1600)}
+function grabMash(){const g=P.grab;if(!g)return;g.mash++;blip(140+g.mash*12,.05,'square',.05,90);shake(.08);if(g.mash>=g.need)grabFree(true)}
+function grabFree(win){const g=P.grab;if(!g)return;const m=g.m;P.grab=null;$('grabV').hidden=true;
+  if(win){m.st='walk';m.stun=1.7;m.grc=11;const a=Math.atan2(P.y-m.y,P.x-m.x);for(let i=0;i<8;i++){const nx=P.x+Math.cos(a)*.1,ny=P.y+Math.sin(a)*.1;if(!solid(nx,ny)){P.x=nx;P.y=ny}}msg('팔을 뿌리치고 빠져나왔다!','gold',1600);burst(.25,'lowpass',600,.5,1);blip(90,.25,'sine',.3,50)}}
+function grabTick(dt){const g=P.grab;if(P.op){opTick(dt);return}if(!g)return;const m=g.m;if(!m||m.dead||G.state!=='play'){grabFree(false);return}
+  g.t+=dt;g.mash=Math.max(0,g.mash-dt*1.6);const dx=g.tx-m.x,dy=g.ty-m.y,dd=Math.hypot(dx,dy);
+  if(dd>.45){const v=Math.min(dd,1.7*dt);if(!moveEnt(m,dx/dd*v,dy/dd*v,.35)){m.x+=dx/dd*v;m.y+=dy/dd*v}m.moving=true}
+  const ba=Math.atan2(dy,dx)+Math.PI,px=m.x+Math.cos(ba)*.55,py=m.y+Math.sin(ba)*.55;if(!solid(px,py)){P.x=px;P.y=py}else{P.x=m.x;P.y=m.y}
+  {const ta=Math.atan2(m.y-P.y,m.x-P.x);P.a+=angDiff(ta,P.a)*Math.min(1,dt*6);P.pitch=(P.pitch||0)*(1-dt*3)}
+  if(rnd()<dt*4)burst(.15,'lowpass',300,.3,1);
+  const el=$('grabB');if(el)el.style.width=(g.mash/g.need*100).toFixed(1)+'%';
+  if((dd<=.45&&g.t>2.4)||g.t>7){P.grab=null;$('grabV').hidden=true;P.op={t:0,m};m.st='opr';msg('수술대에 눕혀졌다','warn',1800);_clank(0,400,.1);burst(.4,'lowpass',300,.6,1)}}
+const OPL=[['hp','장기 하나를 가져갔다 — 최대 체력 영구 감소'],['spd','다리 힘줄을 잘라 갔다 — 이동 속도 영구 감소'],['dmg','팔 근육을 떼어 갔다 — 공격력 영구 감소'],['stam','폐 한쪽을 꿰매 막았다 — 숨 회복 영구 감소']];
+function opTick(dt){const o=P.op;o.t+=dt;const m=o.m;if(m&&!m.dead){m.x+=0;P.a+=angDiff(Math.atan2(m.y-P.y,m.x-P.x),P.a)*Math.min(1,dt*4)}P.pitch=Math.min(H*.4,(P.pitch||0)+dt*90);
+  if(rnd()<dt*7)burst(.12,'bandpass',1800+rnd()*1500,.25,4);if(rnd()<dt*3){sfxSplat&&sfxSplat(.8);splatScreen(1)}if(rnd()<dt*2)blip(500,.3,'sawtooth',.05,300);
+  if(o.t>=2.4){P.op=null;if(m&&!m.dead){m.st='walk';m.stun=.8;m.grc=12}
+    const L=pick(OPL);if(L[0]==='hp'){S.maxHp=Math.max(40,Math.round(S.maxHp*.86));P.hp=Math.min(P.hp,S.maxHp)}else if(L[0]==='spd')S.speed=(S.speed||1)-.06;else if(L[0]==='dmg'){S.dmg=Math.max(1,S.dmg*.9);S.gunK=(S.gunK||0)-.08}else S.stamRegen=Math.max(.3,(S.stamRegen||1)*.8);
+    G.opN=(G.opN||0)+1;msg(L[1],'warn',4200);shake(.8);hurtPlayer((m?m.dmg:26)*2.6,m||{type:'surgeon'})}}
+function opFX(){if(!P.op&&!P.grab)return;if(P.op){const k=clamp(P.op.t/.4,0,1);ctx.fillStyle=`rgba(40,0,0,${.55*k})`;ctx.fillRect(0,0,W,H);
+    const g=ctx.createRadialGradient(W/2,H*.2,4,W/2,H*.2,H*.5);g.addColorStop(0,`rgba(255,255,240,${.75*k})`);g.addColorStop(1,'rgba(255,255,240,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=`rgba(200,210,220,${k})`;const t=P.op.t;for(let i=0;i<4;i++){const x=W*(.25+i*.17)+Math.sin(t*3+i)*12,y=H*(.55+.15*Math.sin(t*5+i*2));ctx.fillRect(x|0,y|0,2,26);ctx.fillRect((x-3)|0,(y+26)|0,8,3)}
+    if(Math.sin(t*9)>.6){ctx.fillStyle='rgba(150,0,0,.35)';ctx.fillRect(0,0,W,H)}}
+  else{ctx.fillStyle='rgba(80,0,0,.18)';ctx.fillRect(0,0,W,H)}}
+addEventListener('keydown',e=>{if(!G||G.state!=='play'||!P||!(P.grab||P.op)||e.code==='Escape')return;e.preventDefault();e.stopImmediatePropagation();if(!e.repeat&&P.grab)grabMash()},true);
+addEventListener('pointerdown',e=>{if(!G||G.state!=='play'||!P||!(P.grab||P.op))return;if(e.target&&e.target.closest&&e.target.closest('#tPause'))return;e.preventDefault();e.stopImmediatePropagation();if(P.grab)grabMash()},true);
+addEventListener('mousedown',e=>{if(!G||G.state!=='play'||!P||!(P.grab||P.op))return;e.stopImmediatePropagation()},true);
+function burntTick(dt){for(const m of G.mon){if(m.dead||m.type!=='burnt')continue;m.spr=((tGlobal*8+m.x*3)|0)%2?'burntB':'burnt';
+    if(rnd()<dt*16){const h=MT.burnt.h;G.parts.push({x:m.x+(rnd()-.5)*.45,y:m.y+(rnd()-.5)*.45,z:h*(.35+rnd()*.7),vx:0,vy:0,vz:.6+rnd(),g:-1.5,life:.3+rnd()*.35,col:pick([[255,210,90],[255,140,30],[230,70,10]]),sz:.45+rnd()*.4,rest:0})}
+    if(rnd()<.45)G.tmpL.push({x:m.x,y:m.y,r:2.6,i:.55,ttl:.07,type:'muz'});
+    if(rnd()<dt*1.5&&Math.hypot(m.x-P.x,m.y-P.y)<7)burst(.3,'bandpass',600+rnd()*500,.05,2,0,panOf(m),.2)}}
 
 function drugTick(dt){
   if(P.stim>0){P.stim-=dt;if(P.stim<=0)msg('각성제 기운이 빠졌다','',2000)}
@@ -5504,6 +5648,7 @@ function netRecv(from,d){if(!d||!d.t)return;const T=d.t;
   else if(T==='kill'){G.kills++;try{gainXp({type:d.ty})}catch(e){}}
   else if(T==='pk')netApplyPk(d);
   else if(T==='nfx'){try{nadeRemote(d)}catch(e){}}
+  else if(T==='p2'){try{if(d.k==='preach')preachP2(null,true);else if(d.k==='surg')surgRage(null,true);else if(d.k==='pdead'&&G.p2)G.p2.dead=1}catch(e){}}
   else if(T==='gadd')giftIn(d);
   else if(T==='shop'){if($('shop').hidden&&G.state==='play'){P.hidden=null;openShop()}}
   else if(T==='end'){NET.fromHost=1;NET.endBy=d.by||null;NET.endMo=d.mo||0;startEnding(d.mode);NET.fromHost=0}
@@ -5659,7 +5804,7 @@ function codexStep(d){if(!SAVE.hasCodex)return;const i=Math.max(0,ORDER.indexOf(
   ul.addEventListener('pointermove',e=>{if(!on||e.pointerId!==id)return;const dy=e.clientY-y0;if(Math.abs(dy)>5&&!ul._dragged){ul._dragged=true;ul.classList.add('drag');try{ul.setPointerCapture(id)}catch(_){}}if(ul._dragged)ul.scrollTop=s0-dy});
   const end=()=>{if(!on)return;on=false;ul.classList.remove('drag');setTimeout(()=>{ul._dragged=false},0)};ul.addEventListener('pointerup',end);ul.addEventListener('pointercancel',end)})();
 // 강한 괴물의 도감 장식
-const CXT={glitch:'glit',reaper:'reap',butcher:'butch',mother:'mother',warden:'warden',juggernaut:'jugg',watch:'cam',seam:'sew',puppet:'sew',preach:'holy',cultist:'holy',surgeon:'surg',specimen:'surg',bomber:'surg',brat:'flesh',dreg:'flesh',origin:'origin'};
+const CXT={glitch:'glit',reaper:'reap',butcher:'butch',mother:'mother',warden:'warden',juggernaut:'jugg',watch:'cam',seam:'sew',puppet:'sew',preach:'holy',cultist:'holy',burnt:'holy',patient:'surg',surgeon:'surg',specimen:'surg',bomber:'surg',brat:'flesh',dreg:'flesh',origin:'origin'};
 // ================= 공략집 =================
 // 줄 머리: '# ' 소제목 · '# @몹 제목' 도감 미등록이면 가림 · '- ' 항목 · '! ' 빨간 펜 · '~ ' 떨리는 글씨
 // 인라인: **굵게** · ~~지운 글씨~~ · @{몹} 미등록이면 ■■■
@@ -5792,7 +5937,7 @@ const GUIDE=[
 - **B30** @{mother} · **B40** @{juggernaut}
 # 특수 구역
 - **B10** @{watch} · **B25** @{seam} · @{puppet}
-- **B35** @{preach} · @{cultist} · **B45** @{surgeon} · @{specimen} · @{bomber}
+- **B35** @{preach} · @{cultist} · @{burnt} · **B45** @{surgeon} · @{specimen} · @{bomber} · @{patient}
 # 최하층
 - **B50** @{origin} · @{brat} · @{dreg}
 # 구역
@@ -6522,11 +6667,11 @@ function die(src){
   G.gEv=null;$('evT').hidden=true;cv.style.transform='';P.deaf=0;P.wobble=0;
   if(G.chase){G.chase=null;chaseMusic(false)}
   G.state='dying';G.dieT=0;releaseLock();stopAllVoices();
-  P.selfT=null;$('badw').innerHTML='';G.selfD=!!(src&&(src.type==='self'||src.type==='c4'||src.type==='fire'||src.type==='nade'));
+  P.selfT=null;$('badw').innerHTML='';G.selfD=!!(src&&(src.type==='self'||src.type==='c4'||src.type==='fire'||src.type==='nade'||src.type==='ceil'));
   G.killer=src&&src.type&&SPR[src.type]?src.type:'wanderer';G.deathPos={x:P.x,y:P.y};G.exK=exeKind(src);if(!G.selfD){sfxJumpScare(G.killer);exeStart()}else{blip(40,2,'sine',.5,20,0,0,.6);burst(2,'lowpass',300,.3,0,0,0,.7)}
   const k=src&&src.type?(MT[src.type]&&MT[src.type].codex)||src.type:null;
   $('deadTitle').textContent='B'+G.floor;
-  $('deadCause').textContent=src&&src.type==='self'?'정신이 무너졌다. 스스로를 해쳤다.':src&&src.type==='c4'?'자기가 설치한 C4에 휘말렸다.':src&&src.type==='nade'?'수류탄 파편에 휘말렸다.':src&&src.type==='fire'?'불길에 휩싸여 타 죽었다.':k&&CODEX[k]?`${CODEX[k].n}에게 붙잡혔다.`:'어둠 속으로 사라졌다.';
+  $('deadCause').textContent=src&&src.type==='self'?'정신이 무너졌다. 스스로를 해쳤다.':src&&src.type==='c4'?'자기가 설치한 C4에 휘말렸다.':src&&src.type==='nade'?'수류탄 파편에 휘말렸다.':src&&src.type==='fire'?'불길에 휩싸여 타 죽었다.':src&&src.type==='ceil'?'무너져 내린 천장이 머리 위로 떨어졌다.':k&&CODEX[k]?`${CODEX[k].n}에게 붙잡혔다.`:'어둠 속으로 사라졌다.';
   if(!SB.used&&G.floor>SAVE.best){SAVE.best=G.floor;persist()}
   let ghostTxt='';if(!SB.used&&G.floor<50){const an=G.antiques.slice().sort((a,b)=>b.base-a.base)[0];SAVE.ghost={f:G.floor,m:Math.floor(P.money*.1),a:an?an.id:null,h:(P.san<30)?1:0,k:G.exK};
     const st=ST();st.deaths++;st.deathF[G.floor]=(st.deathF[G.floor]||0)+1;st.killer[G.killer]=(st.killer[G.killer]||0)+1;stAdd(st);persist();
@@ -6546,8 +6691,8 @@ function die(src){
   $('hud').hidden=true;setTimeout(()=>{G.state='dead';$('dead').hidden=false},G.selfD?1900:3300);
 }
 // ---- 처형 장면: 괴물마다 너를 죽이는 방식이 다르다 ----
-const EXM={wanderer:'bite',listener:'lift',sprinter:'bite',leech:'absorb',mimic:'bite',statue:'snap',flicker:'drag',swarm:'bite',swarmling:'bite',stalker:'lift',dread:'crush',joe:'slash',parasite:'absorb',queen:'absorb',glitch:'drag',reaper:'scythe',butcher:'slash',mother:'absorb',juggernaut:'crush',warden:'crush',watch:'shock',seam:'slash',puppet:'snap',preach:'lift',cultist:'slash',surgeon:'slash',specimen:'bite',brat:'absorb',dreg:'absorb',origin:'absorb',husk:'bite',shooter:'bolt',bomber:'blast',censor:'crush',merchantM:'slash',hound:'bite',guard:'crush'};
-const EXT={wanderer:'Wanderer가 너를 바닥에 쓰러뜨리고 목을 물어뜯었다.',listener:'Listener가 너를 들어 올려, 숨소리가 멎을 때까지 귀를 기울였다.',sprinter:'Sprinter가 네 위로 뛰어올라 목덜미를 물었다.',leech:'Leech가 몸에 달라붙어 마지막 한 방울까지 빨아들였다.',mimic:'돈 더미가 입을 벌려 너를 반쯤 삼켰다.',statue:'눈을 돌린 순간, Mannequin이 네 목을 비틀어 꺾었다.',flicker:'Flicker가 너를 어둠 속으로 끌고 들어갔다.',swarm:'Swarm이 사방에서 덮쳐 물어뜯었다.',swarmling:'작은 것들이 사방에서 덮쳐 물어뜯었다.',stalker:'Stalker가 너를 들어 올린 채 놓아 주지 않았다.',dread:'Dread가 너를 내리찍어 바닥에 짓뭉갰다.',joe:'Screamer Joe가 비명을 지르며 칼을 몇 번이고 내리꽂았다.',parasite:'Parasite가 살갗을 뚫고 몸속으로 파고들었다.',queen:'Queen Parasite의 유충들이 너를 뒤덮었다.',glitch:'The Glitch가 너를 세상 바깥으로 끌어냈다.',reaper:'Collector의 낫이 한 번에 목을 거두었다.',butcher:'Butcher의 식칼이 너를 두 동강 냈다.',mother:'Mother가 너를 자신의 살 속으로 품었다.',juggernaut:'Juggernaut가 너를 바닥째로 짓눌렀다.',warden:'Warden이 너를 들어 바닥에 내리꽂았다.',watch:'Night Watch의 전류가 심장을 멈췄다.',seam:'재봉사의 가위가 너를 조각조각 잘라 냈다. 새 인형의 가죽이 될 것이다.',puppet:'Puppet이 실에 당겨지듯 네 목을 비틀었다.',preach:'설교자가 너를 빛 속으로 들어 올렸다. 다시 내려오지 않았다.',cultist:'신도의 의식용 칼이 가슴을 길게 그었다.',surgeon:'집도의가 네 개의 팔로 너를 해부대에 눕혔다.',specimen:'Specimen이 다리를 타고 올라와 목을 물었다.',brat:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',dreg:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',origin:'기원이 너를 받아들였다. 너는 이제 그 일부다.',husk:'Revenant — 예전의 네가 너를 끌어안고 함께 쓰러졌다.',shooter:'Shooter의 뼈 화살이 가슴을 꿰뚫었다.',bomber:'Bomber가 네 품에서 터졌다.',censor:'눈먼 Censorer가 돌진해 너를 짓뭉갰다.',merchantM:'상인은 빚을 받아 갔다.'};
+const EXM={burnt:'ash',patient:'bite',wanderer:'bite',listener:'lift',sprinter:'bite',leech:'absorb',mimic:'bite',statue:'snap',flicker:'drag',swarm:'bite',swarmling:'bite',stalker:'lift',dread:'crush',joe:'slash',parasite:'absorb',queen:'absorb',glitch:'drag',reaper:'scythe',butcher:'slash',mother:'absorb',juggernaut:'crush',warden:'crush',watch:'shock',seam:'slash',puppet:'snap',preach:'lift',cultist:'slash',surgeon:'slash',specimen:'bite',brat:'absorb',dreg:'absorb',origin:'absorb',husk:'bite',shooter:'bolt',bomber:'blast',censor:'crush',merchantM:'slash',hound:'bite',guard:'crush'};
+const EXT={burnt:'Burnt가 너를 끌어안았다. 방독면 너머로 웃음 같은 숨소리가 들렸고, 둘은 함께 탔다.',patient:'Patient들이 너를 붙잡아 눕혔다. 누군가 수액 줄을 네 목에 감았다.',wanderer:'Wanderer가 너를 바닥에 쓰러뜨리고 목을 물어뜯었다.',listener:'Listener가 너를 들어 올려, 숨소리가 멎을 때까지 귀를 기울였다.',sprinter:'Sprinter가 네 위로 뛰어올라 목덜미를 물었다.',leech:'Leech가 몸에 달라붙어 마지막 한 방울까지 빨아들였다.',mimic:'돈 더미가 입을 벌려 너를 반쯤 삼켰다.',statue:'눈을 돌린 순간, Mannequin이 네 목을 비틀어 꺾었다.',flicker:'Flicker가 너를 어둠 속으로 끌고 들어갔다.',swarm:'Swarm이 사방에서 덮쳐 물어뜯었다.',swarmling:'작은 것들이 사방에서 덮쳐 물어뜯었다.',stalker:'Stalker가 너를 들어 올린 채 놓아 주지 않았다.',dread:'Dread가 너를 내리찍어 바닥에 짓뭉갰다.',joe:'Screamer Joe가 비명을 지르며 칼을 몇 번이고 내리꽂았다.',parasite:'Parasite가 살갗을 뚫고 몸속으로 파고들었다.',queen:'Queen Parasite의 유충들이 너를 뒤덮었다.',glitch:'The Glitch가 너를 세상 바깥으로 끌어냈다.',reaper:'Collector의 낫이 한 번에 목을 거두었다.',butcher:'Butcher의 식칼이 너를 두 동강 냈다.',mother:'Mother가 너를 자신의 살 속으로 품었다.',juggernaut:'Juggernaut가 너를 바닥째로 짓눌렀다.',warden:'Warden이 너를 들어 바닥에 내리꽂았다.',watch:'Night Watch의 전류가 심장을 멈췄다.',seam:'재봉사의 가위가 너를 조각조각 잘라 냈다. 새 인형의 가죽이 될 것이다.',puppet:'Puppet이 실에 당겨지듯 네 목을 비틀었다.',preach:'설교자가 너를 빛 속으로 들어 올렸다. 다시 내려오지 않았다.',cultist:'신도의 의식용 칼이 가슴을 길게 그었다.',surgeon:'집도의가 네 개의 팔로 너를 해부대에 눕혔다.',specimen:'Specimen이 다리를 타고 올라와 목을 물었다.',brat:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',dreg:'기원의 살점이 너를 삼켰다. 너는 이제 그 일부다.',origin:'기원이 너를 받아들였다. 너는 이제 그 일부다.',husk:'Revenant — 예전의 네가 너를 끌어안고 함께 쓰러졌다.',shooter:'Shooter의 뼈 화살이 가슴을 꿰뚫었다.',bomber:'Bomber가 네 품에서 터졌다.',censor:'눈먼 Censorer가 돌진해 너를 짓뭉갰다.',merchantM:'상인은 빚을 받아 갔다.'};
 const PCT={bite:'목이 뜯겨 나갔다',slash:'허리가 두 동강 나 있다',crush:'납작하게 짓눌려 있다',snap:'목이 뒤로 돌아가 있다',lift:'목에 손자국이 남아 있다',drag:'핏자국이 길게 끌려가 있다',shock:'까맣게 그을려 있다',bolt:'뼈 화살이 몇 개 박혀 있다',blast:'몸이 흩어져 있다',absorb:'살덩이에 반쯤 덮여 있다',scythe:'머리가 떨어져 나가 있다',self:'웅크린 채 굳어 있다',gas:'웅크린 채 굳어 있다',ash:'재만 남아 있다'};
 // 같은 방식이어도 괴물마다 디테일이 다르다
 const EXV={wanderer:{fx:['arms'],fall:1},sprinter:{from:'top',fx:['pounce'],fall:-1},swarm:{fx:['swarmers']},swarmling:{fx:['swarmers']},specimen:{from:'bottom',fx:['limbs'],fall:-1},mimic:{fx:['coins'],tint:'150,110,20'},husk:{fx:['mirror']},hound:{fx:[]},
@@ -6616,7 +6761,7 @@ const EXS={butcher:()=>{for(const v of[.3,.62])setTimeout(()=>{if(G.state==='dyi
   leech:()=>{for(let i=0;i<5;i++)burst(.15,'lowpass',400,.4,1,i*.3)},shooter:()=>{for(let i=0;i<2;i++)setTimeout(()=>{if(G.state==='dying'){burst(.06,'lowpass',600,.8,1);sfxSplat(1)}},1000+i*250)},
   censor:()=>{burst(.6,'lowpass',200,.5,1)},cultist:()=>{for(const f of[110,147])blip(f,1.8,'sawtooth',.04,f,0,0,.6)}};
 let EXBG=null;
-function exeKind(src){const t=src&&src.type;if(t==='self')return'self';if(t==='gas')return'gas';if(t==='plasma')return'ash';if(t==='c4'||t==='nade')return'blast';if(t==='fire')return'ash';if(G.dmgK==='energy'&&!MT[t])return'ash';return EXM[t]||(MT[t]?'bite':'self')}
+function exeKind(src){const t=src&&src.type;if(t==='self')return'self';if(t==='gas')return'gas';if(t==='plasma')return'ash';if(t==='c4'||t==='nade')return'blast';if(t==='fire')return'ash';if(t==='ceil')return'blast';if(G.dmgK==='energy'&&!MT[t])return'ash';return EXM[t]||(MT[t]?'bite':'self')}
 function exeStart(){EXBG=null;if(G.selfD)return;try{EXBG=document.createElement('canvas');EXBG.width=W;EXBG.height=H;EXBG.getContext('2d').drawImage(cv,0,0)}catch(e){EXBG=null;return}
   G.exR=Array.from({length:96},()=>rnd());const k=G.exK,at=v=>(.3+v*1.9)*1000,T=(v,f)=>setTimeout(()=>{if(G.state==='dying')try{f()}catch(e){}},at(v));
   if(k==='bite'){T(.3,()=>{burst(.12,'lowpass',500,.9,1);modal(160,[[1,.5,.08],[2.6,.3,.05]],1,0,0,.1);sfxSplat(1.6)});T(.42,()=>sfxSplat(1.2));T(.5,()=>{burst(.4,'lowpass',200,.6,1)})}
@@ -6692,7 +6837,7 @@ const CDT={wanderer:c=>{for(const[x,y]of[[20,6],[24,7],[28,6]])px(c,'#5a0a08',x,
   shooter:c=>{},bomber:c=>{},mother:c=>{px(c,'#c86a70',6,6,12,8)},origin:c=>{px(c,'#ff6040',10,10,2,2)},brat:c=>{for(const[x,y]of[[8,9],[16,15],[26,7]])px(c,'#b04a44',x,y,3,3)},dreg:c=>{px(c,'#d8cdb4',4,18,8,1);px(c,'#d8cdb4',30,3,1,6)},
   parasite:c=>{for(let i=0;i<6;i++)px(c,'#d8d0a8',10+i*5,8+(i%3)*3,3,1)},queen:c=>{for(let i=0;i<10;i++)px(c,'#d8d0a8',6+i*4,6+(i%4)*3,3,1)},leech:c=>{for(let i=0;i<5;i++)px(c,'#5a1a2a',12+i*6,10,3,3)},
   reaper:c=>{c.save();c.translate(26,18);c.rotate(-.15);c.strokeStyle='rgba(180,20,20,.9)';c.lineWidth=.6;c.strokeRect(-9,-2,18,4);c.restore()}};
-const CDN={wanderer:'긴 손톱자국',sprinter:'물린 자리가 두 줄',mimic:'주위에 동전이 흩어져 있다',swarm:'작은 이빨 자국 수십 개',swarmling:'작은 이빨 자국 수십 개',specimen:'꿰맨 팔 하나가 아직 붙어 있다',husk:'옆에 또 하나의 네가 누워 있다',
+const CDN={burnt:'온몸이 숯처럼 타 있다',patient:'목에 수액 줄이 감겨 있다',ceil:'무너진 콘크리트 더미 아래에 깔려 있다',wanderer:'긴 손톱자국',sprinter:'물린 자리가 두 줄',mimic:'주위에 동전이 흩어져 있다',swarm:'작은 이빨 자국 수십 개',swarmling:'작은 이빨 자국 수십 개',specimen:'꿰맨 팔 하나가 아직 붙어 있다',husk:'옆에 또 하나의 네가 누워 있다',
   butcher:'곁에 식칼이 떨어져 있다',seam:'배가 실로 꿰매져 있다',surgeon:'절개선이 반듯하다',joe:'찔린 자국 여섯 개',cultist:'피로 그린 원 안에 눕혀졌다',merchantM:'영수증이 올려져 있다',juggernaut:'가슴에 주먹 자국',warden:'발목에 사슬이 감겨 있다',dread:'눈이 아직 뜨여 있다',
   censor:'눈 위에 검은 띠가 덮였다',statue:'석고 가루가 묻어 있다',puppet:'실이 아직 매달려 있다',listener:'귀에서 피가 흘렀다',stalker:'손가락 자국이 목을 감았다',preach:'가슴에 십자가가 타들어 갔다',flicker:'바닥을 긁은 손톱자국',glitch:'윤곽이 어긋나 보인다',watch:'전류가 지나간 자국',
   shooter:'뼈 화살 세 개',bomber:'주위가 그을려 있다',mother:'살덩이가 따뜻하다',origin:'살점이 아직 꿈틀거린다',brat:'작은 입들이 붙어 있다',dreg:'뼛조각이 섞여 있다',parasite:'유충이 살갗 아래로 움직인다',queen:'유충이 살갗 아래로 움직인다',leech:'빨판 자국이 줄지어 있다',reaper:'「수거 완료」 꼬리표가 붙었다'};
