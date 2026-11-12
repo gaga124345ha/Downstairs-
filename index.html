@@ -504,6 +504,18 @@ input[type=range]{accent-color:var(--amber)}
 body.pxwait .ov,body.pxwait #hud{visibility:hidden}
 .tmenu h1,#bossName,#deadTitle{filter:drop-shadow(0 0 10px rgba(160,30,20,.55))}
 .keeper{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:end}
+.counters{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:stretch}
+@media (max-width:760px){.counters{grid-template-columns:minmax(0,1fr)}}
+.clerk{display:grid;gap:8px;align-content:start;padding:10px;background:linear-gradient(180deg,rgba(90,26,31,.22),rgba(0,0,0,.25));border:1px solid #3a2a24;border-top:2px solid #5a1a1f}
+.clerk .ctop{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center}
+#clerkCv{width:clamp(76px,10vw,104px);height:auto;aspect-ratio:1;image-rendering:pixelated;filter:drop-shadow(0 -3px 12px rgba(255,58,34,.12))}
+.speech.cs{min-height:48px;padding:8px 12px 10px}.speech.cs .who{color:#b8a090}#cSpeech{margin:4px 0 0;font-size:13px;line-height:1.6;color:#d8ccb8;min-height:1.6em}
+.ctalk{position:absolute;right:6px;top:4px;font-size:10px;padding:2px 7px;border-color:#4a3a30;color:#b8a090}
+#genList{display:grid;gap:4px}
+.grow{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:8px;align-items:center;padding:4px 6px;background:#0d0b09;border:1px solid #2a2520;text-align:left;font-family:var(--ui);color:var(--ink);cursor:pointer}
+.grow:hover:not(:disabled){border-color:#7a5a40;background:#15110d}.grow:disabled{opacity:.45;cursor:not-allowed}
+.grow img{width:28px;height:28px;image-rendering:pixelated}.grow b{display:block;font-size:13px;font-weight:700}.grow small{display:block;font-size:10.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grow .gp{font-family:var(--num);font-size:18px;color:var(--amber)}.grow.poor .gp{color:#7a5a50}
 #keeperCv{width:clamp(120px,18vw,176px);height:auto;aspect-ratio:1;image-rendering:pixelated;filter:drop-shadow(0 -4px 18px rgba(227,168,71,.12))}
 .speech{position:relative;align-self:center;background:#0b0907;border:1px solid #3a3326;padding:12px 16px 14px;min-height:64px}
 .speech::before{content:"";position:absolute;left:-7px;bottom:22px;width:12px;height:12px;background:#0b0907;border-left:1px solid #3a3326;border-bottom:1px solid #3a3326;transform:rotate(45deg)}
@@ -636,9 +648,16 @@ body.pxwait .ov,body.pxwait #hud{visibility:hidden}
       <div class="ind"><span id="indFrom">B1</span><span class="arrow">▼</span><span id="indTo">B2</span></div>
       <div class="cash" id="shopMoney"></div>
     </header>
+    <div class="counters">
     <div class="keeper">
       <canvas id="keeperCv" width="64" height="64" aria-label="엘리베이터 상인"></canvas>
       <div class="speech"><span class="who">MERCHANT</span><p id="speech"></p></div>
+    </div>
+    <section class="clerk" aria-label="잡화 판매대">
+      <div class="ctop"><canvas id="clerkCv" width="64" height="64" aria-label="잡화점 점원"></canvas>
+        <div class="speech cs"><span class="who">CLERK · 잡화</span><p id="cSpeech"></p><button id="cTalk" class="ctalk">말 걸기</button></div></div>
+      <div id="genList"></div>
+    </section>
     </div>
     <p class="shopnote" id="shopNote"></p>
     <div id="perkBox" hidden></div>
@@ -1390,6 +1409,7 @@ const ITEMS=[
   {id:'drug',r:2,n:'마약',d:'30초 동안 체력이 계속 줄어든다. 대신 이동 속도와 공격 속도가 크게 오르고 치명타 +30%. 모든 상태이상과 어둠을 무시하지만 기척이 빠르게 오른다. [0]',f:()=>beltAdd('drug'),cons:1},
   {id:'aid',r:0,n:'응급 처치 키트',d:'[7] 체력을 40 회복한다. 함께 하기에서는 쓰러진 동료 곁에서 E를 길게 눌러 일으킬 때 쓴다. 벨트에 5개까지.',f:()=>beltAdd('aid'),cons:1},
   {id:'c4',r:2,n:'C4 폭약',d:'[6]으로 바닥에 설치하고 우클릭으로 터뜨린다. 반경 안의 괴물을 날려 버리지만 온 층이 듣는다. 너무 가까우면 너도 다친다.',f:()=>beltAdd('c4'),cons:1},
+  {id:'drink',r:0,n:'에너지 음료',d:'숨을 즉시 가득 채우고, 30초 동안 달릴 때 숨이 절반만 닳는다.',f:()=>{P.stam=100;P.stamB=30},cons:1},
   {id:'nade',r:1,n:'세열 수류탄',d:'[1] 핀을 뽑아 던진다. 벽과 바닥에 튕기다가 2초 뒤 터져 주변을 찢어 놓는다. 바닥의 기름에 불이 붙는다. 너무 가까우면 너도 다친다.',f:()=>beltAdd('nade'),cons:1},
   {id:'flash',r:1,n:'섬광탄',d:'[2] 던지면 1.5초 뒤 눈부시게 터진다. 빛을 본 괴물은 5초 동안 눈이 멀어 멈춘다. 너도 그쪽을 보고 있었다면 5초 동안 아무것도 보이지 않는다.',f:()=>beltAdd('flash'),cons:1},
   {id:'smoke',r:0,n:'연막탄',d:'[3] 짙은 연기를 12초 동안 뿜는다. 연기 속에 있거나 연기 너머에 있으면 괴물이 너를 보지 못한다. 너도 연기 너머는 보이지 않는다.',f:()=>beltAdd('smoke'),cons:1},
@@ -2737,7 +2757,7 @@ function update(dt){
    if(Math.hypot(P.vx,P.vy)>.05){const ox=P.x,oy=P.y;moveEnt(P,P.vx*dt,P.vy*dt,.22);if(Math.abs(P.x-ox)<1e-5)P.vx*=-.2;if(Math.abs(P.y-oy)<1e-5)P.vy*=-.2}
    if(ml>0){P.walkT+=dt*sp*3.2;P.stepT-=dt*sp;if(P.stepT<=0){P.stepT=1.05;sfxStep();emitNoise(P.run?8.5:P.crouch?1.2:3.6)}}}
   P.bob=P.moving?Math.sin(P.walkT)*(P.run?2.2:1.2):P.bob*.9;
-  if(P.run)P.stam=Math.max(0,P.stam-24*(G.chase?.55:1)*dt);else P.stam=Math.min(100,P.stam+15*S.stamRegen*dt);
+  if(P.stamB>0)P.stamB-=dt;if(P.run)P.stam=Math.max(0,P.stam-24*(G.chase?.55:1)*(P.stamB>0?.5:1)*dt);else P.stam=Math.min(100,P.stam+15*S.stamRegen*dt);
   if(P.flashKill>0)P.flashKill-=dt;
   batTick();if(P.flash&&!S.sun){P.bat-=.55*S.batDrain*dt;if(P.bat<=0){P.bat=0;if(!((P.batR||0)>0)){P.flash=false;msg('손전등 배터리가 다 됐다','warn')}}}
   if(S.regen){P.hp=Math.min(S.maxHp,P.hp+S.regen*dt);if(S.regen<0&&P.hp<1)P.hp=1}
@@ -6126,7 +6146,7 @@ function openShop(){if(P.hp<=5&&G.state==='play')ach('close_call');
 function showShop(){
   if(G.tut&&TUT[G.tut.i]&&G.tut.i===TUT.length-1)tutDone(false);else if(G.tut)tutDone(true);G.state='shop';releaseLock();stopTrack();startMusic(.45,.32);
   {
-    G.rerolls=0;rollShop();
+    G.rerolls=0;G.genN={};rollShop();setTimeout(()=>clerkSay(P.hp<S.maxHp*.4?'피. 많이 나요. 붕대 있어요.':pick(CLL.open)),1400);
     $('indFrom').textContent='B'+G.floor;$('indTo').textContent='B'+(G.floor+1);
     const left=G.piles-G.got;
     $('shopNote').innerHTML=G.bossFloor?`<b>B${G.floor}</b>의 관리자를 쓰러뜨렸다. 아래로 내려갈수록 진열대의 물건이 좋아진다.`
@@ -6159,11 +6179,11 @@ function renderShop(){
     let ic='';try{ic=ok?'':itemIcon(s.it)}catch(e){}
     b.innerHTML=(ok?`<img class="oic" alt="" src="${originIcon(ok)}">`:'')+`<span class="rr">${s.it.perm?'영구 소장':s.it.rw?'유물 무기 · '+ANT_R[s.it.g].n:s.it.gun?'총 · '+RAR[s.it.r].n:s.it.wp?'무기 · '+RAR[s.it.r].n:RAR[s.it.r].n}</span>${ic?`<span class="icw"><img alt="" src="${ic}"></span>`:''}<span class="nm">${s.it.n}</span><span class="ds">${s.it.d}</span>${(()=>{const it=s.it,w=it.wp?(WEP[it.wp]?(WEP[it.wp].wt||.5)*2:0):it.gun?(GWT[it.gun]||2):it.cons?0:(IWT[it.id]||.2);return w?`<span class="wtn">무게 ${w.toFixed(1)}</span>`:''})()}${cap?`<span class="capn">${cap}</span>`:''}${s.sold?'<span class="pr st">판매됨</span>':`<span class="pr" data-n="◈ ${s.price}" data-s="3"></span>`}`;
     b.disabled=s.sold;b.onclick=()=>buy(i);if(s.it.key&&!s.sold&&!G.keyBan&&!G.leaving){const st=document.createElement('span');st.className='steal';st.textContent='몰래 집기';st.onclick=e=>{e.stopPropagation();trySteal(i)};b.appendChild(st)}box.appendChild(b)});
-  renderAntiques();
+  renderAntiques();renderGen();
   applyNums($('shop'));pxify($('shop'));
 }
 function buy(i){const s=G.shop[i];if(s.sold)return;{const cap=itemCap(s.it);if(cap){say('그건 더 못 들어. 손님 몸이 하나뿐이잖아. 히히.');msg(cap,'warn',2200);sfxBuzz();return}}if(P.money<s.price){say(pick(LINES.poor));sfxBuzz();return}P.money-=s.price;s.sold=true;if(s.it.r>=4)ach('buy_legend');s.it.f();useFxStart(s.it.id);if(!s.it.cons)G.owned.push(s.it.id);sfxBuy(s.it.r);keeperMood=1.4;say(s.it.perm?LINES.book:buyLine(s.it));renderShop()}
-$('talk').onclick=talk;
+$('talk').onclick=talk;$('cTalk').onclick=clerkTalk;$('clerkCv').onclick=clerkTalk;
 $('reroll').onclick=()=>{const c=rerollCost();if(P.money<c)return;P.money-=c;G.rerolls++;if(G.rerolls>=5)ach('reroll5');rollShop();sfxClick();say(G.shop.some(x=>x.it.r>=4)?pick(LINES.legend):pick(LINES.reroll));renderShop()};
 $('goDown').onclick=()=>{
   if(NET.on&&!NET.go){netReady();return}
@@ -6258,6 +6278,7 @@ function gIcon(k){return(R,E,L)=>{if(k==='flamer'){R(3,13,22,5,'#5a5c5a');R(3,13
   if(long){R(2,15,10,5,wd);R(10,13,12,6,m);R(20,14,10,2,m);if(k==='dbarrel'){R(20,16,10,2,m)}if(k==='shotgun')R(18,17,9,3,wd);if(k==='ar'||k==='carbine')R(14,19,4,7,dk);if(k==='amr'||k==='rifle'){R(12,9,9,3,'#2a2c30');E(12,10.5,1.5,1.5,'#5ad0ff')}R(12,19,4,5,dk);return}
   R(8,12,18,6,m);R(8,12,18,2,'#6a6e74');R(9,17,6,10,dk);R(15,18,3,2,dk);if(k==='smg')R(16,18,4,9,dk)}}
 Object.assign(ICN,{
+  drink:(R,E)=>{R(11,6,10,22,'#2a6a9a');R(11,6,10,2,'#c8ccd0');R(11,26,10,2,'#c8ccd0');R(12,11,8,9,'#e8e040');R(14,13,4,5,'#2a2a2a');R(15,14,2,1,'#e8e040');R(20,8,1,18,'#4a8ac0')},
   nade:(R,E)=>{E(16,19,8,9,'#4a5a30');R(9,15,14,1,'#36441f');R(9,21,14,1,'#36441f');R(13,24,1,4,'#36441f');R(19,24,1,4,'#36441f');R(13,6,6,5,'#8a8e94');R(19,7,7,2,'#8a8e94');E(26,9,2.5,2.5,'#c8ccd0')},
   flash:(R,E)=>{R(11,9,10,18,'#3a3c40');R(11,9,10,2,'#8a8e94');R(11,15,10,5,'#e8e8d8');R(14,4,4,5,'#8a8e94');E(24,6,2.5,2.5,'#c8ccd0');R(23,14,4,1,'#fff8c0');R(24,11,1,3,'#fff8c0')},
   smoke:(R,E)=>{R(11,11,10,17,'#5a6a5a');R(11,11,10,2,'#8a9a8a');R(13,16,6,4,'#d8d8c8');E(11,7,5,3.5,'#9a9a96');E(19,5,6,3.5,'#c0c0bc');E(25,8,3,2.5,'#80807c')},
@@ -6279,7 +6300,7 @@ const BUYL={ammo:'총알 한 상자. 세어 보진 마, 모자라면 마음만 �
   helmet:'머리는 하나뿐이야. 아끼라고.',medkit:'구급 상자라니, 아직 살 생각이 있구나. 좋아.',plate:'판 한 장이 목숨 하나지. 금 가면 바로 갈아 끼워.',goggle:'눈은 지켜야지. 봐야 도망가니까.',riot:'진압용이었어. 진압당한 건 입던 쪽이었지만.',
   heavy:'무겁지? 그 무게가 너를 살릴 거야. 아니면 못 도망가게 하든가.',calm:'붙이면 손 떨림이 멎어. 머리 떨림도.',eod:'폭탄을 해체하던 옷이야. 이 건물은 해체 못 했지만. 히히.',oskin:'...그걸 입겠다고? 그건 이제 너를 입을 거야.',ocore:'그게 뛰는 소리 들려? 너랑 박자가 같아지고 있어.'};
 const BUYW={blade:'날이 잘 섰어. 뭐든 썰려.',blunt:'묵직하지? 머리 하나쯤은 거뜬해.',saw:'시동 소리가 걔네를 불러. 대신 다 갈아 버리지. 히히.',energy:'빛나는 칼이라니. 어둠 속에선 너무 눈에 띄지 않을까?',bone:'뼈로 뼈를 부수는 거야. 시적이지?'};
-Object.assign(BUYL,{nade:'핀 뽑고 셋 세. 둘에 던져. 히히, 농담이야. 셋에 던져.',flash:'보지 마. 진짜야. 지난 손님은 그거 보고 벽에 박았어.',smoke:'연기 속에선 아무도 널 못 봐. 너도 아무것도 못 보지만.',
+Object.assign(BUYL,{drink:'단 거 마시고 뛰어. 심장 터지기 전까지만.',nade:'핀 뽑고 셋 세. 둘에 던져. 히히, 농담이야. 셋에 던져.',flash:'보지 마. 진짜야. 지난 손님은 그거 보고 벽에 박았어.',smoke:'연기 속에선 아무도 널 못 봐. 너도 아무것도 못 보지만.',
   molotov:'병째로 던져. 불 끄는 건 네 몫이야.',oil:'뿌리고, 불붙이고, 뒤돌아 뛰어. 순서 바꾸지 말고.'});
 const BUYG={pistol:'가볍고 믿음직해. 마지막 한 발은 아껴 둬.',revolver:'여섯 발. 여섯 번의 기회.',shotgun:'가까이서 쏘면 실수할 일이 없지.',dbarrel:'두 발이면 대부분 끝나. 대부분.',rifle:'멀리서 쏘는 거 좋아하는구나. 걔네는 가까이 오는 걸 좋아하는데.',
   amr:'벽째로 뚫어. 귀는 막아 두고.',smg:'탄을 아끼지 않는 손님이네. 탄은 나한테서 사.',ar:'제대로 된 총이야. 이 아래에선 귀하지.',carbine:'짧고 빨라. 도망가면서 쏘기 좋아.',crossbow:'조용하지. 조용한 게 제일 무서운 법이야.',
@@ -6337,8 +6358,52 @@ function drawKeeper(g,t,look,mood){
   for(let h=0;h<2;h++){const bx=h?41:9;for(let f=0;f<4;f++){const tap=Math.sin(t*(mood>0?16:8)+f*1.3+h*2)>.55?-2:0;F('#b9ae96',bx+f*4,50+tap,2,7-tap);F('#7d735f',bx+f*4,50+tap,2,1);F('#e8dcc4',bx+f*4,56,2,1)}}
 }
 function keeperRun(){cancelAnimationFrame(keeperRaf);const g=$('keeperCv').getContext('2d');let last=performance.now();
-  const loop=now=>{if($('shop').hidden)return;const dt=(now-last)/1000;last=now;keeperMood=Math.max(0,keeperMood-dt);keeperAwayTick(dt);if(kAway>0){drawKeeper(g,now/1000,3,0);drawKeeperAway(g,now/1000)}else drawKeeper(g,now/1000,keeperLook,keeperMood);keeperRaf=requestAnimationFrame(loop)};keeperRaf=requestAnimationFrame(loop)}
+  const g2=$('clerkCv')&&$('clerkCv').getContext('2d');
+  const loop=now=>{if($('shop').hidden)return;const dt=(now-last)/1000;last=now;keeperMood=Math.max(0,keeperMood-dt);clerkMood=Math.max(0,clerkMood-dt);clerkGl=Math.max(0,clerkGl-dt);if(g2)drawClerk(g2,now/1000,keeperLook);keeperAwayTick(dt);if(kAway>0){drawKeeper(g,now/1000,3,0);drawKeeperAway(g,now/1000)}else drawKeeper(g,now/1000,keeperLook,keeperMood);keeperRaf=requestAnimationFrame(loop)};keeperRaf=requestAnimationFrame(loop)}
 
+// ================= 잡화점 점원 (Wanderer) =================
+const GEN=[['bandage',.95],['cell',1.05],['ammo',1.35],['drink',.75],['aid',1.7]];
+let cSayT=0,clerkMood=0,clerkGl=0;
+function genPrice(id,k){const n=(G.genN&&G.genN[id])||0;return Math.round(PRICE[0]*k*(1+(G.floor-1)*.06)*(S.priceMult||1)*(1+n*.18))}
+function renderGen(){const box=$('genList');if(!box)return;box.innerHTML='';
+  for(const[id,k]of GEN){const it=ITEMS.find(i=>i.id===id);if(!it)continue;const pr=genPrice(id,k),cap=itemCap(it),poor=P.money<pr;
+    const b=document.createElement('button');b.className='grow'+(poor||cap?' poor':'');let ic='';try{ic=itemIcon(it)}catch(e){}
+    const own=id==='ammo'?`탄 ${P.ammo||0}`:id==='cell'?`전지 ${Math.round(P.bat||0)}${P.batR>0?' +'+Math.round(P.batR):''}`:id==='bandage'?`체력 ${Math.round(P.hp)}/${S.maxHp}`:id==='drink'?`숨 ${Math.round(P.stam||0)}`:`벨트 ${(P.belt&&P.belt.aid)||0}/5`;
+    b.innerHTML=`${ic?`<img alt="" src="${ic}">`:'<span></span>'}<span><b>${it.n}</b><small>${cap||it.d.replace(/^\[\d\]\s*/,'').slice(0,34)} · ${own}</small></span><span class="gp" data-n="◈${pr}" data-s="2"></span>`;
+    b.onclick=()=>genBuy(id,k);box.appendChild(b)}
+  applyNums(box);pxify(box)}
+const CLL={
+  open:['어서… 오세요. 붕대. 전지. 총알. 있어요.','손님. 살아 있는. 손님. 좋아요.','…(고개를 기울인다) 사요? 팔아요. 싸요.','주인님이 그랬어요. 웃어라. …(입꼬리가 귀까지 찢어진다)'],
+  buy:{bandage:['감아요. 꽉. 피, 안에 둬요.','붕대. 하나 더? 손님 피, 냄새 좋아요… 아니에요.'],cell:['불. 꺼지면, 우리가 와요. 그러니까. 켜 둬요.','전지. 따뜻해요. 반짝.'],ammo:['쾅. 쾅. …우리한텐 쏘지 마요.','총알. 무거워요. 손님은 힘세요.'],drink:['마셔요. 뛰어요. 멀리.','달아요. 저는 못 마셔요. 입이… 없어서.'],aid:['상자. 친구 살려요. 친구, 좋아요.','빨간 상자. 쓰러지면. 꺼내요.']},
+  poor:['돈. 모자라요. …손가락, 받아요? 아니에요. 농담.','◈ 없어요. 그럼 못 줘요. 규칙이에요.'],
+  cap:['더. 못 들어요. 손님 몸. 하나.','가득이에요. 터져요.'],
+  talk:['저도. 예전엔. 손님 같았어요. …아마요.','주인님 옷. 빌렸어요. 어울려요?','아래층. 친구들 많아요. 다들 배고파요.','이름… 있었는데. 계산대 밑에 떨어뜨렸어요.','웃는 거 연습했어요. 보여 줘요? (보여 준다)','위로 가는 문. 저는 못 나가요. 손님은. 나가요.','배고…아니에요. 어서 오세요.','쉿. 주인님 들어요. …히히. 따라 해 봤어요.']};
+function clerkSay(text){const el=$('cSpeech');if(!el)return;clearInterval(cSayT);el.textContent=text;pxify(el);clerkMood=Math.min(2,.4+text.length*.04);
+  const ws=[...el.querySelectorAll('.pxw')];ws.forEach(w=>w.style.visibility='hidden');let i=0;
+  cSayT=setInterval(()=>{if(i>=ws.length){clearInterval(cSayT);return}ws[i].style.visibility='visible';blip(150+rnd()*90,.06,'triangle',.03,90+rnd()*40);if(rnd()<.12){blip(70,.12,'sawtooth',.03,40);clerkGl=.25}i++},95)}
+function clerkTalk(){const c=[];if(P.hp<S.maxHp*.4)c.push('피. 많이 나요. 붕대? …붕대 사요.');if((P.bat||0)<30)c.push('불이. 약해요. 깜빡깜빡. 우리, 좋아해요. 그거.');if(GUN[S.gun]&&(P.ammo||0)<10)c.push('총. 배고파요. 총알 먹여요.');if(NET.on)c.push('친구랑 왔어요? 친구. 맛… 좋은 친구네요.');
+  let l=pick(c.length&&rnd()<.55?c:CLL.talk);if(l===G.cLast)l=pick(CLL.talk);G.cLast=l;clerkSay(l)}
+function genBuy(id,k){const it=ITEMS.find(i=>i.id===id),pr=genPrice(id,k),cap=itemCap(it);if(cap){clerkSay(pick(CLL.cap));sfxBuzz();msg(cap,'warn',1800);return}
+  if(id==='bandage'&&P.hp>=S.maxHp){clerkSay('안 아파요? 그럼. 나중에.');sfxBuzz();return}
+  if(P.money<pr){clerkSay(pick(CLL.poor));sfxBuzz();return}
+  P.money-=pr;G.genN=G.genN||{};G.genN[id]=(G.genN[id]||0)+1;it.f();try{useFxStart(id)}catch(e){}sfxBuy(0);clerkSay(pick(CLL.buy[id]||CLL.open));renderShop()}
+function drawClerk(g,t,look){g.clearRect(0,0,64,64);const F=(c,x,y,w,h)=>{g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))};
+  const El=(c,cx,cy,rx,ry)=>{g.fillStyle=c;for(let y=Math.floor(cy-ry);y<=cy+ry;y++)for(let x=Math.floor(cx-rx);x<=cx+rx;x++){const a=(x+.5-cx)/rx,b=(y+.5-cy)/ry;if(a*a+b*b<=1)g.fillRect(x,y,1,1)}};
+  const tl=Math.sin(t*.9)*1.2+(Math.sin(t*.23)>.92?4:0),hx=32+look*2+tl,hy=20+Math.sin(t*1.4)*.8,talk=clerkMood>0?Math.abs(Math.sin(t*14)):0,gl=clerkGl>0;
+  // 몸통: 상인의 붉은 조끼와 금빛 단, 흰 셔츠
+  F('#878c80',10,44,44,20);El('#878c80',32,46,20,8);F('#e4ddd0',26,40,12,24);F('#5a1a1f',12,42,15,22);F('#5a1a1f',37,42,15,22);F('#c9a24a',26,42,1,22);F('#c9a24a',37,42,1,22);F('#c9a24a',12,42,15,1);F('#c9a24a',37,42,15,1);
+  for(let i=0;i<3;i++)F('#c9a24a',29,47+i*5,2,2);F('#3a0e12',28,40,8,3);F('#5a1a1f',30,40,4,3);F('#787d72',29,35,6,6);
+  // 팔: 길고 마른 회색 팔이 계산대 위에
+  F('#787d72',6,50,6,14);F('#787d72',52,50,6,14);F('#2e2a24',0,60,64,4);F('#4a3a2c',0,58,64,2);
+  for(let i=0;i<4;i++){F('#878c80',8+i*2,57,1,4);F('#878c80',51+i*2,57,1,4)}
+  // 머리
+  const hc=gl?'#a8a090':'#878c80';El(hc,hx,hy,10,12);El('#787d72',hx,hy+5,8,6);
+  El('#0b0909',hx-4.2,hy-1,2.4,3.2);El('#0b0909',hx+4.2,hy-1,2.4,3.2);const eb=(Math.sin(t*2.7)>.97)?0:1;if(eb){F(gl?'#ffffff':'#ff3a22',hx-4.5+look,hy-1,1,1);F(gl?'#ffffff':'#ff3a22',hx+3.5+look,hy-1,1,1)}
+  // 입: 웃는 연습 — 말할 때 찢어지듯 벌어진다
+  const mw=6+clerkMood*3,mh=1+talk*2.5;F('#0b0909',hx-mw/2,hy+6,mw,mh+1);for(let i=0;i<mw;i+=2)F('#c4bba8',hx-mw/2+i,hy+6,1,1);if(clerkMood>1.2){F('#0b0909',hx-mw/2-2,hy+5,2,1);F('#0b0909',hx+mw/2,hy+5,2,1)}
+  // 상인 모자: 붉은 벨보이 모자와 금띠
+  F('#5a1a1f',hx-7,hy-15,14,5);F('#c9a24a',hx-7,hy-11,14,1);F('#3a0e12',hx-8,hy-10,16,1);F('#c9a24a',hx-1,hy-14,2,2);
+  if(gl){g.fillStyle='rgba(255,40,30,.25)';g.fillRect(0,(t*97%64)|0,64,3)}}
 function talk(){AS().talk++;persist();if(SAVE.stats.talk>=20)ach('talk20');
   const ctx=[];
   if(!SAVE.hasCodex)ctx.push('수첩 없이 내려가면 이름도 모르는 것한테 죽어. 하나 사 둬. 죽어도 안 없어지는 물건이야.');
