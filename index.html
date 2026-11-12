@@ -1788,15 +1788,15 @@ function drawWeapon(px,py,a,C){
     case 'warham':{shaft(-7,58,4,i=>i<8?C(40,30,26):C(70,72,76));for(let i=54;i<=68;i++)for(let j=-13;j<=13;j++)P1(i,j,Math.abs(j)>11?C(50,52,56):(i===54||i===68)?C(130,132,138):C(100,102,108),1,1);for(let j=-9;j<=9;j+=6)P1(61,j,C(160,160,166),2,2);break}
     case 'plasma':{for(let i=-6;i<=14;i++)for(let j=-4;j<=4;j++)P1(i,j,Math.abs(j)>2?C(54,56,60):C(80,84,92),1,1);for(let i=14;i<=18;i++)for(let j=-3;j<=3;j++)P1(i,j,C(150,154,160),1,1);P1(2,5,C(200,80,30),4,3);
       const fl=.75+Math.sin(tGlobal*40)*.15;for(let i=18;i<=52;i++){ctx.fillStyle=`rgba(110,220,255,${fl*.8})`;const x=Math.round(px+dx*i),y=Math.round(py+dy*i);ctx.fillRect(x-2,y-2,4,4);ctx.fillStyle='rgba(240,252,255,.95)';ctx.fillRect(x-1,y-1,2,2)}break}
-    case 'rib':{const gl=(P.ribS||0)/10,pu=.5+Math.sin(tGlobal*(4+gl*9))*.5,BN=C(222,208,184),BH=C(246,238,220),BD=C(176,156,130);
+    case 'rib':{const gl=(P.ribS||0)/10,pu=.5+Math.sin(tGlobal*(4+gl*9))*.5,BN=C(222,208,184),BH=C(246,238,220),BD=C(176,156,130),SI=.68,SJ=.5,P1=(i,j,col,w,h)=>{ctx.fillStyle=col;ctx.fillRect(Math.round(px+dx*i*SI+nx*j*SJ),Math.round(py+dy*i*SI+ny*j*SJ),w||2,h||2)};
       for(let i=-12;i<=-6;i++){const w=Math.round(4.2-Math.abs(i+9)*1.1);for(let j=-w;j<=w;j++)P1(i,j,j>=w-1?BH:j<=-w?BD:BN)}P1(-13,-1,BD,2,3);P1(-9,-6,BN,2,2);P1(-9,5,BN,2,2);
       for(let i=-6;i<=17;i++){const band=((i+6)%4)<2;for(let j=-2;j<=2;j++)P1(i,j,band?C(122,38,34):C(80,22,22));if((i+6)%4===0){P1(i,-3,C(150,62,52),1,1);P1(i,3,C(60,16,16),1,1)}}
       for(let i=17;i<=21;i++){const w=i===19?6:5;for(let j=-w;j<=w;j++)P1(i,j,Math.abs(j)>=w-1?C(140,40,36):C(206,190,164))}P1(19,8,BN,1,3);P1(19,-9,BN,1,3);
       for(let i=21;i<=76;i++){const u=(i-21)/55,w=Math.max(1,Math.round(4.6-u*3.7)),j0=Math.round(Math.sin(u*Math.PI*.85)*7);
         for(let j=-w;j<=w;j++)P1(i,j0+j,j===w?BH:j===-w?C(150,52,44):j<0?BD:BN);
         if(i%7===0&&i<70)P1(i,j0-w-1,C(118,24,22),2,3);if(i%9===4)P1(i,j0+1,C(168,150,124),1,1)}
-      ctx.fillStyle=`rgba(255,${50+gl*80|0},36,${.2+gl*.7*pu})`;for(let i=22;i<=70;i+=3){const u=(i-21)/55,j0=Math.sin(u*Math.PI*.85)*7;ctx.fillRect(Math.round(px+dx*i+nx*j0),Math.round(py+dy*i+ny*j0),1,1)}
-      if(gl>=1&&rnd()<.5){const i=22+rnd()*50,u=(i-21)/55,j0=Math.sin(u*Math.PI*.85)*7;ctx.fillStyle='rgba(255,170,90,.9)';ctx.fillRect(Math.round(px+dx*i+nx*(j0+(rnd()-.5)*8)),Math.round(py+dy*i+ny*(j0+(rnd()-.5)*8)),1,1)}
+      ctx.fillStyle=`rgba(255,${50+gl*80|0},36,${.2+gl*.7*pu})`;for(let i=22;i<=70;i+=3){const u=(i-21)/55,j0=Math.sin(u*Math.PI*.85)*7;ctx.fillRect(Math.round(px+dx*i*SI+nx*j0*SJ),Math.round(py+dy*i*SI+ny*j0*SJ),1,1)}
+      if(gl>=1&&rnd()<.5){const i=22+rnd()*50,u=(i-21)/55,j0=Math.sin(u*Math.PI*.85)*7;ctx.fillStyle='rgba(255,170,90,.9)';ctx.fillRect(Math.round(px+dx*i*SI+nx*(j0+(rnd()-.5)*8)*SJ),Math.round(py+dy*i*SI+ny*(j0+(rnd()-.5)*8)*SJ),1,1)}
       break}
     case 'sledge':shaft(-7,56,3,i=>i<6?C(40,34,30):C(130,96,60));for(let i=50;i<=61;i++)for(let j=-8;j<=8;j++)P1(i,j,Math.abs(j)>6?C(60,62,66):C(90,92,98),1,1);break;
     // ---- 유물 무기: 놋쇠 · 구리 · 강철 ----
@@ -2789,7 +2789,7 @@ function smooth(t){return t*t*(3-2*t)}
 // 휘두르기 키프레임: 들어올림(예비 동작) → 가속하며 내려침 → 관성으로 더 넘어감 → 천천히 제자리
 // 무기 실제 크기: 픽셀 2배로 그린다. 휘두르기는 어깨 위 → 뒤로 젖힘 → 대각선으로 내려침 → 관성 → 복귀
 const WK=2;
-const WLEN={lasersw:56,scythe:72,exeblade:68,censerw:58,r_piston:40,hammer:30,wrench:44,spade:52,cleaver:30,spear:74,pickaxe:56,grinder:34,warham:64,plasma:52,rib:76,crowbar:60,knife:31,bat:58,sledge:61,r_hammer:60,r_tesla:60,r_rivet:30,r_claw:54,r_disc:50,r_clock:62};
+const WLEN={lasersw:56,scythe:72,exeblade:68,censerw:58,r_piston:40,hammer:30,wrench:44,spade:52,cleaver:30,spear:74,pickaxe:56,grinder:34,warham:64,plasma:52,rib:52,crowbar:60,knife:31,bat:58,sledge:61,r_hammer:60,r_tesla:60,r_rivet:30,r_claw:54,r_disc:50,r_clock:62};
 function swingPose(s){const p=swingPose0(s);if(P.bigSw&&s>0){p.x*=1.8;p.y*=1.9;p.a=lerp(-2.02,p.a,1.25);if(s<.42){const k=Math.sin(s/.42*Math.PI);p.y-=k*30;p.a+=k*.55;p.x+=k*26}}return p}
 const SWK=()=>({back:[[0,0,0,-2.02,null],[.2,-W*.44,-24,-3.9,easeOut],[.32,-W*.47,-28,-4.0,smooth],[.47,4,-8,-1.5,easeIn],[.6,28,22,-1.0,easeOut],[1,0,0,-2.02,smooth]],
   up:[[0,0,0,-2.02,null],[.22,10,46,-2.7,easeOut],[.32,12,50,-2.8,smooth],[.47,-W*.3,-64,-1.25,easeIn],[.62,-W*.32,-72,-1.05,easeOut],[1,0,0,-2.02,smooth]],
@@ -2802,7 +2802,7 @@ function swingPose0(s){
   return{x:0,y:0,a:-2.02};
 }
 function seg(x0,y0,x1,y1,th,col){ctx.fillStyle=col;const n=Math.ceil(Math.hypot(x1-x0,y1-y0));for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,y=y0+(y1-y0)*i/n;ctx.fillRect(Math.round(x-th/2),Math.round(y-th/2),th,th)}}
-function drawHands(){if(G.cut){cutBars();return}drawHands0();try{comboHUD()}catch(e){};try{elbowFx()}catch(e){};drawGrab();drawOriginFx();drawWLens();drawPings();drawGearHUD()}
+function drawHands(){if(G.cut){cutBars();return}drawHands0();try{elbowFx()}catch(e){};drawGrab();drawOriginFx();drawWLens();drawPings();drawGearHUD()}
 function heldOrigin(){return P.useGun&&S.gun?S.gun==='rail':(S.weapon==='rib'||!!(WEP[S.weapon]&&WEP[S.weapon].origin))}
 let ORV=null;
 function originVeins(){if(ORV&&ORV.w===W)return ORV;const L=[];for(let i=0;i<14;i++){const side=i%4;let x=side===0?0:side===1?W:rnd()*W,y=side===2?0:side===3?H:rnd()*H;const pts=[[x,y]];const tx=W/2+(rnd()-.5)*W*.3,ty=H/2+(rnd()-.5)*H*.3;let a=Math.atan2(ty-y,tx-x);
@@ -3275,7 +3275,7 @@ function doHit(){
   if(FIN&&FIN.up&&finHit){burst(.3,'lowpass',300,.4,1);shake(.35);modal(110,[[1,.18,.2]],1,0,0,.1);for(let i=0;i<16;i++)G.parts.push({x:P.x+Math.cos(P.a)*1.2+(rnd()-.5),y:P.y+Math.sin(P.a)*1.2+(rnd()-.5),z:.1,vx:(rnd()-.5),vy:(rnd()-.5),vz:2+rnd()*2,life:.6,col:[140,20,16],sz:.25,rest:0})}
   if(FIN&&FIN.tent)tentSummon();
   if(FIN&&P.cbFin){if(FIN.wave){const g0=G.dmgK;G.dmgK=FIN.burn?'energy':null;shoot(P.a,S.dmg*MELEE_K*FIN.m*.6,6+S.range,5,0);G.dmgK=g0;const tr=G.tracers[G.tracers.length-1];if(tr){tr.en=1;tr.life=.1}G.tmpL.push({x:P.x+Math.cos(P.a)*2,y:P.y+Math.sin(P.a)*2,r:5,i:1.4,ttl:.15,type:'muz'});burst(.3,'highpass',3000,.25,1)}
-    if(finHit||FIN.wave){shake(.45);modal(160,[[1,.2,.2],[2.4,.08,.12]],1,0,0,.1);P.cbFlash=.25;if(!G.cbMsg||tGlobal-G.cbMsg>6){G.cbMsg=tGlobal;msg(`콤보 — ${FIN.nm}`,'gold',900)}}P.cbN=0;P.cbFin=false}
+    if(finHit||FIN.wave){shake(.45);modal(160,[[1,.2,.2],[2.4,.08,.12]],1,0,0,.1);}P.cbN=0;P.cbFin=false}
   if(corpseHit(S.range+BG*.5+FR,WS().arc+BG*.75+FA,BG?2:1)){G._ha=1}
   if(hitAny){sfxHit();shake(BG?.6:.32);if(BG)for(const m of G.mon)if(!m.dead&&Math.hypot(m.x-P.x,m.y-P.y)<S.range+.6)m.stun=Math.max(m.stun||0,.35)}
   if((P.punchCharged||0)>.45)pistonShock(P.punchCharged);P.punchK=1;P.punchCharged=0;
