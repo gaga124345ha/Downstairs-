@@ -2105,7 +2105,7 @@ function bossFor(f){return MIDB[f]?MIDB[f]:['butcher','mother','warden','juggern
 function genFloor(f){if(G)G.portals=[];if(P){P.carry=null;P.rvT=0}if(G&&G.cut){G.cut=null;document.body.classList.remove('cutting')}
   stopAllVoices();
   if(AC)stopAllVoices();
-  G.floor=f;G.threat=0;G.tint=null;G.wdrops=null;G.br=null;G.fk=null;G.wdt=null;G.fdt=null;G.altar=null;G.tanks=null;G.p2=null;G.surgRage=0;G.closets=null;G.cultK=0;G.cultP=[];if(P){P.grab=null;P.op=null}{const e=document.getElementById('p2T');if(e)e.hidden=true;const g=document.getElementById('grabV');if(g)g.hidden=true}G.mgas=[];G.alarm=0;G.mi=null;G.midDone=0;G.door=null;G.lampK=1;G.mon=[];G.pick=[];G.proj=[];G.t1=G.t2=G.reaper=false;G.floorEarn=0;G.got=0;G.piles=0;G.parts=[];G.splat=[];G.npcs=[];G.gibs=[];G.fx=[];G.tmpL=[];G.tracers=[];G.bolts=[];G.slowT=0;G.lockers=0;G.lockOpen=0;if(!G.allies)G.allies=[];G.boss=null;G.bossFloor=f%5===0&&f!==50;G.fin=null;G.ph=[];G.eyes=[];G._stk=0;G._drd=0;G._qn=0;if(P){P.latch=null;P.selfT=null;P.ribPlant=null;P.ribG=0}G.flz=[];G.gEv=null;G.glitchBoost=0;G.glitchAt=(f>=4&&f%5!==0&&rnd()<.07)?25+rnd()*40:0;$('evT').hidden=true;G.ft=0;G.chase=null;G.halT=6;
+  G.floor=f;G.threat=0;G.tint=null;G.wdrops=null;G.br=null;G.fk=null;G.wdt=null;G.fdt=null;G.altar=null;G.tanks=null;G.p2=null;G.surgRage=0;G.closets=null;G.cultK=0;G.cultP=[];if(P){P.sgrab=null;P.op=null}{const e=document.getElementById('p2T');if(e)e.hidden=true;const g=document.getElementById('grabV');if(g)g.hidden=true}G.mgas=[];G.alarm=0;G.mi=null;G.midDone=0;G.door=null;G.lampK=1;G.mon=[];G.pick=[];G.proj=[];G.t1=G.t2=G.reaper=false;G.floorEarn=0;G.got=0;G.piles=0;G.parts=[];G.splat=[];G.npcs=[];G.gibs=[];G.fx=[];G.tmpL=[];G.tracers=[];G.bolts=[];G.slowT=0;G.lockers=0;G.lockOpen=0;if(!G.allies)G.allies=[];G.boss=null;G.bossFloor=f%5===0&&f!==50;G.fin=null;G.ph=[];G.eyes=[];G._stk=0;G._drd=0;G._qn=0;if(P){P.latch=null;P.selfT=null;P.ribPlant=null;P.ribG=0}G.flz=[];G.gEv=null;G.glitchBoost=0;G.glitchAt=(f>=4&&f%5!==0&&rnd()<.07)?25+rnd()*40:0;$('evT').hidden=true;G.ft=0;G.chase=null;G.halT=6;
   G.chaseAt=(f>=4&&f%5!==0&&rnd()<.06)?35+rnd()*40:0;if(P)P.san=Math.min(100,(P.san==null?100:P.san)+10);
   chooseTrait(f);if(G.traitK&&G.state!=='title'){const st=AS();if(!st.traits.includes(G.traitK)){st.traits.push(G.traitK);persist()}if(st.traits.length>=5)ach('traits5')}
   buildTextures(f);traitTex();wallVariants(f);
@@ -2288,7 +2288,7 @@ function edoorTick(dt){const D=G.edoor;if(!D)return;
   else if(D.st==='closing'){D.k=Math.max(0,D.k-dt/.75);if(D.k<=0){D.st='shut';clunk()}}
   else if(D.st==='opening'){D.k=Math.min(1,D.k+dt/.7);if(D.k>=1){D.st='open';for(const i of D.cells)map[i]=0;if(D.board)D.board.t=0}}
   TX.wall[9]=doorTexF(D.k);
-  const B=D.board;if(B&&D.st==='open'){B.t+=dt;const k=smooth(clamp(B.t/.6,0,1));P.x=lerp(B.x0,elev.x-.15,k);P.y=lerp(B.y0,elev.y,k);if(B.t>=.6){D.board=null;if(boardOK(true))netOpenShop()}}
+  const B=D.board;if(B&&Math.hypot(B.x0-elev.x,B.y0-elev.y)>4.5){D.board=null}else if(B&&D.st==='open'){B.t+=dt;const k=smooth(clamp(B.t/.6,0,1));P.x=lerp(B.x0,elev.x-.15,k);P.y=lerp(B.y0,elev.y,k);if(B.t>=.6){D.board=null;if(boardOK(true))netOpenShop()}}
   else if(B){P.x=B.x0;P.y=B.y0}}
 function boardOK(say){
   if(G.gEv){if(say){msg('엘리베이터가 응답하지 않는다','warn');sfxBuzz()}return false}
@@ -2785,7 +2785,7 @@ function update(dt){
   try{devTick(dt)}catch(e){}try{rushTick(dt)}catch(e){}
   if(G.blackout>0)G.blackout-=dt;
   // 이동
-  const hid=!!P.hidden||!!P.netDead||!!P.grab||!!P.op;
+  const hid=!!P.hidden||!!P.netDead||!!P.sgrab||!!P.op;
   const f=hid?0:clamp((keys.KeyW?1:0)-(keys.KeyS?1:0)+TJ.f,-1,1),s=hid?0:clamp((keys.KeyD?1:0)-(keys.KeyA?1:0)+TJ.s,-1,1);
   if(keys.ArrowLeft)P.a-=2.4*dt;if(keys.ArrowRight)P.a+=2.4*dt;
   if(keys.ArrowUp)P.pitch=Math.min(H*.48,(P.pitch||0)+H*.9*dt);if(keys.ArrowDown)P.pitch=Math.max(-H*.48,(P.pitch||0)-H*.9*dt);
@@ -3169,7 +3169,7 @@ function killMon(m){if(m.type==='bomber'&&!m._boomed&&!m._boomQ){m._boomQ=1;setT
   if(m.type==='cultist'){G.cultK=(G.cultK||0)+1;(G.cultP=G.cultP||[]).push({x:m.x,y:m.y})}
   if(m.type==='burnt'&&!m._nb&&!m.dead){const x=m.x,y=m.y;setTimeout(()=>{try{hzReset();boomAt(x,y,2.3,48+G.floor,false);fireAt(x,y,1,4,true);msg('산소통이 터졌다','warn',1000)}catch(e){}},120)}
   if(m.type==='preach'&&G.p2&&G.p2.k==='preach'){G.p2.dead=1;setTimeout(()=>msg('설교자가 쓰러졌다 — 건물이 무너진다! 엘리베이터로 달려라!','warn',4000),400);if(NET.host)netSend({t:'p2',k:'pdead'})}
-  if(m.type==='surgeon'&&P.grab&&P.grab.m===m)grabFree(false);if(['watch','seam','preach','surgeon'].includes(m.type)&&G.tint)G.tint.tk=0;
+  if(m.type==='surgeon'&&P.sgrab&&P.sgrab.m===m)grabFree(false);if(['watch','seam','preach','surgeon'].includes(m.type)&&G.tint)G.tint.tk=0;
   if(m.type==='queen')queenDie(m);
   m.dead=true;if(G._netK){netTo(G._netK,{t:'kill',ty:m.type})}else{G.kills++;achKill(m);gainXp(m)}NET.killed&&NET.killed.push(m.nid);if(m.elite)eliteDrop(m);if(m.type==='puppet')G.pick.push({x:m.x,y:m.y,kind:'skin',h:.1,t:0});if(['watch','seam','preach','surgeon'].includes(m.type)){midDoorOpen();setTimeout(()=>{if(['watch','seam','preach','surgeon'].every(k=>SAVE.codex[k]&&SAVE.codex[k].kills))ach('mid_all')},50);for(const o of G.mon)if(!o.dead&&(o.type==='cultist'||o.type==='specimen'||o.type==='burnt'||o.type==='patient')){o._nb=1;killMon(o)}G.mgas=[];G.alarm=0}if(m.type==='seam'){ach('seam_kill');for(const o of G.mon)if(!o.dead&&o.type==='puppet')killMon(o);for(let i=G.pick.length-1;i>=0;i--)if(G.pick[i].kind==='skin')G.pick.splice(i,1);G.thread=null}if(S.killHeal)P.hp=Math.min(S.maxHp,P.hp+S.killHeal);const k=MT[m.type].codex||m.type;const c=SAVE.codex[k]||(SAVE.codex[k]={seen:1,kills:0,floor:G.floor});c.seen=1;c.kills++;persist();
   sfxDie(m);sfxSplat(1.7,m);setTimeout(()=>sfxSplat(.6,m),120);
@@ -4290,7 +4290,12 @@ function fireAt(x,y,r,t,rem){const F={x,y,r,t,mx:t,rem:!!rem,ct:0,fl:[]};G.fire.
 function igniteNear(x,y,R,rem){for(const o of G.oil){if(o.lit)continue;if(Math.hypot(o.x-x,o.y-y)<R+o.r*.7){o.lit=1;fireAt(o.x,o.y,o.r+.25,10,rem);if(!G.fireMsg||tGlobal-G.fireMsg>6){G.fireMsg=tGlobal;msg('기름에 불이 붙었다 — 화재!','warn',2200)}}}}
 function smokeBlock(mx,my){const L=G.smoke;if(!L||!L.length)return false;for(const c of L){if(c.r<.6)continue;const r=c.r*.92;if(Math.hypot(P.x-c.x,P.y-c.y)<r)return true;
     const dx=P.x-mx,dy=P.y-my,l2=dx*dx+dy*dy||1,t=clamp(((c.x-mx)*dx+(c.y-my)*dy)/l2,0,1);if(Math.hypot(mx+dx*t-c.x,my+dy*t-c.y)<r*.85)return true}return false}
-function hazTick(dt){if(G.state!=='play'&&G.state!=='dying')return;hzReset();
+function posGuard(){if(!P||G.state!=='play'||!N)return;if(!isFinite(P.pitch))P.pitch=0;if(!isFinite(P.a))P.a=0;
+  if(!isFinite(P.x)||!isFinite(P.y)||P.x<1||P.y<1||P.x>N-1||P.y>N-1){P.x=elev.x-.4;P.y=elev.y;P.vx=P.vy=0;return}
+  if(DEV.noclip||P.hidden||!solid(P.x,P.y))return;G.stuckT=(G.stuckT||0)+1;if(G.stuckT<4)return;G.stuckT=0;
+  let best=null,bd=1e9;for(let r=1;r<=6&&!best;r++)for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){const x=(P.x|0)+dx,y=(P.y|0)+dy;if(x<1||y<1||x>=N-1||y>=N-1||map[y*N+x])continue;const d=Math.hypot(x+.5-P.x,y+.5-P.y);if(d<bd){bd=d;best=[x+.5,y+.5]}}
+  if(best){P.x=best[0];P.y=best[1];P.vx=P.vy=0}}
+function hazTick(dt){if(G.state!=='play'&&G.state!=='dying')return;hzReset();try{posGuard()}catch(e){}
   nadeTick(dt);
   // 연막
   for(const c of G.smoke){c.t-=dt;c.r=Math.min(2.7,c.r+dt*2.2);if(c.t<1.5)c.r=Math.max(0,c.r-dt*1.2)}G.smoke=G.smoke.filter(c=>c.t>0);
@@ -4446,42 +4451,42 @@ function openClosets(remote){if(!G.closets)return;let n=0;for(const c of G.close
 function surgP2Tick(m,spd,dt,d,hasLos){
   if(m.rage){m.sc-=dt*.5;m.lc-=dt*.5;m.gc-=dt*.3;m.grc=(m.grc==null?3:m.grc)-dt;if(rnd()<dt*3)G.parts.push({x:m.x,y:m.y,z:.9+rnd()*.4,vx:(rnd()-.5),vy:(rnd()-.5),vz:-.5,life:.6,col:[150,10,8],sz:.3,rest:0})}
   if(m.st==='gwind'){m.timer-=dt;m.cdir=Math.atan2(P.y-m.y,P.x-m.x);if(m.timer<=0){m.st='gdash';m.timer=.85;burst(.25,'highpass',2500,.4,0,0,panOf(m),.2)}return true}
-  if(m.st==='gdash'){m.timer-=dt;moveEnt(m,Math.cos(m.cdir)*10.5*dt,Math.sin(m.cdir)*10.5*dt,.4);m.moving=true;if(d<1.2&&!P.grab&&!P.op&&!P.netDead&&!P.hidden&&!DEV.fly){grabStart(m);return true}if(m.timer<=0){m.st='walk'}return true}
-  if(m.st==='drag'){if(!P.grab||P.grab.m!==m){m.st='walk';return true}return true}
+  if(m.st==='gdash'){m.timer-=dt;moveEnt(m,Math.cos(m.cdir)*10.5*dt,Math.sin(m.cdir)*10.5*dt,.4);m.moving=true;if(d<1.2&&!P.sgrab&&!P.op&&!P.netDead&&!P.hidden&&!DEV.fly){grabStart(m);return true}if(m.timer<=0){m.st='walk'}return true}
+  if(m.st==='drag'){if(!P.sgrab||P.sgrab.m!==m){m.st='walk';return true}return true}
   if(m.st==='opr')return true;
-  if(m.rage&&m.grc<=0&&d<9&&d>1.6&&hasLos&&!P.grab&&!P.op){m.grc=11;m.st='gwind';m.timer=.75;msg('집도의가 네 팔을 활짝 벌린다 — 피하라!','warn',1500);for(let i=0;i<3;i++)modal(1800+i*400,[[1,.06,.15]],1,i*.08,panOf(m),.3);return true}
+  if(m.rage&&m.grc<=0&&d<9&&d>1.6&&hasLos&&!P.sgrab&&!P.op){m.grc=11;m.st='gwind';m.timer=.75;msg('집도의가 네 팔을 활짝 벌린다 — 피하라!','warn',1500);for(let i=0;i<3;i++)modal(1800+i*400,[[1,.06,.15]],1,i*.08,panOf(m),.3);return true}
   return false}
 function optSpots(){const o=[];for(const f of G.fx)if(f.spr==='optable'&&f.life>0)o.push(f);return o}
 function grabStart(m){const tb=optSpots();let best=null,bd=1e9;for(const t of tb){const dd=Math.hypot(t.x-m.x,t.y-m.y);if(dd<bd){bd=dd;best=t}}
   let tx=m.x,ty=m.y;if(best){tx=best.x;ty=best.y+(best.y<N/2?1.3:-1.3);if(solid(tx,ty))ty=best.y+(best.y<N/2?-1.3:1.3)}
-  P.grab={m,mash:0,need:12,t:0,tx,ty};m.st='drag';P.ads=false;try{mouseHeld=false}catch(e){}P.run=false;
+  P.sgrab={m,mash:0,need:12,t:0,tx,ty};m.st='drag';P.ads=false;try{mouseHeld=false}catch(e){}P.run=false;
   hurtPlayer(m.dmg*.4,m);splatScreen(3);shake(.6);sfxFlesh&&sfxFlesh(m,30,true);burst(.3,'lowpass',400,.7,1);
   const g=$('grabV');if(g){g.hidden=false}msg('붙잡혔다! 연타해서 벗어나라','warn',1600)}
-function grabMash(){const g=P.grab;if(!g)return;g.mash++;blip(140+g.mash*12,.05,'square',.05,90);shake(.08);if(g.mash>=g.need)grabFree(true)}
-function grabFree(win){const g=P.grab;if(!g)return;const m=g.m;P.grab=null;$('grabV').hidden=true;
+function grabMash(){const g=P.sgrab;if(!g)return;g.mash++;blip(140+g.mash*12,.05,'square',.05,90);shake(.08);if(g.mash>=g.need)grabFree(true)}
+function grabFree(win){const g=P.sgrab;if(!g)return;const m=g.m;P.sgrab=null;$('grabV').hidden=true;
   if(win){m.st='walk';m.stun=1.7;m.grc=11;const a=Math.atan2(P.y-m.y,P.x-m.x);for(let i=0;i<8;i++){const nx=P.x+Math.cos(a)*.1,ny=P.y+Math.sin(a)*.1;if(!solid(nx,ny)){P.x=nx;P.y=ny}}msg('팔을 뿌리치고 빠져나왔다!','gold',1600);burst(.25,'lowpass',600,.5,1);blip(90,.25,'sine',.3,50)}}
-function grabTick(dt){const g=P.grab;if(P.op){opTick(dt);return}if(!g)return;const m=g.m;if(!m||m.dead||G.state!=='play'){grabFree(false);return}
+function grabTick(dt){const g=P.sgrab;if(P.op){opTick(dt);return}if(!g)return;const m=g.m;if(!m||m.dead||G.state!=='play'){grabFree(false);return}
   g.t+=dt;g.mash=Math.max(0,g.mash-dt*1.6);const dx=g.tx-m.x,dy=g.ty-m.y,dd=Math.hypot(dx,dy);
   if(dd>.45){const v=Math.min(dd,1.7*dt);if(!moveEnt(m,dx/dd*v,dy/dd*v,.35)){m.x+=dx/dd*v;m.y+=dy/dd*v}m.moving=true}
   const ba=Math.atan2(dy,dx)+Math.PI,px=m.x+Math.cos(ba)*.55,py=m.y+Math.sin(ba)*.55;if(!solid(px,py)){P.x=px;P.y=py}else{P.x=m.x;P.y=m.y}
   {const ta=Math.atan2(m.y-P.y,m.x-P.x);P.a+=angDiff(ta,P.a)*Math.min(1,dt*6);P.pitch=(P.pitch||0)*(1-dt*3)}
   if(rnd()<dt*4)burst(.15,'lowpass',300,.3,1);
   const el=$('grabB');if(el)el.style.width=(g.mash/g.need*100).toFixed(1)+'%';
-  if((dd<=.45&&g.t>2.4)||g.t>7){P.grab=null;$('grabV').hidden=true;P.op={t:0,m};m.st='opr';msg('수술대에 눕혀졌다','warn',1800);_clank(0,400,.1);burst(.4,'lowpass',300,.6,1)}}
+  if((dd<=.45&&g.t>2.4)||g.t>7){P.sgrab=null;$('grabV').hidden=true;P.op={t:0,m};m.st='opr';msg('수술대에 눕혀졌다','warn',1800);_clank(0,400,.1);burst(.4,'lowpass',300,.6,1)}}
 const OPL=[['hp','장기 하나를 가져갔다 — 최대 체력 영구 감소'],['spd','다리 힘줄을 잘라 갔다 — 이동 속도 영구 감소'],['dmg','팔 근육을 떼어 갔다 — 공격력 영구 감소'],['stam','폐 한쪽을 꿰매 막았다 — 숨 회복 영구 감소']];
 function opTick(dt){const o=P.op;o.t+=dt;const m=o.m;if(m&&!m.dead){m.x+=0;P.a+=angDiff(Math.atan2(m.y-P.y,m.x-P.x),P.a)*Math.min(1,dt*4)}P.pitch=Math.min(H*.4,(P.pitch||0)+dt*90);
   if(rnd()<dt*7)burst(.12,'bandpass',1800+rnd()*1500,.25,4);if(rnd()<dt*3){sfxSplat&&sfxSplat(.8);splatScreen(1)}if(rnd()<dt*2)blip(500,.3,'sawtooth',.05,300);
   if(o.t>=2.4){P.op=null;if(m&&!m.dead){m.st='walk';m.stun=.8;m.grc=12}
     const L=pick(OPL);if(L[0]==='hp'){S.maxHp=Math.max(40,Math.round(S.maxHp*.86));P.hp=Math.min(P.hp,S.maxHp)}else if(L[0]==='spd')S.speed=(S.speed||1)-.06;else if(L[0]==='dmg'){S.dmg=Math.max(1,S.dmg*.9);S.gunK=(S.gunK||0)-.08}else S.stamRegen=Math.max(.3,(S.stamRegen||1)*.8);
     G.opN=(G.opN||0)+1;msg(L[1],'warn',4200);shake(.8);hurtPlayer((m?m.dmg:26)*2.6,m||{type:'surgeon'})}}
-function opFX(){if(!P.op&&!P.grab)return;if(P.op){const k=clamp(P.op.t/.4,0,1);ctx.fillStyle=`rgba(40,0,0,${.55*k})`;ctx.fillRect(0,0,W,H);
+function opFX(){if(!P.op&&!P.sgrab)return;if(P.op){const k=clamp(P.op.t/.4,0,1);ctx.fillStyle=`rgba(40,0,0,${.55*k})`;ctx.fillRect(0,0,W,H);
     const g=ctx.createRadialGradient(W/2,H*.2,4,W/2,H*.2,H*.5);g.addColorStop(0,`rgba(255,255,240,${.75*k})`);g.addColorStop(1,'rgba(255,255,240,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
     ctx.fillStyle=`rgba(200,210,220,${k})`;const t=P.op.t;for(let i=0;i<4;i++){const x=W*(.25+i*.17)+Math.sin(t*3+i)*12,y=H*(.55+.15*Math.sin(t*5+i*2));ctx.fillRect(x|0,y|0,2,26);ctx.fillRect((x-3)|0,(y+26)|0,8,3)}
     if(Math.sin(t*9)>.6){ctx.fillStyle='rgba(150,0,0,.35)';ctx.fillRect(0,0,W,H)}}
   else{ctx.fillStyle='rgba(80,0,0,.18)';ctx.fillRect(0,0,W,H)}}
-addEventListener('keydown',e=>{if(!G||G.state!=='play'||!P||!(P.grab||P.op)||e.code==='Escape')return;e.preventDefault();e.stopImmediatePropagation();if(!e.repeat&&P.grab)grabMash()},true);
-addEventListener('pointerdown',e=>{if(!G||G.state!=='play'||!P||!(P.grab||P.op))return;if(e.target&&e.target.closest&&e.target.closest('#tPause'))return;e.preventDefault();e.stopImmediatePropagation();if(P.grab)grabMash()},true);
-addEventListener('mousedown',e=>{if(!G||G.state!=='play'||!P||!(P.grab||P.op))return;e.stopImmediatePropagation()},true);
+addEventListener('keydown',e=>{if(!G||G.state!=='play'||!P||!(P.sgrab||P.op)||e.code==='Escape')return;e.preventDefault();e.stopImmediatePropagation();if(!e.repeat&&P.sgrab)grabMash()},true);
+addEventListener('pointerdown',e=>{if(!G||G.state!=='play'||!P||!(P.sgrab||P.op))return;if(e.target&&e.target.closest&&e.target.closest('#tPause'))return;e.preventDefault();e.stopImmediatePropagation();if(P.sgrab)grabMash()},true);
+addEventListener('mousedown',e=>{if(!G||G.state!=='play'||!P||!(P.sgrab||P.op))return;e.stopImmediatePropagation()},true);
 function burntTick(dt){for(const m of G.mon){if(m.dead||m.type!=='burnt')continue;m.spr=((tGlobal*8+m.x*3)|0)%2?'burntB':'burnt';
     if(rnd()<dt*16){const h=MT.burnt.h;G.parts.push({x:m.x+(rnd()-.5)*.45,y:m.y+(rnd()-.5)*.45,z:h*(.35+rnd()*.7),vx:0,vy:0,vz:.6+rnd(),g:-1.5,life:.3+rnd()*.35,col:pick([[255,210,90],[255,140,30],[230,70,10]]),sz:.45+rnd()*.4,rest:0})}
     if(rnd()<.45)G.tmpL.push({x:m.x,y:m.y,r:2.6,i:.55,ttl:.07,type:'muz'});
@@ -6668,7 +6673,12 @@ const NOTES=[
  {id:'n21',f:43,t:'관측 기록 · 대상 0',a:'— 수용 관리과',b:'대상은 움직이지 않는다. 대신 문을 지킨다.\n출구 앞에 서는 순간, 그것은 깨어난다.\n도망칠 곳은 뒤가 아니라 그것의 핵이다.'},
  {id:'n22',f:46,t:'일기의 마지막 장',a:'— 이름 모를 회사원',b:'공간이 다시 뒤틀릴 때를 기다린다.\n나를 여기로 데려온 그 균열.\n혹시 그것도, 기원이 연 문이었을까.'},
  {id:'n23',f:48,t:'상인의 장부',a:'— ?',b:'탈출 열쇠: 시세 없음.\n손님이 가진 전부.\n히히.'},
- {id:'n24',f:49,t:'보내지 못한 편지',a:'— 먼저 내려간 누군가',b:'이걸 읽는다면 아직 살아 있는 거다.\n"한 층만 더." 그 말이 나를 여기까지 데려왔다.\n끝까지 가.'}];
+ {id:'n24',f:49,t:'보내지 못한 편지',a:'— 먼저 내려간 누군가',b:'이걸 읽는다면 아직 살아 있는 거다.\n"한 층만 더." 그 말이 나를 여기까지 데려왔다.\n끝까지 가.'},
+ {id:'st_watch',f:10,drop:1,t:'반장의 마지막 무전',a:'— 통제실 녹음기 (받아 적음)',b:'치직— 여기는 통제실. 모든 근무자에게 알린다.\n엘리베이터 버튼이 또 하나 늘었다. 지하 10층. 설계도엔 없는 층이다.\n아래로 내려간 직원들이 화면에 비친다. 아무도 돌아오지 않는다.\n\n내가 지켜보고 있으면 괜찮을 거라 생각했다. 눈만 감지 않으면.\n사흘째 잠을 안 잤다. 눈이 마르니까 건물이 새 눈을 줬다. 렌즈는 깜빡이지 않는다.\n\nK, 듣고 있나. 교대는 오지 않는다. 내가 여기서 전부 지켜볼 테니 너는 문을 지켜라.\n아무도 아래로 보내지 마. 아래로 내려가면… 치직—\n\n(녹음은 여기서 끊겼다. 그 뒤로 스물두 시간 동안 같은 말이 반복된다. “정지. 신원을 확인한다.”)'},
+ {id:'st_seam',f:25,drop:1,t:'재봉사의 주문 장부',a:'— 재봉 공방 주인',b:'이 공방은 위층 직원들의 유니폼을 지어 왔다. 삼십 년 동안 치수 한 번 틀린 적이 없다.\n지하가 열리던 날, 원단 창고가 비었다. 실도, 단추도. 바늘만 남았다.\n\n그때 벽 너머에서 누가 속삭였다.\n“옷은 몸에 맞추는 게 아니란다. 몸을 옷에 맞추는 거지.”\n\n처음엔 견습생이 데려온 개였다. 그다음은 견습생이었다.\n나는 아이들을 아꼈다. 그래서 오래 남도록 꿰매 주었다. 실밥 하나 풀리지 않게.\n인형들이 일어나 걷기 시작했을 때, 나는 울지 않았다. 드디어 완성된 거니까.\n\n다음 손님의 치수는 이미 재 두었다.'},
+ {id:'st_preach',f:35,drop:1,t:'설교자의 첫 설교 원고',a:'— 지하 예배당 강단 밑에서',b:'나는 이 건물의 청소부였다. 아무도 내 이름을 부르지 않았다.\nB30 아래에서 처음 살점을 보았을 때, 그것은 따뜻했고 나를 밀어내지 않았다.\n\n그것은 말했다. 너희는 따로따로 태어나 외로웠다고. 하나가 되면 아프지 않다고.\n\n나는 사람들을 모았다. 길을 잃은 사람, 위로 돌아가지 못한 사람들.\n우리는 무릎을 꿇고 노래했다. 노래가 길어질수록 우리의 살은 서로에게 녹아들었다.\n\n그분은 아래에 계신다. 쉰 번째 층. 기원.\n나는 그분의 목소리다.\n일어선 자여, 너는 왜 아직도 혼자이길 원하는가.'},
+ {id:'st_surgeon',f:45,drop:1,t:'집도의의 개인 기록',a:'— 연구동 B45 · 기밀',b:'우리는 이 건물을 연구하러 왔다. 스스로 자라는 구조물, 스스로 아무는 벽.\n조직 샘플 A-0. 우리는 그것을 ‘기원’이라 불렀다. 모든 살점이 거기서 시작되니까.\n\nA-0은 이식해도 거부 반응이 없다. 대신 이식받은 쪽이 조금씩 A-0이 된다.\n\n연구비가 끊겼다. 위층과 연락이 끊겼다. 동료들이 하나씩 표본실로 들어갔다.\n나는 마지막까지 메스를 놓지 않았다. 팔이 모자라서 하나 더 붙였다. 그다음 하나 더.\n\n이제 안다. 우리가 그것을 연구한 게 아니다. 그것이 우리를 해부하고 있었다.\n\n다음 피험자: 엘리베이터를 타고 내려오는 자. 마취는 생략한다.'}
+];
 let noteFrom='play';
 function openNote(id,from){$('noteV').classList.remove('guide','flesh');$('noteV').className=$('noteV').className.replace(/\bpp-\w+/g,'').trim();$('gNav').hidden=true;guideI=-1;const n=NOTES.find(x=>x.id===id);if(!n)return;noteFrom=from||'play';$('noteF').textContent=from==='codex'?'기록 보관 · '+NOTES.indexOf(n)+1+' / '+NOTES.length:`B${G.floor}에서 주운 쪽지`;$('noteF').textContent=from==='codex'?`기록 ${NOTES.indexOf(n)+1} / ${NOTES.length}`:`B${G.floor}에서 주운 쪽지`;
   $('noteT').textContent=n.t;$('noteB').innerHTML=n.b.split('\n').map(l=>l?`<span style="display:block">${l}</span>`:'<span style="display:block;height:.9em"></span>').join('');$('noteA').textContent=n.a;$('noteV').hidden=false;pxify($('noteV'));if(noteFrom==='play'){G.state='note';releaseLock()}
@@ -7339,10 +7349,6 @@ const MF=n=>440*Math.pow(2,(n-69)/12);
 const SONG=[ // [베이스, 코드, 멜로디(박자:음)]
   [50,[53,57,60,64],[[0,69],[1.5,72],[2,74],[3,72]]],[43,[53,59,64],[[0,71],[2,67]]],[48,[52,55,59,62],[[0,64],[1,67],[1.5,71],[2.5,72]]],[45,[55,61,64,70],[[0,70],[2,69]]],
   [50,[53,57,60,64],[[0,74],[1,72],[1.5,69],[3,72]]],[49,[53,59,63],[[0,71],[1.5,70],[3,68]]],[48,[52,55,59,62],[[0,67],[2,64]]],[48,[51,55,59,62],[[0,63],[1.5,62],[2,59],[3,'x']]],
- {id:'st_watch',f:10,drop:1,t:'반장의 마지막 무전',a:'— 통제실 녹음기 (받아 적음)',b:'치직— 여기는 통제실. 모든 근무자에게 알린다.\n엘리베이터 버튼이 또 하나 늘었다. 지하 10층. 설계도엔 없는 층이다.\n아래로 내려간 직원들이 화면에 비친다. 아무도 돌아오지 않는다.\n\n내가 지켜보고 있으면 괜찮을 거라 생각했다. 눈만 감지 않으면.\n사흘째 잠을 안 잤다. 눈이 마르니까 건물이 새 눈을 줬다. 렌즈는 깜빡이지 않는다.\n\nK, 듣고 있나. 교대는 오지 않는다. 내가 여기서 전부 지켜볼 테니 너는 문을 지켜라.\n아무도 아래로 보내지 마. 아래로 내려가면… 치직—\n\n(녹음은 여기서 끊겼다. 그 뒤로 스물두 시간 동안 같은 말이 반복된다. “정지. 신원을 확인한다.”)'},
- {id:'st_seam',f:25,drop:1,t:'재봉사의 주문 장부',a:'— 재봉 공방 주인',b:'이 공방은 위층 직원들의 유니폼을 지어 왔다. 삼십 년 동안 치수 한 번 틀린 적이 없다.\n지하가 열리던 날, 원단 창고가 비었다. 실도, 단추도. 바늘만 남았다.\n\n그때 벽 너머에서 누가 속삭였다.\n“옷은 몸에 맞추는 게 아니란다. 몸을 옷에 맞추는 거지.”\n\n처음엔 견습생이 데려온 개였다. 그다음은 견습생이었다.\n나는 아이들을 아꼈다. 그래서 오래 남도록 꿰매 주었다. 실밥 하나 풀리지 않게.\n인형들이 일어나 걷기 시작했을 때, 나는 울지 않았다. 드디어 완성된 거니까.\n\n다음 손님의 치수는 이미 재 두었다.'},
- {id:'st_preach',f:35,drop:1,t:'설교자의 첫 설교 원고',a:'— 지하 예배당 강단 밑에서',b:'나는 이 건물의 청소부였다. 아무도 내 이름을 부르지 않았다.\nB30 아래에서 처음 살점을 보았을 때, 그것은 따뜻했고 나를 밀어내지 않았다.\n\n그것은 말했다. 너희는 따로따로 태어나 외로웠다고. 하나가 되면 아프지 않다고.\n\n나는 사람들을 모았다. 길을 잃은 사람, 위로 돌아가지 못한 사람들.\n우리는 무릎을 꿇고 노래했다. 노래가 길어질수록 우리의 살은 서로에게 녹아들었다.\n\n그분은 아래에 계신다. 쉰 번째 층. 기원.\n나는 그분의 목소리다.\n일어선 자여, 너는 왜 아직도 혼자이길 원하는가.'},
- {id:'st_surgeon',f:45,drop:1,t:'집도의의 개인 기록',a:'— 연구동 B45 · 기밀',b:'우리는 이 건물을 연구하러 왔다. 스스로 자라는 구조물, 스스로 아무는 벽.\n조직 샘플 A-0. 우리는 그것을 ‘기원’이라 불렀다. 모든 살점이 거기서 시작되니까.\n\nA-0은 이식해도 거부 반응이 없다. 대신 이식받은 쪽이 조금씩 A-0이 된다.\n\n연구비가 끊겼다. 위층과 연락이 끊겼다. 동료들이 하나씩 표본실로 들어갔다.\n나는 마지막까지 메스를 놓지 않았다. 팔이 모자라서 하나 더 붙였다. 그다음 하나 더.\n\n이제 안다. 우리가 그것을 연구한 게 아니다. 그것이 우리를 해부하고 있었다.\n\n다음 피험자: 엘리베이터를 타고 내려오는 자. 마취는 생략한다.'}
 ];
 function schedMusic(){
   if(!MUS)return;const beat=60/74,now=AC.currentTime;
