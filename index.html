@@ -633,6 +633,7 @@ body.pxwait .ov,body.pxwait #hud{visibility:hidden}
     <button id="openAch" class="achBtn">★  도전과제</button><button id="openGuide" class="achBtn">✎  공략집</button><button id="openStats" class="achBtn">▦  통계</button><button id="openMP" class="achBtn">👥  함께 하기 · 최대 4인</button><button id="rushBtn" class="achBtn">☠  보스 러시</button>
     <div class="trow"><button id="nmTg" class="touchTg">악몽 모드 · 끔</button><button id="optBtn" class="touchTg">설정</button><button id="touchTg" class="touchTg">모바일 조작 · 끔</button></div>
     <div class="trow"><button id="keysBtn" class="touchTg">조작법</button><button id="credBtn" class="touchTg">크레딧</button></div></div>
+    <p class="hint" style="opacity:.55;letter-spacing:.3em;margin-top:6px">VERSION 2</p>
     <p class="hint" id="firstHint" hidden style="color:#e8c070">처음이라면 그냥 엘리베이터에 타면 된다 · B1에서 하나씩 알려 준다</p>
     <p id="best"></p>
     <p id="sbBadge" hidden>SANDBOX · 게임 중 ` 키로 패널을 연다</p>
@@ -2782,22 +2783,24 @@ function render(){
     const lm=(pmx>=0&&pmy>=0&&pmx<N&&pmy<N)?light[pmy*N+pmx]:0;
     const fog=(side?.72:1)/(1+pd*FOGK),ff=fp/(1+pd*pd*.07),step=32/lineH;
     const y0=Math.max(ds,0),y1=Math.min(de,H-1);WTOP[x]=y0;WBOT[x]=y0>y1?-1:y1;let tp=(y0-hz+lineH*(1-EYE))*step;
-    for(let y=y0;y<=y1;y++){const ty=(tp|0)&31;tp+=step;const ti=(ty*32+tx)*3;
-      buf[y*W+x]=sh(tex[ti],tex[ti+1],tex[ti+2],(amb+lm+ff*cone[y*W+x])*fog,BAY[((y&3)<<2)+(x&3)])}
+    {const kb=(amb+lm)*fog*KK,kf=ff*fog*KK,xb=x&3;let bi=y0*W+x;for(let y=y0;y<=y1;y++,bi+=W){const ti=(((tp|0)&31)*32+tx)*3;tp+=step;const k=kb+kf*cone[bi],d=BAY[((y&3)<<2)+xb];let r_=tex[ti]*k+d,g_=tex[ti+1]*k+d,b_=tex[ti+2]*k*.97+d;r_=r_<0?0:r_>LV?LV:r_|0;g_=g_<0?0:g_>LV?LV:g_|0;b_=b_<0?0:b_>LV?LV:b_|0;
+      buf[bi]=0xFF000000|(Q[b_]<<16)|(Q[g_]<<8)|Q[r_]}}
   }
+  const fdt_=G.fdt,fkA_=G.fk&&TX.fk?G.fk:null,TXfk_=TX.fk,tF_=TX.floor,tC_=TX.ceil,tEF_=TX.efloor,tEC_=TX.eceil,hasFZ_=FZ.length>0;
   for(let y=0;y<H;y++){
     const p=y-hz,row=y*W;if(p===0){for(let x=0;x<W;x++)if(!(y>=WTOP[x]&&y<=WBOT[x]))buf[row+x]=0xFF000000;continue}
     const isF=p>0,rowD=posZ*VS*(isF?EYE*2:(1-EYE)*2)/Math.abs(p),stx=rowD*(rdx1-rdx0)/W,sty=rowD*(rdy1-rdy0)/W;
     let fx=P.x+rowD*rdx0,fy=P.y+rowD*rdy0;
     const fog=(isF?1:.78)/(1+rowD*FOGK),ff=fp/(1+rowD*rowD*.07),bay=(y&3)<<2;
+    let lci=-2,lm=0,tex=isF?tF_:tC_;const fgK=fog*KK,ffK=ff*fgK;
     for(let x=0;x<W;x++,fx+=stx,fy+=sty){
       if(y>=WTOP[x]&&y<=WBOT[x])continue;
-      const cx=fx|0,cy=fy|0;let lm=0,tex;
-      if(cx>=0&&cy>=0&&cx<N&&cy<N){const ci=cy*N+cx;lm=light[ci];tex=kind[ci]===1?(isF?TX.efloor:TX.eceil):(isF?((G.fdt&&G.fdt[ci])||(G.fk&&G.fk[ci]&&TX.fk?TX.fk[G.fk[ci]]:TX.floor)):TX.ceil)}else tex=isF?TX.floor:TX.ceil;
+      const cx=fx|0,cy=fy|0,ci=(cx>=0&&cy>=0&&cx<N&&cy<N)?cy*N+cx:-1;
+      if(ci!==lci){lci=ci;if(ci>=0){lm=light[ci];tex=kind[ci]===1?(isF?tEF_:tEC_):(isF?((fdt_&&fdt_[ci])||(fkA_&&fkA_[ci]?TXfk_[fkA_[ci]]:tF_)):tC_)}else{lm=0;tex=isF?tF_:tC_}}
       const ti=((((fy-cy)*32)|0)*32+(((fx-cx)*32)|0))*3;
-      if(isF&&FZ.length){let fz=0;for(let q=0;q<FZ.length;q+=4){const ax=fx-FZ[q],ay=fy-FZ[q+1],d2=ax*ax+ay*ay;if(d2<FZ[q+3]){const hh=((((fx*3)|0)*73+((fy*3)|0)*151)&15)/15,v=(1-Math.sqrt(d2)/FZ[q+2])*3.2-hh*.9;if(v>fz)fz=v}}
+      if(isF&&hasFZ_){let fz=0;for(let q=0;q<FZ.length;q+=4){const ax=fx-FZ[q],ay=fy-FZ[q+1],d2=ax*ax+ay*ay;if(d2<FZ[q+3]){const hh=((((fx*3)|0)*73+((fy*3)|0)*151)&15)/15,v=(1-Math.sqrt(d2)/FZ[q+2])*3.2-hh*.9;if(v>fz)fz=v}}
         if(fz>0){fz=fz>1?1:fz;const e=1-fz,pk=.9+FZP*.2;buf[row+x]=sh(tex[ti]*e+FZT[ti]*fz*pk,tex[ti+1]*e+FZT[ti+1]*fz*pk,tex[ti+2]*e+FZT[ti+2]*fz*pk,(amb+lm+ff*cone[row+x]+fz*.06)*fog,BAY[bay+(x&3)]);continue}}
-      buf[row+x]=sh(tex[ti],tex[ti+1],tex[ti+2],(amb+lm+ff*cone[row+x])*fog,BAY[bay+(x&3)]);
+      {const k=(amb+lm)*fgK+ffK*cone[row+x],d=BAY[bay+(x&3)];let r_=tex[ti]*k+d,g_=tex[ti+1]*k+d,b_=tex[ti+2]*k*.97+d;r_=r_<0?0:r_>LV?LV:r_|0;g_=g_<0?0:g_>LV?LV:g_|0;b_=b_<0?0:b_>LV?LV:b_|0;buf[row+x]=0xFF000000|(Q[b_]<<16)|(Q[g_]<<8)|Q[r_]}
     }
   }
   // 스프라이트
@@ -2830,7 +2833,11 @@ function render(){
     if(e.isRP||e.dopN){e._sx=scrX;e._sy=top;e._ty=tY}
     let drawn=0;const wk=e.isMon&&!e.disguised&&isFinite(e.maxHp)&&e.maxHp>0&&e.type!=='origin'?clamp(1-e.hp/e.maxHp,0,1):0,WN=wk>.04?(spr.wn||(spr.wn=woundMap(spr))):null,wsd=e.wsd||(e.wsd=rnd()*7),wth=wk*.62;
     const skS=SKw?DF.sk*spr.w:0,wbS=SKw?DF.wob*spr.w:0,fdK=e.type==='corpse'&&e.life<2?Math.max(0,e.life/2)*.95:9;
-    for(let x=x0;x<=x1;x++){if(tY>=zbuf[x])continue;const uf=(x-left)/sW*spr.w;if(!SKw&&(uf<0||uf>=spr.w))continue;
+    if(!SKw&&!e.isPh&&fdK>=9){const wfl=wsd>3.5,W3=WC[3],sw_=spr.w,sh_=spr.h,sa_=spr.a,sr_=spr.rgb,nmE=!!(G.nm&&e.isMon),iH=sh_/sH,kb=(amb+lm)*fog*hf*KK,kf=ff*fog*hf*KK,kE=(nmE?2.7:1.3)*KK,eP=G.eyeP;
+      for(let x=x0;x<=x1;x++){if(tY>=zbuf[x])continue;const uf=(x-left)/sW*sw_;if(uf<0||uf>=sw_)continue;const u=uf|0,xb=x&3;let bi=y0*W+x;
+        for(let y=y0;y<=y1;y++,bi+=W){const v=((y-top)*iH)|0;if(v<0||v>=sh_)continue;const pi=v*sw_+u,al=sa_[pi];if(!al)continue;const k3=pi*3;if(al===2&&nmE&&eP.length<1500)eP.push(x,y,sr_[k3],sr_[k3+1],sr_[k3+2]);
+          const k=al===2?kE:kb+kf*cone[bi],d=BAY[((y&3)<<2)+xb];let r_,g_,b_;if(WN&&al===1){const n=WN[wfl?v*sw_+(sw_-1-u):pi];if(n<wth+.05){const c=n<wth?(n<wth*.18?WC[2]:n<wth*.55?WC[0]:WC[1]):W3;r_=c[0]*k+d;g_=c[1]*k+d;b_=c[2]*k*.97+d}else{r_=sr_[k3]*k+d;g_=sr_[k3+1]*k+d;b_=sr_[k3+2]*k*.97+d}}else{r_=sr_[k3]*k+d;g_=sr_[k3+1]*k+d;b_=sr_[k3+2]*k*.97+d}r_=r_<0?0:r_>LV?LV:r_|0;g_=g_<0?0:g_>LV?LV:g_|0;b_=b_<0?0:b_>LV?LV:b_|0;buf[bi]=0xFF000000|(Q[b_]<<16)|(Q[g_]<<8)|Q[r_];drawn++}}}
+    else for(let x=x0;x<=x1;x++){if(tY>=zbuf[x])continue;const uf=(x-left)/sW*spr.w;if(!SKw&&(uf<0||uf>=spr.w))continue;
       for(let y=y0;y<=y1;y++){const v=((y-top)/sH*spr.h)|0;if(v<0||v>=spr.h)continue;const u=SKw?(uf-skS*(1-v/spr.h)-wbS*Math.sin(v*DF.wf+DF.ph))|0:uf|0;if(u<0||u>=spr.w)continue;const pi=v*spr.w+u,al=spr.a[pi];if(!al)continue;if(e.isPh&&((x+y+(tGlobal*24|0))&1))continue;if(fdK<9&&BAY[((y&3)<<2)+(x&3)]+.45>fdK)continue;const k=pi*3;
         if(al===2&&G.nm&&e.isMon&&G.eyeP.length<1500)G.eyeP.push(x,y,spr.rgb[k],spr.rgb[k+1],spr.rgb[k+2]);const br=al===2?(G.nm&&e.isMon?2.7:1.3):(amb+lm+ff*cone[y*W+x])*fog*hf;
         if(WN&&al===1){const n=WN[wsd>3.5?v*spr.w+(spr.w-1-u):pi];if(n<wth){const dpt=n/wth;const c=dpt<.18?WC[2]:dpt<.55?WC[0]:WC[1];buf[y*W+x]=sh(c[0],c[1],c[2],br,BAY[((y&3)<<2)+(x&3)]);drawn++;continue}else if(n<wth+.05){buf[y*W+x]=sh(WC[3][0],WC[3][1],WC[3][2],br,BAY[((y&3)<<2)+(x&3)]);drawn++;continue}}
