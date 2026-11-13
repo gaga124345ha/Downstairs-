@@ -2342,7 +2342,11 @@ function genFloor(f){if(G)G.portals=[];if(P){P.carry=null;P.rvT=0}if(G&&G.cut){G
   // 벽 변형
   for(let i=0;i<N*N;i++)if(map[i]===1){const v=rnd();if(v<.05)map[i]=4;else if(v<.2)map[i]=2}
   // 조명
-  for(const r of rooms.slice(boss?2:1))if(rnd()<.55)lamps.push({x:r.x+r.w/2,y:r.y+r.h/2,r:2.4+Math.min(r.w,r.h)*.45,i:.5+rnd()*.35,type:rnd()<.4?'buzz':'steady',ph:rnd()*9});
+  // 초반 층은 전등이 더 많고 더 안정적이다: B1~B4는 가득, B5~B8은 점점 줄어든다
+  const EK=boss||G.stealF?0:f<=4?1:f<=8?(9-f)/5:0;
+  for(const r of rooms.slice(boss?2:1))if(rnd()<.55+.45*EK)lamps.push({x:r.x+r.w/2,y:r.y+r.h/2,r:2.4+Math.min(r.w,r.h)*.45+EK*.8,i:.5+rnd()*.35+EK*.2,type:rnd()<.4*(1-EK*.75)?'buzz':'steady',ph:rnd()*9});
+  if(EK>0){const open=[];for(let i=0;i<N*N;i++)if(!map[i]&&kind[i]!==1)open.push(i);const want=Math.round((8+open.length/40)*EK);
+    for(let k=0,tries=0;k<want&&tries<want*30&&open.length;tries++){const i=open[(rnd()*open.length)|0],x=i%N+.5,y=((i/N)|0)+.5;if(lamps.some(L=>Math.hypot(L.x-x,L.y-y)<4.6))continue;lamps.push({x,y,r:3.6+rnd()*.8,i:.42+rnd()*.18,type:rnd()<.2?'buzz':'steady',ph:rnd()*9,early:1});k++}}
   elevDist=new Int16Array(N*N);bfs(2,ey,elevDist);distF=new Int16Array(N*N);
   // 경로 밖 방은 비워 둠
   const cells=[];for(let y=1;y<N-1;y++)for(let x=1;x<N-1;x++){const i=y*N+x;if(map[i]===0&&kind[i]===0&&elevDist[i]>=0)cells.push(i)}
