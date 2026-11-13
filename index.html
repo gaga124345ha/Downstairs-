@@ -622,7 +622,7 @@ body.pxwait .ov,body.pxwait #hud{visibility:hidden}
     <div class="bar hv" id="hvSt">숨<i><span id="stF"></span></i></div>
     <div id="wtH" class="nopx hv"></div>
     <div class="bar hv" id="hvSn">정신<i><span id="snF"></span></i></div>
-    <div class="bar hv" id="hvXp">경험<i><span id="xpF"></span></i></div><div id="lvl" class="hv"></div>
+    <div id="hvXp" hidden><span id="xpF"></span></div><div id="lvl" hidden></div>
   </div>
   <div class="br"><div id="belt"></div><div id="wep"><span id="wepName"></span><span id="wepAmmo"></span></div><div id="skill"></div><div id="money">◈ 0</div><div id="collect"></div></div>
 </div>
@@ -5858,9 +5858,10 @@ const PERKS=[
   ['shock','충격','근접 공격이 적을 잠깐 기절시킨다 (+0.35초)',()=>{S.stun=(S.stun||0)+.35}],
 ];
 function xpNeed(){return 25+(P.lv||1)*20}
-function gainXp(m){if(m.type==='brat')return;const t=MT[m.type];let x=t.boss?70:Math.max(2,Math.round(Math.sqrt(Math.min(t.hp,900))*1.3));
+function gainXp(m){return; // 경험치 · 레벨 · 전투 특성은 없앴다
+  if(m.type==='brat')return;const t=MT[m.type];let x=t.boss?70:Math.max(2,Math.round(Math.sqrt(Math.min(t.hp,900))*1.3));
   P.xp=(P.xp||0)+x;P.lv=P.lv||1;while(P.xp>=xpNeed()){P.xp-=xpNeed();P.lv++;P.perk=(P.perk||0)+1;msg(`레벨 업! LV ${P.lv} · 엘리베이터에서 전투 특성을 고를 수 있다`,'gold',4500);[784,988,1175,1568].forEach((f,i)=>blip(f,.35,'square',.04,f,i*.06,0,.4))}}
-function perkOffer(){const box=$('perkBox');if(!(P.perk>0)){box.hidden=true;return}P.perks=P.perks||{};
+function perkOffer(){const box=$('perkBox');box.hidden=true;return;if(!(P.perk>0)){box.hidden=true;return}P.perks=P.perks||{};
   const pool=PERKS.slice();const pick3=[];while(pick3.length<3&&pool.length){pick3.push(pool.splice((rnd()*pool.length)|0,1)[0])}
   box.innerHTML=`<p class="ph">전투 특성 선택 · 남은 포인트 ${P.perk}</p><div class="pr3">${pick3.map((p,i)=>`<button class="perk" data-i="${i}"><b>${p[1]}${P.perks[p[0]]?` <small>×${P.perks[p[0]]+1}</small>`:''}</b><span>${p[2]}</span></button>`).join('')}</div>`;
   box.querySelectorAll('.perk').forEach(b=>b.onclick=()=>{const p=pick3[+b.dataset.i];p[3]();P.perks[p[0]]=(P.perks[p[0]]||0)+1;P.perk--;S.wst=null;sfxBuy(3);say(pick(['좋은 눈빛이야. 더 깊이 갈 수 있겠어.','그래, 그렇게 살아남는 거지.','몸이 기억하는군.']));perkOffer()});
@@ -6983,7 +6984,7 @@ function hudDiet(){const all=!!(G.tut||OPT.hudAll||G.state!=='play');document.bo
   hvSet('hvSt',P.stam<98||P.run);
   const sn=P.san==null?100:P.san;if(hudCache.sn==null)hudCache.sn=sn;hvSet('hvSn',sn<70||Math.abs(sn-hudCache.sn)>2,2500);if(Math.abs(sn-hudCache.sn)>2)hudCache.sn=sn;
   const c=wtCalc(),l=c.w/c.cap,wk=c.w.toFixed(1);hvSet('wtH',l>.6||hudCache.wk!==wk,2200);hudCache.wk=wk;
-  const xk=(P.xp||0)+'|'+(P.lv||1);hvSet('hvXp',hudCache.xk!==xk&&hudCache.xk!=null,3200);hvSet('lvl',hudCache.xk!==xk&&hudCache.xk!=null||(P.perk||0)>0,3200);hudCache.xk=xk;
+  
   const ck=G.got+'|'+(G.lockOpen||0)+'|'+G.floor;hvSet('collect',hudCache.ck!==ck,4200);hudCache.ck=ck}
 function updateHUD(){try{hudDiet()}catch(e){}
   setW('hpF',clamp(P.hp/S.maxHp,0,1));$('hpF').classList.toggle('low',P.hp/S.maxHp<.3);
@@ -7446,7 +7447,7 @@ function die(src){
   if(!G.selfD&&EXT[G.killer]&&src&&MT[src.type])$('deadCause').textContent=EXT[G.killer];
   if(src&&src.type==='plasma')$('deadCause').textContent='자신이 쏜 플라즈마 폭렬에 휘말렸다.';else if(src&&src.type==='gas')$('deadCause').textContent='새어 나온 가스에 숨이 막혔다.';
   const lh=G.lastHit;$('deadLast').textContent=(lh?`마지막 일격 · ${lh.amt} 피해${lh.boss?' (보스)':''}${G.fev?' · '+FEVD[G.fev.k][1]+' 중':''}${G.traitK?' · '+TRAITS[G.traitK].ko:''}`:'')+(ghostTxt?(lh?'\n':'')+ghostTxt:'');$('deadLast').style.whiteSpace='pre-line';
-  const tm=Math.floor(G.runT||0);$('deadStats').innerHTML=`<dt>도달한 층</dt><dd>B${G.floor}</dd><dt>소지 골드</dt><dd data-n="◈${Math.floor(P.money)}"></dd><dt>번 돈</dt><dd data-n="◈${G.earned}"></dd><dt>처치</dt><dd>${G.kills}</dd><dt>레벨</dt><dd>${P.lv||1}</dd><dt>버틴 시간</dt><dd>${Math.floor(tm/60)}:${String(tm%60).padStart(2,'0')}</dd><dt>최고 기록</dt><dd>B${SAVE.best}${!SB.used&&G.floor>(G._pb||0)?' <b class="nr">신기록!</b>':G._pb&&G.floor<G._pb?` <i class="df">${G._pb-G.floor}층 모자랐다</i>`:''}</dd><dt>새로 만난 괴물</dt><dd>${G.newSeen||0}</dd><dt>마지막 무기</dt><dd class="wn">${WS().n}${S.gun&&GUN[S.gun]?' · '+GUN[S.gun].n:''}</dd><dt>평가</dt><dd class="rk">${G.floor>=40?'S':G.floor>=30?'A':G.floor>=20?'B':G.floor>=10?'C':'D'}</dd>${G.nm?'<dt>모드</dt><dd style="color:#ff5a4a">악몽</dd>':''}`;
+  const tm=Math.floor(G.runT||0);$('deadStats').innerHTML=`<dt>도달한 층</dt><dd>B${G.floor}</dd><dt>소지 골드</dt><dd data-n="◈${Math.floor(P.money)}"></dd><dt>번 돈</dt><dd data-n="◈${G.earned}"></dd><dt>처치</dt><dd>${G.kills}</dd><dt>버틴 시간</dt><dd>${Math.floor(tm/60)}:${String(tm%60).padStart(2,'0')}</dd><dt>최고 기록</dt><dd>B${SAVE.best}${!SB.used&&G.floor>(G._pb||0)?' <b class="nr">신기록!</b>':G._pb&&G.floor<G._pb?` <i class="df">${G._pb-G.floor}층 모자랐다</i>`:''}</dd><dt>새로 만난 괴물</dt><dd>${G.newSeen||0}</dd><dt>마지막 무기</dt><dd class="wn">${WS().n}${S.gun&&GUN[S.gun]?' · '+GUN[S.gun].n:''}</dd><dt>평가</dt><dd class="rk">${G.floor>=40?'S':G.floor>=30?'A':G.floor>=20?'B':G.floor>=10?'C':'D'}</dd>${G.nm?'<dt>모드</dt><dd style="color:#ff5a4a">악몽</dd>':''}`;
   {const w=WS(),ch=[];const chip=(t,c)=>`<span class="gch" style="--rc:${c}">${t}</span>`;ch.push('<span class="gh">장비</span>');ch.push(chip('근접 · '+wname(w.k,w.g),w.relic?ANT_R[w.g].c:RAR[w.r].c));if(S.gun)ch.push(chip('총 · '+GUN[S.gun].n,RAR[GUN[S.gun].r].c));
     const cnt={};G.owned.forEach(id=>cnt[id]=(cnt[id]||0)+1);for(const id in cnt){const it=ITEMS.find(i=>i.id===id);if(it)ch.push(chip(it.n+(cnt[id]>1?' ×'+cnt[id]:''),RAR[it.r].c))}
     if(G.antiques.length){ch.push('<span class="gh">유물</span>');for(const a of G.antiques){const it=ANTQ.find(q=>q.id===a.id);if(it)ch.push(chip(it.n,ANT_R[a.r].c))}}
