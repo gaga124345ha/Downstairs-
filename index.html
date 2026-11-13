@@ -2865,7 +2865,7 @@ function render(){
     const x0=Math.max(0,Math.floor(left-SKpx)),x1=Math.min(W-1,Math.floor(scrX+sW/2+SKpx));
     const y0=Math.max(0,Math.floor(top)),y1=Math.min(H-1,Math.floor(bottom));
     if(x0>x1||y0>y1)continue;
-    if(e.isMon&&!e.disguised&&!e.isPh&&(tY<2.8||(S.fleshR>0&&tY<18)))G.sil.push({e,spr,left,top,sW,sH,x0,x1,tY});
+    if(e.isMon&&!e.disguised&&!e.isPh&&S.fleshR>0&&tY<18)G.sil.push({e,spr,left,top,sW,sH,x0,x1,tY});
     const lm=lightAt(e.x,e.y),fog=1/(1+tY*FOGK),ff=fp/(1+tY*tY*.07),hf=e.hit>0?2.4:1;
     if(OPT.shadow!==0&&(e.isMon&&!e.disguised&&!e.isPh||e.isAlly||e.isNpc||e.isRP||(e.type==='deco'&&e.h>.3&&!e.z&&tY<9)))castShadow(e,spr,tY,scrX,sW,sH,top,bottom,unit,hz,VS,fp,ff);
     if(e.isRP||e.dopN){e._sx=scrX;e._sy=top;e._ty=tY}
@@ -5886,6 +5886,7 @@ function drawSil(){const sv=document.getElementById('silv');if(!sv)return;if(!si
   const dark=clamp(Math.max((G.dread||0)*VK(),(G.zoom||0)*VK()*1.4,P.hurt||0,P.flash?0:.6),0,1);
   for(const q of G.sil){const m=q.e;if(m.dead)continue;const near=clamp((2.8-q.tY)/2,0,1),hit=clamp(m.silT||0,0,1);
     if(S.fleshR>0&&q.tY>=1.2){let hid=0;for(let x=Math.max(0,q.x0|0);x<=Math.min(W-1,q.x1|0);x+=2)if(q.tY>=zbuf[x])hid++;const wid=Math.max(1,(q.x1-q.x0)/2);if(hid/wid>.35){const rc=redSil(q.spr);g.globalAlpha=.32+Math.sin(tGlobal*4+q.tY)*.08;g.drawImage(rc,Math.round(q.left),Math.round(q.top),Math.round(q.sW),Math.round(q.sH));continue}}
+    continue; // 가까운 괴물 위에 겹치던 붉은 잔상은 없앴다
     const a=near*(.1+.3*dark+.38*hit)*(.85+Math.sin(tGlobal*9)*.15);if(a<.03)continue;const rc=redSil(q.spr);
     // 너무 가까워 화면을 넘칠 때는, 괴물 전체 모습이 화면 안에 들어오도록 줄인 붉은 면을 세운다
     const fit=Math.min(1,H*.9/q.sH),dh=q.sH*fit,dw=q.sW*fit,cx=clamp(q.left+q.sW/2,dw*.35,W-dw*.35),top=fit<1?H*.96-dh:q.top;
