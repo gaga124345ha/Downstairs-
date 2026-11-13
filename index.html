@@ -7981,6 +7981,10 @@ function sfxHurt(){blip(130,.22,'sine',.5,45,0,0,.1);burst(.08,'lowpass',900,.4)
   if(!AC)return;const t=AC.currentTime,s=AC.createBufferSource();s.buffer=NOISE;const d=dest(0,.12),g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.22,t+.03);g.gain.exponentialRampToValueAtTime(.0004,t+.32);
   [[650,6],[1100,7],[2500,8]].forEach(([fq,q])=>{const f=filt('bandpass',fq,q);f.frequency.exponentialRampToValueAtTime(fq*.82,t+.3);s.connect(f);f.connect(g)});g.connect(d);s.start(t,rnd());s.stop(t+.4)}
 function sfxClick(){burst(.014,'highpass',4200,.08,0,0,0,.05);blip(1900,.03,'sine',.025)}
+// 메뉴 버튼을 누르면 짧은 딸깍 소리 (게임 조작용 터치 버튼은 제외)
+let _uiT=0;function sfxUI(sel){if(!AC)return;const n=performance.now();if(n-_uiT<45)return;_uiT=n;if(sel){blip(1250,.035,'square',.018,1650);burst(.012,'highpass',5200,.05,0,0,0,.04)}else{blip(820,.03,'square',.016,980);burst(.01,'highpass',4500,.045,0,0,0,.04)}}
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button,.optT,[data-g],[data-tab],.tabs>*,.slot,.card,label[for]');if(!b||b.closest('#touch')||b.disabled)return;try{if(!AC)initAudio();sfxUI(b.classList.contains('primary')||b.classList.contains('on'))}catch(_){}},true);
+document.addEventListener('input',e=>{if(e.target&&e.target.type==='range'){try{const n=performance.now();if(n-_uiT>70){_uiT=n;blip(600+(+e.target.value/(+e.target.max||1))*900,.02,'sine',.02)}}catch(_){}}},true);
 function sfxBuzz(){blip(170,.12,'triangle',.12,150,0,0,.1);blip(140,.16,'triangle',.12,120,.1,0,.1)}
 function sfxDing(){modal(1318.5,[[.5,.05,2.2],[1,.16,2.6],[2.0,.06,1.4],[2.4,.05,1.1],[3.0,.035,.8],[4.2,.02,.5]],1,0,0,.55);burst(.01,'bandpass',4000,.05,2)}
 function sfxBuy(r){sfxCoin();modal(1046*(1+r*.06),[[1,.06,.9],[2,.03,.6],[3,.015,.4]],1,.08,0,.4);if(r>=3)modal(1568,[[1,.05,1.4],[2.01,.025,.9]],1,.2,0,.5)}
