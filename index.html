@@ -2228,13 +2228,51 @@ function midIntroTick(dt){const bt=MIDB[G.floor];if(!bt||!G.boss||G.boss.dead)re
 function midFX2(){if(!G.mi)return;const k=Math.min(1,G.mi.t/.5)*(G.mi.t>2.6?Math.max(0,(3-G.mi.t)/.4):1),bh=Math.round(H*.11*k);ctx.fillStyle='#000';ctx.fillRect(0,0,W,bh);ctx.fillRect(0,H-bh,W,bh)}
 function midDoorOpen(){if(G.door){for(const i of G.door)map[i]=0;G.door=null;burst(.8,'lowpass',300,.6,1);msg('닫혔던 문이 열렸다','gold',2000)}}
 function midSetup(bt,b){if(bt==='preach'&&G.altar){b.x=G.altar.x-2.5;b.y=G.altar.y;for(let i=0;i<4;i++){const a=i/4*6.28+.4,c=spawn('cultist',G.altar.x-2.5+Math.cos(a)*2,G.altar.y+Math.sin(a)*2);if(solid(c.x,c.y)){c.x=b.x-1;c.y=b.y}c.st='pray';c.spr='cultistK';c.hk=.66}}}
+// ================= 괴물 동작 프레임 =================
+// 기본 그림을 부위별로 움직여 걷기 · 공격 프레임을 만든다. 처음 쓰일 때 한 번 만들고 기억한다.
+// k: biped(두 발) · robe(긴 옷자락) · crawl(기는 것) · pulse(덩어리) · still(제자리)   leg: 다리 비율   arm: 팔 폭 비율
+const AK={wanderer:{k:'biped',leg:.34,arm:.2},joe:{k:'biped',leg:.36,arm:.2},stalker:{k:'biped',leg:.3,arm:.2},flicker:{k:'biped',leg:.38,arm:.18},butcher:{k:'biped',leg:.24,arm:.24},
+  juggernaut:{k:'biped',leg:.26,arm:.28},warden:{k:'biped',leg:.3,arm:.2},watch:{k:'biped',leg:.34,arm:.2},surgeon:{k:'biped',leg:.3,arm:.26},patient:{k:'biped',leg:.28,arm:.2},puppet:{k:'biped',leg:.3,arm:.22},
+  husk:{k:'biped',leg:.3,arm:.2},shooter:{k:'biped',leg:.32,arm:.2},bomber:{k:'biped',leg:.3,arm:.2},censor:{k:'biped',leg:.3,arm:.2},merchantM:{k:'biped',leg:.3,arm:.22},gdoll:{k:'biped',leg:.26,arm:.24},
+  listener:{k:'biped',leg:.16,arm:.2},sprinter:{k:'biped',leg:.42,arm:.3},
+  dread:{k:'robe',arm:.2},reaper:{k:'robe',arm:.2},cultist:{k:'robe',arm:.2},preach:{k:'robe',arm:.18},seam:{k:'robe',arm:.24},
+  parasite:{k:'crawl'},swarmling:{k:'crawl'},brat:{k:'crawl'},specimen:{k:'crawl'},dreg:{k:'crawl'},leech:{k:'pulse'},mimic:{k:'pulse'},queen:{k:'pulse'},mother:{k:'pulse'},swarm:{k:'pulse'},
+  burnt:{k:'still',arm:.3}};
+const AFC=new Map();
+function animBuild(base,cfg,fr){const w=base.w,h=base.h,px=Math.max(2,Math.round(w*.1)),pt=Math.max(2,Math.round(h*.09)),W2=w+px*2,H2=h+pt,rgb=new Uint8Array(W2*H2*3),a=new Uint8Array(W2*H2),src=new Int32Array(W2*H2).fill(-1);
+  const k=cfg.k,leg=cfg.leg||.3,armF=cfg.arm||.2,cx=w/2,legTop=h*(1-leg),s=fr==='w1'?-1:1,lift=Math.max(2,Math.round(h*.055)),lean=Math.max(1,w*.045),armS=Math.max(1,Math.round(h*.035)),aL=w*armF,aR=w*(1-armF),tTop=h*.2;
+  for(let Y=0;Y<H2;Y++)for(let X=0;X<W2;X++){let bx=X-px+.5,by=Y-pt+.5,sx=bx,sy=by;
+    if(fr==='w0'||fr==='w1'){
+      if(k==='biped'){if(by>=legTop){const side=bx<cx?-1:1;if(side===s){const L=h-legTop;sy=legTop+(by-legTop)*L/(L-lift);sx=bx-side*.6}}
+        else{const u=1-by/legTop;sx=bx-s*lean*u;sy=by+1;if(by>tTop&&(sx<aL||sx>aR)){const side=sx<cx?-1:1;sy+=-side*s*armS}}}
+      else if(k==='robe'){const u=by>h*.5?(by-h*.5)/(h*.5):0;sx=bx-s*w*.07*u*u+s*lean*.6*(1-by/h);sy=by+(by<h*.5?1:0);if(by>tTop&&by<h*.6&&(sx<aL||sx>aR)){const side=sx<cx?-1:1;sy+=-side*s*armS}}
+      else if(k==='crawl'){const kx=s>0?1.14:.9,ky=s>0?.9:1.1;sx=cx+(bx-cx)/kx;sy=h-(h-by)/ky}
+      else if(k==='pulse'){const kx=s>0?1.07:.95,ky=s>0?.95:1.06;sx=cx+(bx-cx)/kx+Math.sin(by*.5+s)*.7;sy=h-(h-by)/ky}}
+    else if(fr==='wm'){if(k==='biped'){if(by>=legTop){const L=h-legTop;sy=legTop+(by-legTop-1)*L/(L-1)}else sy=by-1}else if(k==='robe'){sy=by-(by<h*.5?1:0)}}
+    else if(fr==='a0'){ // 준비: 몸을 뒤로 젖히고 움츠린다 · 팔을 든다
+      const ky=.93,u=1-by/h;sy=h-(h-by)/ky;const kx=k==='crawl'||k==='pulse'?1.1:1-.07*u;sx=cx+(bx-cx)/kx;
+      if((k==='biped'||k==='robe'||k==='still')&&sy>tTop&&sy<h*.72&&(sx<aL||sx>aR))sy+=Math.round(h*.1)}
+    else if(fr==='a1'){ // 내지르기: 윗몸이 이쪽으로 쏟아진다 (위로 갈수록 커진다) · 팔을 내리친다
+      const u=1-by/h,ky=k==='crawl'?1.12:1.07;sy=h-(h-by)/ky;const u2=1-sy/h,kx=k==='crawl'||k==='pulse'?1.16:1+.2*u2;sx=cx+(bx-cx)/kx;
+      if((k==='biped'||k==='robe'||k==='still')&&sy>tTop&&sy<h*.8&&(sx<aL||sx>aR)){sy-=Math.round(h*.09);sx+=(sx<cx?-1:1)*1.2}}
+    const ix=Math.floor(sx),iy=Math.floor(sy);if(ix<0||iy<0||ix>=w||iy>=h)continue;const si=iy*w+ix;if(!base.a[si])continue;const di=Y*W2+X;a[di]=base.a[si];src[di]=si;rgb[di*3]=base.rgb[si*3];rgb[di*3+1]=base.rgb[si*3+1];rgb[di*3+2]=base.rgb[si*3+2]}
+  const pc=document.createElement('canvas');pc.width=W2;pc.height=H2;const pg=pc.getContext('2d'),id=pg.createImageData(W2,H2);for(let i=0;i<W2*H2;i++)if(a[i]){id.data[i*4]=rgb[i*3];id.data[i*4+1]=rgb[i*3+1];id.data[i*4+2]=rgb[i*3+2];id.data[i*4+3]=255}pg.putImageData(id,0,0);
+  const f={w:W2,h:H2,rgb,a,cv:pc,hs:H2/h,_src:src,_base:base};
+  Object.defineProperty(f,'wn',{configurable:true,get(){const bw=base.wn||(base.wn=woundMap(base)),m=new Float32Array(W2*H2);for(let i=0;i<m.length;i++)m[i]=src[i]>=0?bw[src[i]]:9;Object.defineProperty(f,'wn',{value:m,writable:true});return m},set(v){Object.defineProperty(f,'wn',{value:v,writable:true})}});
+  return f}
+function animGet(base,cfg,fr){let m=AFC.get(base);if(!m){m={};AFC.set(base,m)}return m[fr]||(m[fr]=animBuild(base,cfg,fr))}
+function monFrame(spr,e){const cfg=AK[e.type];if(!cfg||(OPT&&OPT.anim===0)||e.dopN)return spr;
+  if(e.atkFx>0){const p=1-Math.min(1,e.atkFx/.36);return animGet(spr,cfg,p<.6?'a1':'a0')}
+  if(e.stun>0)return spr;const ws=e.st;if(ws==='wind'||ws==='aim'||ws==='chant'||ws==='sew'||ws==='bell'||ws==='cens'||ws==='grab')return animGet(spr,cfg,'a0');if(ws==='lunge'||ws==='charge')return animGet(spr,cfg,'a1');
+  if(e.moving&&cfg.k!=='still'){const ph=(((e.bobT||0)/Math.PI*2)%4+4)%4|0;return ph===0?animGet(spr,cfg,'w0'):ph===2?animGet(spr,cfg,'w1'):(cfg.k==='biped'||cfg.k==='robe')?animGet(spr,cfg,'wm'):spr}
+  return spr}
 function monDeform(e){if(e.disguised)return null;let sx=1,sy=1,sk=0,wob=0,wf=.7,dx=0,by=0,any=false;const t=tGlobal;
   if(e.type!=='origin'){
-    if(e.moving&&!(e.stun>0)){const c=Math.sin(e.bobT||0),a=Math.abs(Math.cos(e.bobT||0));sk+=c*.05;sy*=1+a*.035;sx*=1-a*.025;any=true}
-    const ws=e.st;if(ws==='wind'||ws==='aim'||ws==='spot'||ws==='chant'||ws==='sew'){sy*=.95;sx*=1.06;sk+=-.06+Math.sin(t*28)*.025;wob=Math.max(wob,.025);wf=1.3;any=true}
+    if(e.moving&&!(e.stun>0)){const c=Math.sin(e.bobT||0),a=Math.abs(Math.cos(e.bobT||0));const fk=AK[e.type]?.35:1;sk+=c*.05*fk;sy*=1+a*.035*fk;sx*=1-a*.025*fk;any=true}
+    const ws=e.st;if(ws==='wind'||ws==='aim'||ws==='spot'||ws==='chant'||ws==='sew'){if(AK[e.type]){sk+=Math.sin(t*30)*.012;dx+=Math.sin(t*47)*.006}else{sy*=.95;sx*=1.06;sk+=-.06+Math.sin(t*28)*.025;wob=Math.max(wob,.025);wf=1.3}any=true}
     if(ws==='charge'||ws==='lunge'){sx*=.9;sy*=1.07;sk+=(e.atkSide||1)*.07;wob=Math.max(wob,.02);any=true}
     if(ws==='daze'){sk+=Math.sin(t*3)*.08;sy*=.93;any=true}
-    if(e.atkFx>0){const a=e.atkFx/.36,pk=Math.sin(Math.min(1,1-a)*Math.PI);sy*=1+.12*pk;sx*=1+.2*pk;sk+=(e.atkSide||1)*.12*pk;by-=.04*pk;any=true}
+    if(e.atkFx>0){const a=e.atkFx/.36,pk=Math.sin(Math.min(1,1-a)*Math.PI);const fk=AK[e.type]?.45:1;sy*=1+.12*pk*fk;sx*=1+.2*pk*fk;sk+=(e.atkSide||1)*.12*pk*fk;by-=.04*pk;any=true}
     if(e.hit>0){const k=Math.min(1,e.hit/.12);sy*=1-.09*k;sx*=1+.08*k;sk+=(Math.sin(t*90)*.05)*k;any=true}
     if(e.stun>0&&!MT[e.type].undying){sk+=Math.sin(t*4+e.x)*.05;any=true}}
   const sc=Math.max(e.scrFx||0,e.st==='scream'?1:0);
@@ -2815,7 +2853,7 @@ function render(){
   for(const e of list){
     const tY=e._ty;if(tY<.12)continue;
     let spr,hS,lift=0,jit=0;
-    if(e.isPh){spr=SPR[e.type];hS=MT[e.type].h;jit=rnd()<.3?ri(-2,2):0}else if(e.isMon){if(e.disguised){spr=SPR[MSPR[moneyTier(e.fake||0)]];hS=.2+Math.min(.18,e.fake/500)}else if(e.type==='origin'){spr=SPR[e.spr||'origin0'];hS=e.hs||1.3;lift=e.lift||0;jit=e.jit?ri(-e.jit,e.jit):0}else if(e.type==='glitch'){spr=SPR['glitch'+((tGlobal*14|0)%3)];hS=MT.glitch.h;jit=ri(-4,4)}else{spr=e.spr&&SPR[e.spr]?SPR[e.spr]:e.berserk&&SPR[e.type+'R']?SPR[e.type+'R']:SPR[e.type];hS=MT[e.type].h*(e.berserk?1.12:1)*(e.hk||1);if(e.dopN)hS=.74;if(e.berserk&&rnd()<.4)jit=ri(-3,3)}
+    if(e.isPh){spr=SPR[e.type];hS=MT[e.type].h;jit=rnd()<.3?ri(-2,2):0}else if(e.isMon){if(e.disguised){spr=SPR[MSPR[moneyTier(e.fake||0)]];hS=.2+Math.min(.18,e.fake/500)}else if(e.type==='origin'){spr=SPR[e.spr||'origin0'];hS=e.hs||1.3;lift=e.lift||0;jit=e.jit?ri(-e.jit,e.jit):0}else if(e.type==='glitch'){spr=SPR['glitch'+((tGlobal*14|0)%3)];hS=MT.glitch.h;jit=ri(-4,4)}else{spr=e.spr&&SPR[e.spr]?SPR[e.spr]:e.berserk&&SPR[e.type+'R']?SPR[e.type+'R']:SPR[e.type];hS=MT[e.type].h*(e.berserk?1.12:1)*(e.hk||1);if(!e.spr&&spr){spr=monFrame(spr,e);if(spr.hs)hS*=spr.hs}if(e.dopN)hS=.74;if(e.berserk&&rnd()<.4)jit=ri(-3,3)}
       if(e.type==='flicker'&&!e.disguised&&rnd()<.25)jit=ri(-2,2);}
     else if(e.gib){spr=SPR[e.spr];hS=e.h;lift=e.z}else if(e.isRP){const hl=e.hl>0&&!e.dead&&SPR[e.hlS];const lkS=!e.dead&&!hl&&e.lk?plLook(e.ci,e.lk):null;spr=lkS||SPR[e.dead?'plD':hl?e.hlS:'pl'+e.ci];hS=lkS?.894:e.dead?.26:hl?MT[e.hlS].h:.74}else if(e.isAlly||e.isNpc){spr=SPR[e.type];hS=FT[e.type].h}else if(e.kind){spr=SPR[pickSpr(e)];hS=e.h;lift=e.z||0}else{spr=SPR.acid;hS=.14;lift=.35}
     if(!spr||!spr.w)continue;if(e.isMon&&e.gz)lift=(lift||0)+e.gz;
