@@ -4842,7 +4842,7 @@ function opFX(){if(!P.op&&!P.sgrab)return;if(P.op){const k=clamp(P.op.t/.4,0,1);
 addEventListener('keydown',e=>{if(!G||G.state!=='play'||!P||!(P.sgrab||P.op)||e.code==='Escape')return;e.preventDefault();e.stopImmediatePropagation();if(!e.repeat&&P.sgrab)grabMash()},true);
 addEventListener('pointerdown',e=>{if(!G||G.state!=='play'||!P||!(P.sgrab||P.op))return;if(e.target&&e.target.closest&&e.target.closest('#tPause'))return;e.preventDefault();e.stopImmediatePropagation();if(P.sgrab)grabMash()},true);
 addEventListener('mousedown',e=>{if(!G||G.state!=='play'||!P||!(P.sgrab||P.op))return;e.stopImmediatePropagation()},true);
-function burntTick(dt){try{burntTick2(dt)}catch(e){}try{stalkDownTick(dt)}catch(e){}try{plockTick(dt)}catch(e){}try{tentTick(dt)}catch(e){console.error(e)}for(const m of G.mon){if(m.dead||m.type!=='burnt')continue;m.spr=((tGlobal*8+m.x*3)|0)%2?'burntB':'burnt';
+function burntTick(dt){try{burntTick2(dt)}catch(e){}try{stalkDownTick(dt)}catch(e){}try{specTick(dt)}catch(e){}if(NET.host){G._mpChk=(G._mpChk||0)-dt;if(G._mpChk<=0){G._mpChk=.5;try{netCheckWipe()}catch(e){}try{if(P.collapsed||Object.values(NET.peers).some(r=>r.col))netCheckReady()}catch(e){}}}try{plockTick(dt)}catch(e){}try{tentTick(dt)}catch(e){console.error(e)}for(const m of G.mon){if(m.dead||m.type!=='burnt')continue;m.spr=((tGlobal*8+m.x*3)|0)%2?'burntB':'burnt';
     if(rnd()<dt*16){const h=MT.burnt.h;G.parts.push({x:m.x+(rnd()-.5)*.45,y:m.y+(rnd()-.5)*.45,z:h*(.35+rnd()*.7),vx:0,vy:0,vz:.6+rnd(),g:-1.5,life:.3+rnd()*.35,col:pick([[255,210,90],[255,140,30],[230,70,10]]),sz:.45+rnd()*.4,rest:0})}
     if(rnd()<.45)G.tmpL.push({x:m.x,y:m.y,r:2.6,i:.55,ttl:.07,type:'muz'});
     if(rnd()<dt*1.5&&Math.hypot(m.x-P.x,m.y-P.y)<7)burst(.3,'bandpass',600+rnd()*500,.05,2,0,panOf(m),.2)}}
@@ -5132,7 +5132,7 @@ function sanWords(dt){
 }
 // 정신력 0: 손에 든 무기가 스스로를 향한다 (항우울제로만 멈출 수 있다)
 function selfTick(dt){
-  if(P.resisted&&P.san<0&&G.state==='play'){if(P.san<=-50){if(NET.on){P.resisted=0;P.san=0;G.negMsg=0;msg('정신이 완전히 무너졌다 · 동료가 깨워 줘야 한다','warn',4200);netDown({type:'collapse'});return}startCollapse();return}P.hb2=(P.hb2||0)-dt;if(P.hb2<=0){P.hb2=lerp(1.1,.4,-P.san/50);blip(46,.2,'sine',.35,28,0,0,.1)}if(!G.negMsg){G.negMsg=1;msg('정신력이 바닥 아래로 꺼진다… 항우울제가 필요하다','warn',4000)}}
+  if(P.resisted&&P.san<0&&G.state==='play'){if(P.san<=-50){if(NET.on){netCollapse();return}startCollapse();return}P.hb2=(P.hb2||0)-dt;if(P.hb2<=0){P.hb2=lerp(1.1,.4,-P.san/50);blip(46,.2,'sine',.35,28,0,0,.1)}if(!G.negMsg){G.negMsg=1;msg('정신력이 바닥 아래로 꺼진다… 항우울제가 필요하다','warn',4000)}}
   if(P.selfT==null){
     if(G.state==='play'&&(P.san||0)<=0&&!P.resisted&&!(P.drug>0)&&!SB.god&&SB.lockSan==null&&!inElev()){P.selfT=0;P.selfR=0;P.ads=false;P.swing=0;
       msg('정신이 무너졌다. 손이 멋대로 움직인다…'+(P.belt&&P.belt.antidep?' [3] 항우울제!':''),'warn',3200);sfxWhisper(0);sfxWhisper(.7);sfxWhisper(-.7)}
@@ -5467,10 +5467,10 @@ function sfxEmerge(c){const pn=panOf(c);burst(.35,'lowpass',500,.3,2,0,pn,.3,150
 function sfxDregBlink(m){const pn=panOf(m);blip(1400,.12,'square',.06,300,0,pn,.3);burst(.1,'highpass',3000,.15,0,0,pn,.3);modal(600,[[1,.05,.2],[2.7,.03,.1]],1,0,pn,.3)}
 
 // ================= 엔딩 (탈출 / 돈으로 산 자유 / 붕괴) =================
-const ENDN={betray:'배신',escape:'탈출',freedom:'돈으로 산 자유',collapse:'붕괴',stolen:'부정하게 산 자유',sacrifice:'희생',being:'존재 (Being)'},HIDN=['stolen','sacrifice','being','betray'];
+const ENDN={together:'함께 무너지다',betray:'배신',escape:'탈출',freedom:'돈으로 산 자유',collapse:'붕괴',stolen:'부정하게 산 자유',sacrifice:'희생',being:'존재 (Being)'},HIDN=['stolen','sacrifice','being','betray','together'];
 let END=null;
 // ---- 엔딩마다 다르게 열리는 마지막 엘리베이터 문 ----
-function eDoorRun(mode){const d=$('eDoor'),fl=$('edFl');d.className='m-'+mode;void d.offsetWidth;END.hold=mode==='collapse'?4.2:4.6;
+function eDoorRun(mode){if(mode==='together')mode='collapse';const d=$('eDoor'),fl=$('edFl');d.className='m-'+mode;void d.offsetWidth;END.hold=mode==='collapse'?4.2:4.6;
   const at=(ms,f)=>setTimeout(()=>{if(END&&!$('ending').hidden)try{f()}catch(e){}},ms);
   const ding=(lo)=>{blip(lo?660:1318.5,1.4,'sine',.12,lo?640:1318.5,0,0,.6);blip(lo?523:1046.5,1.6,'sine',.12,lo?500:1046.5,.28,0,.6)};
   const rumbleOpen=(d0)=>burst(d0||1.4,'lowpass',260,.35,0,0,0,.4,120);
@@ -5482,7 +5482,7 @@ function eDoorRun(mode){const d=$('eDoor'),fl=$('edFl');d.className='m-'+mode;vo
   else if(mode==='being'){fl.textContent='0F';fl.style.color='#ff6060';for(let i=0;i<5;i++)at(i*900,()=>{blip(55,.18,'sine',.4,40);blip(55,.16,'sine',.3,40,.2)});at(1000,()=>ding(1));at(1300,()=>{d.classList.add('open');burst(3,'lowpass',400,.3,1.2,0,0,.5);sfxSplat&&sfxSplat(1.2)});at(4200,()=>{d.classList.add('snap');sfxSplat&&sfxSplat(1.6)})}
   else if(mode==='collapse'){fl.textContent='B50';at(400,()=>{d.classList.add('open');burst(.5,'lowpass',200,.5,1)});at(1200,()=>{fl.textContent='--';d.classList.add('shk');modal(900,[[1,.4,.3],[2.4,.2,.2]],1,0,0,.2);burst(.12,'highpass',2000,.8,1)});at(2000,()=>{d.classList.add('fall');blip(140,1.6,'sawtooth',.12,30);burst(1.6,'bandpass',800,.4,1,0,0,.4,200)})}
   const off=mode==='collapse'?3500:3900;at(off,()=>d.classList.add('off'));at(off+1000,()=>{d.classList.add('gone');fl.style.color='';fl.style.filter=''})}
-function startEnding(mode){mode=mode||'escape';if(mode==='collapse'&&NET.on&&!NET.fromHost)return;if(NET.cl&&!NET.fromHost){netSend({t:'endReq',mode,by:NET.endBy||null,mo:NET.endMo||0});return}if(NET.host)netSend({t:'end',mode,by:NET.endBy||null,mo:NET.endMo||0});runClear();if(!SB.used){const st=ST();st.wins++;st.ends[mode]=(st.ends[mode]||0)+1;stAdd(st);persist()}if(G.nm)ach('nm_escape');G.endTrack='end_'+mode;
+function startEnding(mode){mode=mode||'escape';if(mode==='collapse'&&NET.on&&!NET.fromHost)return;if(mode==='together'){P.netDead=0;$('netDown').hidden=true}if(NET.cl&&!NET.fromHost){netSend({t:'endReq',mode,by:NET.endBy||null,mo:NET.endMo||0});return}if(NET.host)netSend({t:'end',mode,by:NET.endBy||null,mo:NET.endMo||0});runClear();if(!SB.used){const st=ST();st.wins++;st.ends[mode]=(st.ends[mode]||0)+1;stAdd(st);persist()}if(G.nm)ach('nm_escape');G.endTrack='end_'+(mode==='together'?'collapse':mode);
   G.state='ending';releaseLock();{const pe=$('party');if(pe)pe.hidden=true}stopAllVoices();stopMusic();if(G.chase){G.chase=null;chaseMusic(false)}$('hud').hidden=true;$('prompt').innerHTML='';cv.style.transform='';$('badw').innerHTML='';
   SAVE.endings=SAVE.endings||{};SAVE.endings[mode]=(SAVE.endings[mode]||0)+1;ach('end_'+mode);if(Object.keys(ENDN).filter(k=>k!=='betray').every(k=>SAVE.endings[k]))ach('end_all');if(!SB.used&&G.floor>SAVE.best)SAVE.best=G.floor;persist();
   let money=Math.floor(P.money);let L=[];const btr=mode==='betray'&&NET.endBy===NET.id;if(btr)money=Math.max(money,NET.endMo||0);
@@ -5490,13 +5490,14 @@ function startEnding(mode){mode=mode||'escape';if(mode==='collapse'&&NET.on&&!NE
     :[[2,'문이 닫히는 소리가 들렸다.'],[6,'달렸다. 이름을 불렀다. 틈 사이로 그 얼굴이 보였다.'],[10.5,'그는 나를 보고 있었다. 그리고 버튼에서 손을 떼지 않았다.'],[15,'등 뒤에서, 그것들의 발소리가 가까워졌다.'],[20,'감옥은 새 죄수를 얻었다.'],[25,'…다음 엘리베이터는 오지 않는다.']];
   if(mode==='escape'){L=['그날, 퇴근길의 엘리베이터 안에서 공간이 뒤틀렸다.','도착한 곳은 아래로만 이어지는 건물이었다.','돈을 줍고, 숨고, 달렸다. 한 층만 더. 한 층만 더.','그것들은 모두 같은 살점에서 태어났다.','이 건물은 감옥이었다. The ORIGIN을 가두기 위한.','그리고 나는 그 감옥의 가장 밑바닥에서, 그것을 끝냈다.',`주머니 속에는 ◈ ${money}. 아침 햇살 아래에서는 녹슨 동전처럼 보였다.`,'나는 다시는 엘리베이터를 타지 않는다.'].map((x,i)=>[6+i*4.8,x])}
   else if(mode==='stolen')L=[[1.5,'다락문 너머는 바깥이었다. 훔친 열쇠가 아직 손에 쥐어져 있었다.'],[6.5,'그때, 하늘이 찢어졌다.'],[10,'「이 도둑놈 새끼가… 감히 내 물건에 손을 대?」',1],[13.2,'「값은 치르고 가야지, 개자식아.」',1],[17.5,'도시가 깜빡였다.'],[22,'찢어진 틈으로, 그것도 따라 나왔다.']];
+  else if(mode==='together')L=[[2,'처음엔 한 명이 웃기 시작했다.'],[6.5,'곧 모두가 웃고 있었다. 아무도 이유를 몰랐다.'],[11,'우리는 손을 맞잡고 엘리베이터 바닥에 둥글게 앉았다.'],[15.5,'벽 너머에서 무언가가 다정하게 우리 이름을 하나씩 불렀다.'],[20,'감옥은 이제 외롭지 않다.']];
   else if(mode==='sacrifice')L=[[3,'레버는 건물 전체와 이어져 있었다.'],[7.5,'감옥은 그것과 함께 불탔다. 나도 함께.'],[12,'도시는 아무것도 모른 채 아침을 맞았다.'],[16.5,'아무도 나를 기억하지 않는다.'],[21,'그래도, 이제 아무도 아래로 내려가지 않는다.']];
   else if(mode==='being')L=[[4.5,'바깥은 평범한 아침이었다.'],[8.5,'사람들이 걸어갔다. 가로등이 켜져 있었다.'],[12.5,'…그런데 왜, 다들 그것들의 얼굴을 하고 있지?'],[16,'가로등이 심장처럼 뛰었다.'],[19.5,'아니. 바뀐 건 세상이 아니었다.'],[23,'나는 처음부터, 그 살점의 일부였다.']];
   else if(mode==='freedom')L=[[1.2,'열쇠는 따뜻했다. 살아 있는 것처럼 맥박이 뛰었다.'],[6,'한 층, 또 한 층. 아무것도 따라오지 않았다.'],[10.6,'천장에 작은 다락문이 있었다.'],[19,'바깥이었다. 아침이었다.'],[24,'자유는 돈으로 살 수 있었다.'],[29.5,'등 뒤의 다락문은 닫지 않았다.'],[35.5,'감옥은 이제 비어 있다.']];
-  END={mode,t:0,last:performance.now(),li:-1,fast:false,roll:null,done:false,lines:L,cs:{betray:31,escape:6+8*4.8+.6,freedom:42,collapse:1.2,stolen:31,sacrifice:26,being:27}[mode],
+  END={mode,t:0,last:performance.now(),li:-1,fast:false,roll:null,done:false,lines:L,cs:{together:25,betray:31,escape:6+8*4.8+.6,freedom:42,collapse:1.2,stolen:31,sacrifice:26,being:27}[mode],
     mem:seenTypes().filter(t=>SPR[t]),cars:[],birds:[],af:48,an:0,step:0};
   buildCredits(mode,money);
-  const e=$('ending');e.hidden=false;e.classList.remove('lit');$('endW').style.opacity=0;$('endB').style.opacity=mode==='collapse'?1:0;$('endTxt').style.opacity=0;$('credits').classList.remove('on');$('endBtns').hidden=true;$('roll').style.transform=`translateY(${innerHeight}px)`;
+  const e=$('ending');e.hidden=false;e.classList.remove('lit');$('endW').style.opacity=0;$('endB').style.opacity=mode==='collapse'||mode==='together'?1:0;$('endTxt').style.opacity=0;$('credits').classList.remove('on');$('endBtns').hidden=true;$('roll').style.transform=`translateY(${innerHeight}px)`;
   if(mode==='escape'){requestAnimationFrame(()=>{$('endW').style.opacity=1});blip(523.3,3.5,'sine',.12,523.3,0,-.3,.9);blip(659.3,3.5,'sine',.1,659.3,.15,.3,.9);blip(784,3.5,'sine',.09,784,.3,0,.9);blip(1046.5,3,'sine',.05,1046.5,.5,0,.9);burst(3,'highpass',3000,.08,0,0,0,.9)}
   if(mode==='freedom'){e.classList.add('lit');END.lit=1;END.scene='up';rumble(true)}
   if(mode==='collapse')endMusic(true,1);
@@ -5622,7 +5623,7 @@ function buyKey(){G.keyBought=1;G.leaving=1;keeperMood=2;setTimeout(()=>say('행
 function selfResist(){if(P.selfT==null)return;P.selfR=(P.selfR||0)+1;shake(.25);burst(.06,'lowpass',400,.2,2,0,0,.1);
   if(P.selfR>=14){P.selfT=null;P.selfR=0;P.resisted=1;P.san=-1;P.pitch=0;ach('resist');msg('손을 억지로 붙잡았다. 대신 머릿속에서 무언가가 끊어졌다.','warn',4500);blip(60,1.5,'sawtooth',.2,30,0,0,.6);sfxWhisper(0)}}
 const COLW=['역겨워','괴물','넌 이제 그것들 중 하나야','배고파','살점','The ORIGIN이 부른다','돌아와','아무도 널 알아보지 못해','거울을 봐','더 이상 사람이 아니야','먹어','아래로 내려와','네 이름은 없어','흉측해','살이 찢어진다','이빨이 자란다','우리와 같아','혐오스러워','기어','형제여','살 냄새','한 층 더'];
-function startCollapse(){if(NET.on){P.resisted=0;P.san=0;try{netDown({type:'collapse'})}catch(e){}return}G.state='collapse';G.col={t:0,hb:0,br:0,w:0,cough:1.2};stopAllVoices();releaseLock();$('hud').hidden=true;$('prompt').innerHTML='';P.latch=null;P.selfT=null;
+function startCollapse(){if(NET.on){netCollapse();return}G.state='collapse';G.col={t:0,hb:0,br:0,w:0,cough:1.2};stopAllVoices();releaseLock();$('hud').hidden=true;$('prompt').innerHTML='';P.latch=null;P.selfT=null;
   if(G.chase){G.chase=null;chaseMusic(false)}G.col.a0=P.a;G.col.p0=P.pitch||0}
 function collapseUpdate(dt){const C=G.col;C.t+=dt;const t=C.t;
   C.hb-=dt;if(t<16&&C.hb<=0){C.hb=t<1.6?.55:lerp(.9,.45,clamp((t-3)/12,0,1));blip(44,.3,'sine',t<1.6?1:.6,26,0,0,.2);blip(40,.26,'sine',t<1.6?.8:.45,24,.16,0,.2);if(t<1.6)shakeY+=6}
@@ -5762,6 +5763,7 @@ const ACH=[
   ['end_sacrifice','희생','레버를 당긴 채, 감옥과 함께 불탔다.',1],
   ['end_being','존재','모든 것을 알게 된 채로 바깥에 나갔다.',1],
   ['end_betray','배신','함께 내려온 동료를 두고 혼자 마지막 문을 닫았다.',1],
+  ['end_together','함께 무너지다','함께 내려온 모두가 한꺼번에 무너졌다.',1],
   ['origin_pipe','배관공','쇠파이프를 쥔 채로 The ORIGIN을 쓰러뜨렸다.',1],
   ['origin_rich','돈으로 살 수 없는 가치','◈28000 이상을 지닌 채로 The ORIGIN을 쓰러뜨렸다.',1],
   ['korean_d','국어','D를 40번 연속으로 눌렀다.',1],
@@ -6266,6 +6268,7 @@ function interact(){
   }
 }
 function updatePrompt(){
+  if(P.collapsed){const L=specTargets(),a=L.length?L[((P.specI||0)%L.length+L.length)%L.length]:null,s2='관전 중 · '+(a?String(a.n||'동료').replace(/[<>&]/g,''):'남은 동료가 없다')+(L.length>1?' · 클릭으로 바꾸기':'');if(G._pr!==s2){G._pr=s2;$('prompt').innerHTML=s2;pxify($('prompt'))}return}
   if(P.selfT!=null){const s2='<b>손이 말을 듣지 않는다</b> 클릭 연타로 버텨라'+(P.belt&&P.belt.antidep?' · <kbd>8</kbd> 항우울제':'');if(G._pr!==s2){G._pr=s2;$('prompt').innerHTML=s2;pxify($('prompt'))}return}
   if(P.latch){const s2=`<b>클릭 연타!</b> Parasite를 떼어내라`;if(G._pr!==s2){G._pr=s2;$('prompt').innerHTML=s2;pxify($('prompt'))}return}
   const t=P.hidden?null:facingTarget();let s=P.hidden?'<kbd>E</kbd> 나오기 · 숨죽이는 중':'';
@@ -6345,11 +6348,12 @@ function netRecv(from,d){if(!d||!d.t)return;const T=d.t;
     if(T==='hi'){if(NET.peers[from]){NET.peers[from].lastT=performance.now();netTo(from,{t:'welcome',ci:NET.peers[from].ci});netLobbyPush();return}if(Object.keys(NET.peers).length>=3){netTo(from,{t:'full'});return}const used=new Set(Object.values(NET.peers).map(r=>r.ci));let ci=1;while(used.has(ci))ci++;
       NET.peers[from]={id:from,name:String(d.name||'?').slice(0,10),ci,x:0,y:0,a:0,dead:0,hp:100,inE:0,lastT:performance.now()};netTo(from,{t:'welcome',ci});netLobbyPush();if(G.state!=='title'){netTo(from,{t:'start',nm:SAVE.nm?1:0});setTimeout(netSendFloor,600)}return}
     const r=NET.peers[from];if(!r)return;r.lastT=performance.now();
-    if(T==='u'){Object.assign(r,{x:d.x,y:d.y,a:d.a,dead:d.dead,hp:d.hp,mhp:d.mhp,inE:d.inE,mo:d.mo||0,hidden:d.hd,crouch:d.cr,run:d.rn,flash:d.fl,lk:String(d.lk||'').slice(0,44),fz:d.fz,ok:d.ok,lt:performance.now()})}
+    if(T==='u'){Object.assign(r,{x:d.x,y:d.y,a:d.a,dead:d.dead,hp:d.hp,mhp:d.mhp,inE:d.inE,mo:d.mo||0,hidden:d.hd,crouch:d.cr,run:d.rn,flash:d.fl,lk:String(d.lk||'').slice(0,44),fz:d.fz,ok:d.ok,col:d.col?1:0,lt:performance.now()})}
     else if(T==='dmg'){for(const k in d.v){const m=NET.mm[k];if(!m||m.dead)continue;G._netK=from;damageMon(m,d.v[k],!!(d.ml&&d.ml[k]));G._netK=null}}
     else if(T==='pk'){netApplyPk(d);netSend(d)}
     else if(T==='nfx'){try{nadeRemote(d)}catch(e){}netSend(d)}
     else if(T==='ping'){pingAdd(d.p);netSend(d)}
+    else if(T==='startReq'){if(G.state==='title'||G.state==='ending'||G.state==='dead'){const r=NET.peers[from];msg(`${r?r.name:'동료'}이(가) 새 판을 기다린다 · 시작을 누르면 함께 시작한다`,'gold',3200)}}
     else if(T==='tstop'){timeStop(Math.min(6,+d.d||5));netSend(d)}
     else if(T==='gdrop'){giftAdd(d)}
     else if(T==='ready'){NET.ready[from]=1;netCheckReady()}
@@ -6364,7 +6368,7 @@ function netRecv(from,d){if(!d||!d.t)return;const T=d.t;
   if(T==='lobby'){NET.lobby=d.list;netRenderLobby()}
   else if(T==='welcome'){clearTimeout(NET.rFind);NET.ci=d.ci;netMsgSt('방에 들어왔다 · 호스트가 시작하길 기다리는 중…')}
   else if(T==='full'){netMsgSt('방이 가득 찼다 (최대 4명)');netClose();$('mpPick').hidden=false;$('mpRoom').hidden=true}
-  else if(T==='start'){NET.wipe=0;if(NET.tx==='room')NET.needFl=performance.now();NET.hT=performance.now();if(typeof d.nm==='number'){SAVE.nm=d.nm}$('mpV').hidden=true;$('title').hidden=true;$('dead').hidden=true;$('netWait').hidden=true;try{initAudio()}catch(e){}startFall()}
+  else if(T==='start'){NET.wipe=0;NET.floorF=null;NET.waiting=0;NET.ready={};for(const id in NET.av){NET.av[id].here=false;NET.av[id].lt=0}if(NET.tx==='room')NET.needFl=performance.now();NET.hT=performance.now();if(typeof d.nm==='number'){SAVE.nm=d.nm}$('mpV').hidden=true;$('title').hidden=true;$('dead').hidden=true;$('netWait').hidden=true;try{initAudio()}catch(e){}startFall()}
   else if(T==='floor'){NET.needFl=0;NET.pend=d;if(!$('shop').hidden&&NET.waiting){NET.waiting=0;NET.go=1;$('goDown').onclick();NET.go=0}}
   else if(T==='s'){NET.hT=performance.now();if(G.state==='title'&&NET.ci&&!NET.stReq){NET.stReq=1;netRecv('h',{t:'start'});setTimeout(()=>{NET.stReq=0},3000)}netSnapIn(d)}
   else if(T==='hurt'){if(G.state==='play')hurtPlayer(d.a,{type:d.s||'wanderer',snap:d.k?1:0,x:d.x!=null?d.x:P.x+Math.cos(P.a),y:d.y!=null?d.y:P.y+Math.sin(P.a)})}
@@ -6381,7 +6385,7 @@ function netRecv(from,d){if(!d||!d.t)return;const T=d.t;
   else if(T==='gadd')giftIn(d);
   else if(T==='shop'){if($('shop').hidden&&G.state==='play'){P.hidden=null;openShop()}}
   else if(T==='end'){NET.fromHost=1;NET.endBy=d.by||null;NET.endMo=d.mo||0;startEnding(d.mode);NET.fromHost=0}
-  else if(T==='wipe'){NET.wipe=1;$('netDown').hidden=true;P.netDead=0;die(NET.lastSrc||{type:'wanderer'})}
+  else if(T==='wipe'){NET.wipe=1;$('netDown').hidden=true;P.netDead=0;P.collapsed=0;die(NET.lastSrc||{type:'wanderer'})}
   else if(T==='msg'){msg(d.m,d.c,2600)}
   else if(T==='wh')whHear(d)}
 // ---- 층 전송
@@ -6397,7 +6401,7 @@ function netApplyFloor(pk){G._netSpawn=0;genFloor(pk.f);N=pk.N;map=Uint8Array.fr
 // ---- 스냅숏 (호스트 → 모두, 초당 12번)
 function netSnapOut(){const m=[];for(const o of G.mon){if(o.dead)continue;if(o.nid==null){o.nid=NET.mid++;NET.mm[o.nid]=o}NET.mm[o.nid]=o;
     const fl=(o.disguised?1:0)|(o.moving?2:0)|(o.hit>0?4:0)|(o.stun>0?8:0)|(o.atkFx>0?16:0)|(o.scrFx>0?32:0);const row=[o.nid,o.type,Math.round(o.x*100),Math.round(o.y*100),Math.round(o.hp||0),Math.round(isFinite(o.maxHp)?o.maxHp:-1),fl,o.fake||0];if(o.type==='origin'||o.spr)row.push(o.spr||null,o.hs||null,o.lift||0);if(o.dopN)row.push(o.dopN,o.dopC||0);m.push(row)}
-  const pl=[{id:'h',n:NET.name,ci:0,x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,fl:P.flash?1:0,hp:P.hp,mhp:S.maxHp,inE:inElev()?1:0,mo:Math.floor(P.money),lk:netLook(),fz:G.floor,ok:(G.state==='play'||G.state==='elevIn'||G.state==='elevOut')?1:0}].concat(Object.values(NET.peers).map(r=>({id:r.id,n:r.name,ci:r.ci,x:r.x,y:r.y,a:r.a,dead:r.dead,fl:r.fl,hp:r.hp,mhp:r.mhp,inE:r.inE,mo:r.mo||0,lk:r.lk,fz:r.fz,ok:r.ok&&performance.now()-(r.lt||0)<2500?1:0})));
+  const pl=[{id:'h',col:P.collapsed?1:0,n:NET.name,ci:0,x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,fl:P.flash?1:0,hp:P.hp,mhp:S.maxHp,inE:inElev()?1:0,mo:Math.floor(P.money),lk:netLook(),fz:G.floor,ok:(G.state==='play'||G.state==='elevIn'||G.state==='elevOut')&&!P.collapsed?1:0}].concat(Object.values(NET.peers).map(r=>({id:r.id,n:r.name,ci:r.ci,x:r.x,y:r.y,a:r.a,dead:r.dead,fl:r.fl,hp:r.hp,mhp:r.mhp,inE:r.inE,mo:r.mo||0,lk:r.lk,fz:r.fz,ok:r.ok&&performance.now()-(r.lt||0)<2500?1:0})));
   const d={t:'s',f:G.floor,m,pl,b:G.boss&&!G.boss.dead?G.boss.nid:null,k:NET.killed.splice(0)};if(++NET.pkT%12===0)d.pk=G.pick.filter(p=>p.nid!=null).map(pickPack);netSend(d);netParty(pl)}
 function netSnapIn(d){if(d.f!==G.floor||G.state==='title')return;const seen={};
   for(const row of d.m){const [id,type,x,y,hp,mx,fl,fake]=row;seen[id]=1;let o=NET.mm[id];if(!o){G._netSpawn=1;o=spawn(type,x/100,y/100);G._netSpawn=0;o.nid=id;o.aggro=0;o.atkCd=99;NET.mm[id]=o;if(o.voice){try{o.voice.stop()}catch(e){}o.voice=null}}
@@ -6476,12 +6480,23 @@ function netAllIn(){if(!inElev()&&!(G.edoor&&G.edoor.board))return false;for(con
 function netOpenShop(){if(!NET.on){openShop();return}if(NET.cl){msg('엘리베이터에 탔다 · 모두 모이면 호스트가 출발시킨다',null,2600);return}
   if(!netAllIn()){const n=Object.values(NET.peers).filter(r=>!r.dead&&!r.inE).length;msg(`아직 ${n}명이 엘리베이터 밖에 있다`,'warn',2400);return}netSend({t:'shop'});openShop()}
 function netReady(){$('netWait').hidden=false;pxify($('netWait'));if(NET.cl){NET.waiting=1;netSend({t:'ready'});if(NET.pend&&NET.pend.f===G.floor+1){NET.waiting=0;NET.go=1;$('goDown').onclick();NET.go=0}}else{NET.ready.h=1;netCheckReady()}}
-function netCheckReady(){if(!NET.host||!NET.ready.h)return;for(const id in NET.peers)if(!NET.ready[id])return;NET.ready={};NET.go=1;$('goDown').onclick();NET.go=0}
+function netCheckReady(){if(!NET.host)return;if(P.collapsed)NET.ready.h=1;if(!NET.ready.h)return;const live=Object.values(NET.peers).filter(r=>!r.col);if(P.collapsed&&!live.length)return;for(const r of live)if(!NET.ready[r.id])return;NET.ready={};NET.go=1;$('goDown').onclick();NET.go=0}
 // ---- 쓰러짐
+// 붕괴한 사람은 되살릴 수 없고, 남은 동료를 따라다니며 관전한다
+// 멀티: 손님은 호스트가 시작할 때까지 기다리고, 호스트가 시작하면 모두 같은 판으로 들어간다
+function mpRestart(){if(!NET.on)return false;for(const id in NET.av){NET.av[id].here=false;NET.av[id].lt=0}if(NET.cl){stopMusic();$('hud').hidden=true;G.state='title';$('title').hidden=false;showBest();msg('호스트가 다시 시작하길 기다린다','warn',3000);netSend({t:'startReq'});return true}
+  NET.wipe=0;NET.ready={};netSend({t:'start',nm:SAVE.nm?1:0});startFall();return true}
+function netCollapse(){if(P.collapsed)return;P.collapsed=1;P.resisted=0;P.san=0;P.netDead=1;P.hp=0;P.hidden=null;P.carryBy=null;P.selfT=null;P.latch=null;G.negMsg=0;
+  const nd=$('netDown');nd.innerHTML='<b>무너졌다</b><span>정신이 바닥 아래로 꺼졌다 · 남은 동료를 관전한다 · 클릭(터치)으로 다른 동료 보기</span>';nd.hidden=false;pxify(nd);
+  msg('정신이 완전히 무너졌다 · 관전 모드','warn',4200);blip(46,1.6,'sine',.5,22,0,0,.5);burst(1.2,'lowpass',200,.4,1);if(NET.host)netCheckWipe()}
+function specTargets(){return netAvatars().filter(a=>!a.dead)}
+function specTick(dt){if(!P.collapsed||G.state!=='play')return;const L=specTargets();if(!L.length)return;P.specI=((P.specI||0)%L.length+L.length)%L.length;const a=L[P.specI],k=Math.min(1,dt*8);
+  P.x+=(a.x-Math.cos(a.a)*.35-P.x)*k;P.y+=(a.y-Math.sin(a.a)*.35-P.y)*k;P.a+=angDiff(a.a,P.a)*k;P.pitch=0;P.flash=!!a.fl;P.bat=100;}
+function specNext(){if(!P.collapsed)return;P.specI=(P.specI||0)+1}
 function netDown(src){if(P.netDead)return;P.netDead=1;P.hp=0;NET.lastSrc=src;$('netDown').hidden=false;pxify($('netDown'));sfxJumpScare&&sfxJumpScare(src&&src.type&&SPR[src.type]?src.type:'wanderer');if(NET.host)netCheckWipe()}
 // ---- 쓰러진 동료: 업어 나르기와 응급 처치 ----
 function netSendTo(id,d){if(NET.host)netTo(id,d);else netSend(Object.assign({},d,{t:d.t+'q',id}))}
-function reviveMe(n){if(!P.netDead)return;P.netDead=0;P.hp=Math.max(1,S.maxHp*.35);P.invT=2.5;P.carryBy=null;$('netDown').hidden=true;msg(`${n||'동료'}이(가) 너를 일으켜 세웠다`,'gold',2600);sfxDing()}
+function reviveMe(n){if(!P.netDead||P.collapsed)return;P.netDead=0;P.hp=Math.max(1,S.maxHp*.35);P.invT=2.5;P.carryBy=null;$('netDown').hidden=true;msg(`${n||'동료'}이(가) 너를 일으켜 세웠다`,'gold',2600);sfxDing()}
 function nearDown(){let best=null,bd=1.4;for(const a of netAvatars()){if(!a.dead)continue;const d=Math.hypot(a.x-P.x,a.y-P.y);if(d<bd){bd=d;best=a}}return best}
 function carryToggle(){if(G.state!=='play'||P.netDead)return;if(P.carry){netSendTo(P.carry,{t:'cy',by:NET.id,on:0,n:NET.name});msg('동료를 내려놓았다','',1200);P.carry=null;return}
   const a=nearDown();if(!a){msg('업을 동료가 곁에 없다','',1000);return}P.carry=a.id;netSendTo(a.id,{t:'cy',by:NET.id,on:1,n:NET.name});msg(`${a.name||'동료'}을(를) 업었다 · 느려지고 공격할 수 없다 · B로 내려놓기`,'gold',2400);burst(.3,'lowpass',300,.4,1)}
@@ -6549,13 +6564,15 @@ function tvLoop(now){if(!TV||$('tvV').hidden)return;const dt=Math.min(.05,(now-T
   if(TV.t>T.len)return closeTape(1);requestAnimationFrame(tvLoop)}
 function closeTape(force){if(!TV||(!force&&TV.t<-.2))return;TV=null;$('tvV').className='ov off';setTimeout(()=>{$('tvV').hidden=true;if(G.state==='tv'){G.state='play';requestLock()}},360);burst(.2,'highpass',2500,.2,1)}
 $('tvV').addEventListener('pointerdown',()=>closeTape());addEventListener('keydown',e=>{if(G&&G.state==='tv'&&(e.code==='Escape'||e.code==='KeyE'||e.code==='Space')){e.preventDefault();closeTape()}});
-function netCheckWipe(){if(!NET.host||!P.netDead)return;for(const id in NET.peers)if(!NET.peers[id].dead)return;NET.wipe=1;netSend({t:'wipe'});$('netDown').hidden=true;P.netDead=0;die(NET.lastSrc||{type:'wanderer'})}
+function netCheckWipe(){if(!NET.host||!P.netDead||NET.wipe||G.state!=='play')return;const ps=Object.values(NET.peers);for(const r of ps)if(!r.dead)return;
+  if(P.collapsed&&ps.every(r=>r.col)){NET.wipe=1;$('netDown').hidden=true;startEnding('together');return}
+  NET.wipe=1;netSend({t:'wipe'});$('netDown').hidden=true;P.netDead=0;P.collapsed=0;die(NET.lastSrc||{type:'wanderer'})}
 // ---- 매 프레임
 function netTick(dt){try{downTick(dt)}catch(e){}if(P&&P.snapT>0){P.snapT-=dt;P.a+=dt*9*(P.snapK||1)*Math.max(0,P.snapT/.45);P.pitch=Math.max(-H*.45,(P.pitch||0)-dt*H*1.2)}
   if(!NET.on||G.state==='title')return;const now=performance.now();
   if(NET.cl&&NET.tx==='room'){if((NET.hT||0)&&now-NET.hT>40000&&G.state!=='title'){NET.hT=0;msg('호스트와 연결이 끊겼다','warn',3000);netLost();return}if(NET.needFl&&now-NET.needFl>3500){NET.needFl=now;netSend({t:'need'})}}
   if(NET.cl){if(NET.pend&&$('shop').hidden&&(G.state==='play'||G.state==='elevIn')&&NET.pend.f!==NET.floorF&&!NET.waiting){const pk=NET.pend;NET.pend=null;netApplyFloor(pk)}
-    if(now-NET.uT>66){NET.uT=now;netSend({t:'u',x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,hp:P.hp,mhp:S.maxHp,inE:(inElev()||(G.edoor&&G.edoor.board))?1:0,hd:P.hidden?1:0,cr:P.crouch?1:0,rn:P.run?1:0,fl:flashPower()>0?1:0,mo:Math.floor(P.money),lk:netLook(),fz:G.floor,ok:(G.state==='play'||G.state==='elevIn'||G.state==='elevOut')?1:0});
+    if(now-NET.uT>66){NET.uT=now;netSend({t:'u',col:P.collapsed?1:0,x:P.x,y:P.y,a:P.a,dead:P.netDead?1:0,hp:P.hp,mhp:S.maxHp,inE:(inElev()||(G.edoor&&G.edoor.board))?1:0,hd:P.hidden?1:0,cr:P.crouch?1:0,rn:P.run?1:0,fl:flashPower()>0?1:0,mo:Math.floor(P.money),lk:netLook(),fz:G.floor,ok:(G.state==='play'||G.state==='elevIn'||G.state==='elevOut')&&!P.collapsed?1:0});
       if(Object.keys(NET.dq).length){netSend({t:'dmg',v:NET.dq,ml:NET.dqm});NET.dq={};NET.dqm={}}}}
   else{if(now-NET.sT>80){NET.sT=now;netSnapOut()}for(const id in NET.peers){const r=NET.peers[id];if((NET.tx==='bc'||NET.tx==='room')&&now-r.lastT>(NET.tx==='room'?30000:6000))netDrop(id);else netAv({id,n:r.name,ci:r.ci,x:r.x,y:r.y,a:r.a,dead:r.dead,fl:r.flash,inE:r.inE,lk:r.lk,fz:r.fz,ok:r.ok&&performance.now()-(r.lt||0)<2500?1:0})}if(P.netDead)netCheckWipe()}
   const k=Math.min(1,dt*12);for(const id in NET.av){const a=NET.av[id];if(!avHere(a)){a._sx=null;continue}if(a.tx!=null){a.x+=(a.tx-a.x)*k;a.y+=(a.ty-a.y)*k}if(a.fl&&!a.dead)G.tmpL.push({x:a.x+Math.cos(a.a||0)*.6,y:a.y+Math.sin(a.a||0)*.6,r:3.2,i:.55,ttl:.04,type:'muz'})}}
@@ -7739,7 +7756,7 @@ function continueRun(){const d=runLoad();if(!d)return;setT=0;initAudio();$('titl
   $('hud').hidden=true;G.dread=0;G.zoom=0;P.pitch=0;G.state='elevIn';G.cin=0;G.cinF={};requestLock()}
 $('contBtn').onclick=continueRun;
 function startFall(){if($('rushT'))$('rushT').hidden=true;stopMusic();stopTrack();runClear();chaseMusic(false);newRun();$('hud').hidden=true;G.state='elevIn';G.cin=0;G.cinF={fall:1};P.a=0;requestLock()}
-$('start').onclick=()=>{initAudio();$('title').hidden=true;ST().runs++;persist();startFall()};
+$('start').onclick=()=>{initAudio();if(NET.cl){msg('호스트가 시작하길 기다린다','warn',2400);netSend({t:'startReq'});return}$('title').hidden=true;ST().runs++;persist();if(NET.host){NET.wipe=0;NET.ready={};netSend({t:'start',nm:SAVE.nm?1:0})}startFall()};
 // ---- 보스 러시: 엔딩을 하나 보면 열린다. 보스 층만 연달아 내려간다 ----
 const RUSHL=[5,10,15,20,25,30,35,45];
 function rushOK(){const st=ST();return (st.wins||0)>0||Object.keys(st.ends||{}).length>0||SB.on}
@@ -7754,7 +7771,7 @@ function rushTick(dt){if(!G.rush)return;if(G.state==='play')G.rush.t+=dt;const e
 $('rushBtn').onclick=startRush;$('rushAgain').onclick=startRush;$('rushTitle').onclick=()=>{$('rushV').hidden=true;stopMusic();$('hud').hidden=true;stopAllVoices();G.state='title';G.rush=null;$('title').hidden=false;showBest();rushLabel();lobbyRun()};
 $('restart').onclick=()=>{if(NET.cl){msg('호스트가 다시 시작할 때까지 기다린다','warn',2400);return}$('dead').hidden=true;if(NET.host){NET.wipe=0;netSend({t:'start',nm:SAVE.nm?1:0})}startFall()};
 $('openAch').onclick=()=>openAch('title');$('openAch2').onclick=()=>openAch('pause');$('achClose').onclick=closeAch;
-$('endAgain').onclick=()=>{endClose();startFall()};
+$('endAgain').onclick=()=>{endClose();if(mpRestart())return;startFall()};
 $('endTitle').onclick=()=>{endClose();stopMusic();$('hud').hidden=true;stopAllVoices();G.state='title';$('title').hidden=false;showBest();lobbyRun()};
 $('ending').addEventListener('pointerdown',()=>{if(END)END.fast=true});addEventListener('pointerup',()=>{if(END)END.fast=false});
 addEventListener('keydown',e=>{if(END&&e.code==='Space')END.fast=true});addEventListener('keyup',e=>{if(END&&e.code==='Space')END.fast=false});
@@ -8086,7 +8103,7 @@ function sfxHurt(){blip(130,.22,'sine',.5,45,0,0,.1);burst(.08,'lowpass',900,.4)
 function sfxClick(){burst(.014,'highpass',4200,.08,0,0,0,.05);blip(1900,.03,'sine',.025)}
 // 메뉴 버튼을 누르면 짧은 딸깍 소리 (게임 조작용 터치 버튼은 제외)
 let _uiT=0;function sfxUI(sel){if(!AC)return;const n=performance.now();if(n-_uiT<45)return;_uiT=n;if(sel){blip(1250,.035,'square',.018,1650);burst(.012,'highpass',5200,.05,0,0,0,.04)}else{blip(820,.03,'square',.016,980);burst(.01,'highpass',4500,.045,0,0,0,.04)}}
-document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button,.optT,[data-g],[data-tab],.tabs>*,.slot,.card,label[for]');if(!b||b.closest('#touch')||b.disabled)return;try{if(!AC)initAudio();sfxUI(b.classList.contains('primary')||b.classList.contains('on'))}catch(_){}},true);
+document.addEventListener('pointerdown',e=>{try{if(P&&P.collapsed&&G.state==='play'&&!e.target.closest('button,#touch .tb'))specNext()}catch(_){}const b=e.target.closest&&e.target.closest('button,.optT,[data-g],[data-tab],.tabs>*,.slot,.card,label[for]');if(!b||b.closest('#touch')||b.disabled)return;try{if(!AC)initAudio();sfxUI(b.classList.contains('primary')||b.classList.contains('on'))}catch(_){}},true);
 document.addEventListener('input',e=>{if(e.target&&e.target.type==='range'){try{const n=performance.now();if(n-_uiT>70){_uiT=n;blip(600+(+e.target.value/(+e.target.max||1))*900,.02,'sine',.02)}}catch(_){}}},true);
 function sfxBuzz(){blip(170,.12,'triangle',.12,150,0,0,.1);blip(140,.16,'triangle',.12,120,.1,0,.1)}
 function sfxDing(){modal(1318.5,[[.5,.05,2.2],[1,.16,2.6],[2.0,.06,1.4],[2.4,.05,1.1],[3.0,.035,.8],[4.2,.02,.5]],1,0,0,.55);burst(.01,'bandpass',4000,.05,2)}
